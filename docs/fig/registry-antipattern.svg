@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="278" viewBox="0 0 680 278">
+<rect x="0" y="0" width="680" height="278" fill="#ffffff"/>
+
+<rect x="40" y="30" width="280" height="176" rx="12" fill="#FCEBEB" stroke="#A32D2D" stroke-width="0.5"/>
+<text x="60" y="54" font-family="sans-serif" font-size="14" font-weight="500" fill="#791F1F">调用期查找 &#10007; 不要</text>
+<text x="60" y="80" font-family="monospace" font-size="11" fill="#501313">void tick(w, st) {</text>
+<text x="60" y="98" font-family="monospace" font-size="11" fill="#501313">  const cxf_type *t =</text>
+<text x="60" y="116" font-family="monospace" font-size="11" fill="#501313">    cxf_type_find(w, "Particle");</text>
+<text x="60" y="134" font-family="monospace" font-size="11" fill="#501313">  ...</text>
+<text x="60" y="152" font-family="monospace" font-size="11" fill="#501313">}</text>
+<text x="60" y="180" font-family="sans-serif" font-size="12" fill="#A32D2D">每帧一次 strcmp</text>
+<text x="60" y="196" font-family="sans-serif" font-size="12" fill="#A32D2D">谁调用谁退化成运行时数据</text>
+
+<rect x="360" y="30" width="280" height="176" rx="12" fill="#EAF3DE" stroke="#3B6D11" stroke-width="0.5"/>
+<text x="380" y="54" font-family="sans-serif" font-size="14" font-weight="500" fill="#27500A">固化后直用 &#10003; 要</text>
+<text x="380" y="80" font-family="monospace" font-size="11" fill="#173404">// init 里查一次</text>
+<text x="380" y="98" font-family="monospace" font-size="11" fill="#173404">s-&gt;t = cxf_type_find(w, "Particle");</text>
+<text x="380" y="124" font-family="monospace" font-size="11" fill="#173404">void tick(w, st) {</text>
+<text x="380" y="142" font-family="monospace" font-size="11" fill="#173404">  col = s-&gt;col_vx;   // 零查找</text>
+<text x="380" y="160" font-family="monospace" font-size="11" fill="#173404">}</text>
+<text x="380" y="180" font-family="sans-serif" font-size="12" fill="#3B6D11">一次指针解引用</text>
+<text x="380" y="196" font-family="sans-serif" font-size="12" fill="#3B6D11">调用关系编译期可见、可内联</text>
+
+<line x1="40" y1="226" x2="640" y2="226" stroke="#B4B2A9" stroke-width="0.5"/>
+<text x="40" y="248" font-family="sans-serif" font-size="12" fill="#444441">可观测证据：world-&gt;type_find_count 是查找次数槽位。</text>
+<text x="40" y="266" font-family="sans-serif" font-size="12" fill="#444441">tests/test_registry.c 跑 100 帧并断言它不变 —— 违反纪律会立刻变成测试失败，而不是一条没人读的注释。</text>
+</svg>

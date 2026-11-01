@@ -1,0 +1,4609 @@
+{
+  "date": "2026-10-30",
+  "llama_commit": "f1e44dcc11d8802d107bd7331a3d3fd3e6f57b93",
+  "hardware": "Apple M5, 16 GiB unified memory, Metal",
+  "model": "Qwen3-0.6B-Q8_0.gguf",
+  "model_sha256": "710d7b1aa4e2ae03238a9e65e82f48cfa70edf501becae8979c35acf5830e1ed",
+  "accepted_template_sha256": "57f1fd00f0013a2be96aa79b857391f27e23df5b5f847072b524c897e24d0361",
+  "kv_pool_tokens": 16384,
+  "kv_pool_bytes": 1879048192,
+  "scope": "Known-template warm direct Jinja values, direct result-tree collection and bounded first tokenizer buffer; no upstream core patch",
+  "baseline": "normalized_json is the previous direct borrowed-message path with normalized JSON and query-then-tokenize, already using early release",
+  "method": {
+    "samples_per_variant": 3,
+    "same_process": true,
+    "alternating_order": true,
+    "memory_sampler_period_us": 200,
+    "metric": "max(0, sampled_heap_peak - heap_before); sampled malloc in-use bytes, not total RSS or KV bytes",
+    "timing": "Separate timing phase without sampler thread or payload callback; excludes first long prefill and full generation"
+  },
+  "rows": [
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 1024,
+      "rep": 0,
+      "mode": "jinja_values",
+      "input_bytes": 6152,
+      "rc": 0,
+      "heap_before": 118249072,
+      "heap_after": 118284944,
+      "sampled_heap_peak": 118308608,
+      "peak_since_probe": "committed",
+      "rss_after": 2615279616,
+      "stored": 1199,
+      "logical": 1192,
+      "payload_capacity": 6144,
+      "cxf_bytes": 8748,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118250816,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 118260864,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 6162,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118256944,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 6885,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118257632,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 6885,
+          "token_scratch": 196
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 1024,
+      "rep": 0,
+      "mode": "normalized_json",
+      "input_bytes": 6152,
+      "rc": 0,
+      "heap_before": 118289040,
+      "heap_after": 118289040,
+      "sampled_heap_peak": 118349920,
+      "peak_since_probe": "normalized",
+      "rss_after": 2614165504,
+      "stored": 1199,
+      "logical": 1192,
+      "payload_capacity": 6144,
+      "cxf_bytes": 8748,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118290784,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118298368,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 6162,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118296912,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 6885,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118296416,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 6885,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 1024,
+      "rep": 1,
+      "mode": "normalized_json",
+      "input_bytes": 6152,
+      "rc": 0,
+      "heap_before": 118289040,
+      "heap_after": 118289040,
+      "sampled_heap_peak": 118340880,
+      "peak_since_probe": "normalized",
+      "rss_after": 2614165504,
+      "stored": 1199,
+      "logical": 1192,
+      "payload_capacity": 6144,
+      "cxf_bytes": 8748,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118290784,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118298368,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 6162,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118296912,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 6885,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118296416,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 6885,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 1024,
+      "rep": 1,
+      "mode": "jinja_values",
+      "input_bytes": 6152,
+      "rc": 0,
+      "heap_before": 118289040,
+      "heap_after": 118289040,
+      "sampled_heap_peak": 118324096,
+      "peak_since_probe": "jinja_values",
+      "rss_after": 2614165504,
+      "stored": 1199,
+      "logical": 1192,
+      "payload_capacity": 6144,
+      "cxf_bytes": 8748,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118290784,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 118300832,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 6162,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118296912,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 6885,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118296576,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 6885,
+          "token_scratch": 196
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 1024,
+      "rep": 2,
+      "mode": "jinja_values",
+      "input_bytes": 6152,
+      "rc": 0,
+      "heap_before": 118289040,
+      "heap_after": 118290304,
+      "sampled_heap_peak": 118351376,
+      "peak_since_probe": "committed",
+      "rss_after": 2614165504,
+      "stored": 1199,
+      "logical": 1192,
+      "payload_capacity": 6144,
+      "cxf_bytes": 8748,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118290784,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 118300832,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 6162,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118296912,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 6885,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118296576,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 6885,
+          "token_scratch": 196
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 1024,
+      "rep": 2,
+      "mode": "normalized_json",
+      "input_bytes": 6152,
+      "rc": 0,
+      "heap_before": 118289040,
+      "heap_after": 118289040,
+      "sampled_heap_peak": 118352704,
+      "peak_since_probe": "normalized",
+      "rss_after": 2614198272,
+      "stored": 1199,
+      "logical": 1192,
+      "payload_capacity": 6144,
+      "cxf_bytes": 8748,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118290784,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118298368,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 6162,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118296912,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 6885,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118296416,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 6885,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 4096,
+      "rep": 0,
+      "mode": "jinja_values",
+      "input_bytes": 24584,
+      "rc": 0,
+      "heap_before": 118579392,
+      "heap_after": 118586656,
+      "sampled_heap_peak": 118654432,
+      "peak_since_probe": "committed",
+      "rss_after": 2579759104,
+      "stored": 4271,
+      "logical": 4264,
+      "payload_capacity": 18432,
+      "cxf_bytes": 22124,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118581136,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 118612688,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 24594,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118608768,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 25317,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118609456,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 25317,
+          "token_scratch": 196
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 4096,
+      "rep": 0,
+      "mode": "normalized_json",
+      "input_bytes": 24584,
+      "rc": 0,
+      "heap_before": 118586656,
+      "heap_after": 118586656,
+      "sampled_heap_peak": 118829344,
+      "peak_since_probe": "normalized",
+      "rss_after": 2580168704,
+      "stored": 4271,
+      "logical": 4264,
+      "payload_capacity": 18432,
+      "cxf_bytes": 22124,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118588400,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118617488,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 24594,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118616032,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 25317,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118615536,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 25317,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 4096,
+      "rep": 1,
+      "mode": "normalized_json",
+      "input_bytes": 24584,
+      "rc": 0,
+      "heap_before": 118586656,
+      "heap_after": 118586656,
+      "sampled_heap_peak": 118712160,
+      "peak_since_probe": "normalized",
+      "rss_after": 2580168704,
+      "stored": 4271,
+      "logical": 4264,
+      "payload_capacity": 18432,
+      "cxf_bytes": 22124,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118588400,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118617488,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 24594,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118616032,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 25317,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118615536,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 25317,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 4096,
+      "rep": 1,
+      "mode": "jinja_values",
+      "input_bytes": 24584,
+      "rc": 0,
+      "heap_before": 118586656,
+      "heap_after": 118586656,
+      "sampled_heap_peak": 118644896,
+      "peak_since_probe": "jinja_values",
+      "rss_after": 2580168704,
+      "stored": 4271,
+      "logical": 4264,
+      "payload_capacity": 18432,
+      "cxf_bytes": 22124,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118588400,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 118619952,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 24594,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118616032,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 25317,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118615696,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 25317,
+          "token_scratch": 196
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 4096,
+      "rep": 2,
+      "mode": "jinja_values",
+      "input_bytes": 24584,
+      "rc": 0,
+      "heap_before": 118586656,
+      "heap_after": 118586656,
+      "sampled_heap_peak": 118641808,
+      "peak_since_probe": "jinja_values",
+      "rss_after": 2580185088,
+      "stored": 4271,
+      "logical": 4264,
+      "payload_capacity": 18432,
+      "cxf_bytes": 22124,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118588400,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 118619952,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 24594,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118616032,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 25317,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118615696,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 25317,
+          "token_scratch": 196
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 4096,
+      "rep": 2,
+      "mode": "normalized_json",
+      "input_bytes": 24584,
+      "rc": 0,
+      "heap_before": 118586656,
+      "heap_after": 118586656,
+      "sampled_heap_peak": 118670336,
+      "peak_since_probe": "committed",
+      "rss_after": 2580185088,
+      "stored": 4271,
+      "logical": 4264,
+      "payload_capacity": 18432,
+      "cxf_bytes": 22124,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118588400,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118617488,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 24594,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118616032,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 25317,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118615536,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 25317,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 7168,
+      "rep": 0,
+      "mode": "jinja_values",
+      "input_bytes": 43016,
+      "rc": 0,
+      "heap_before": 118793792,
+      "heap_after": 118784080,
+      "sampled_heap_peak": 118968992,
+      "peak_since_probe": "jinja_values",
+      "rss_after": 2583642112,
+      "stored": 7343,
+      "logical": 7336,
+      "payload_capacity": 30720,
+      "cxf_bytes": 34412,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118795536,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 118847568,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 43026,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118843648,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 43749,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118844336,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 43749,
+          "token_scratch": 196
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 7168,
+      "rep": 0,
+      "mode": "normalized_json",
+      "input_bytes": 43016,
+      "rc": 0,
+      "heap_before": 118784080,
+      "heap_after": 118784080,
+      "sampled_heap_peak": 119211088,
+      "peak_since_probe": "normalized",
+      "rss_after": 2584002560,
+      "stored": 7343,
+      "logical": 7336,
+      "payload_capacity": 30720,
+      "cxf_bytes": 34412,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118785824,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118835392,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 43026,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118833936,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 43749,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118833440,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 43749,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 7168,
+      "rep": 1,
+      "mode": "normalized_json",
+      "input_bytes": 43016,
+      "rc": 0,
+      "heap_before": 118784080,
+      "heap_after": 118784080,
+      "sampled_heap_peak": 118852320,
+      "peak_since_probe": "committed",
+      "rss_after": 2584002560,
+      "stored": 7343,
+      "logical": 7336,
+      "payload_capacity": 30720,
+      "cxf_bytes": 34412,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118785824,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118835392,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 43026,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118833936,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 43749,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118833440,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 43749,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 7168,
+      "rep": 1,
+      "mode": "jinja_values",
+      "input_bytes": 43016,
+      "rc": 0,
+      "heap_before": 118784080,
+      "heap_after": 118784080,
+      "sampled_heap_peak": 118870064,
+      "peak_since_probe": "jinja_values",
+      "rss_after": 2584002560,
+      "stored": 7343,
+      "logical": 7336,
+      "payload_capacity": 30720,
+      "cxf_bytes": 34412,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118785824,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 118837856,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 43026,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118833936,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 43749,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118833600,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 43749,
+          "token_scratch": 196
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 7168,
+      "rep": 2,
+      "mode": "jinja_values",
+      "input_bytes": 43016,
+      "rc": 0,
+      "heap_before": 118784080,
+      "heap_after": 118784080,
+      "sampled_heap_peak": 118865536,
+      "peak_since_probe": "jinja_values",
+      "rss_after": 2584002560,
+      "stored": 7343,
+      "logical": 7336,
+      "payload_capacity": 30720,
+      "cxf_bytes": 34412,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118785824,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 118837856,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 43026,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118833936,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 43749,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118833600,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 43749,
+          "token_scratch": 196
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 7168,
+      "rep": 2,
+      "mode": "normalized_json",
+      "input_bytes": 43016,
+      "rc": 0,
+      "heap_before": 118784080,
+      "heap_after": 118784080,
+      "sampled_heap_peak": 118852832,
+      "peak_since_probe": "committed",
+      "rss_after": 2584002560,
+      "stored": 7343,
+      "logical": 7336,
+      "payload_capacity": 30720,
+      "cxf_bytes": 34412,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118785824,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118835392,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 43026,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118833936,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 43749,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118833440,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 43749,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 14336,
+      "rep": 0,
+      "mode": "jinja_values",
+      "input_bytes": 86024,
+      "rc": 0,
+      "heap_before": 119447232,
+      "heap_after": 119437520,
+      "sampled_heap_peak": 119591904,
+      "peak_since_probe": "committed",
+      "rss_after": 2601861120,
+      "stored": 14511,
+      "logical": 14504,
+      "payload_capacity": 59392,
+      "cxf_bytes": 65260,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 119448976,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 119550160,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 86034,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 119546240,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 86757,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 119546928,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 86757,
+          "token_scratch": 196
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 14336,
+      "rep": 0,
+      "mode": "normalized_json",
+      "input_bytes": 86024,
+      "rc": 0,
+      "heap_before": 119437520,
+      "heap_after": 119437520,
+      "sampled_heap_peak": 120061072,
+      "peak_since_probe": "normalized",
+      "rss_after": 2602401792,
+      "stored": 14511,
+      "logical": 14504,
+      "payload_capacity": 59392,
+      "cxf_bytes": 65260,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 119439264,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 119537984,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 86034,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 119536528,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 86757,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 119536032,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 86757,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 14336,
+      "rep": 1,
+      "mode": "normalized_json",
+      "input_bytes": 86024,
+      "rc": 0,
+      "heap_before": 119437520,
+      "heap_after": 119437520,
+      "sampled_heap_peak": 119858160,
+      "peak_since_probe": "normalized",
+      "rss_after": 2602418176,
+      "stored": 14511,
+      "logical": 14504,
+      "payload_capacity": 59392,
+      "cxf_bytes": 65260,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 119439264,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 119537984,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 86034,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 119536528,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 86757,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 119536032,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 86757,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 14336,
+      "rep": 1,
+      "mode": "jinja_values",
+      "input_bytes": 86024,
+      "rc": 0,
+      "heap_before": 119437520,
+      "heap_after": 119437520,
+      "sampled_heap_peak": 119657088,
+      "peak_since_probe": "jinja_values",
+      "rss_after": 2600337408,
+      "stored": 14511,
+      "logical": 14504,
+      "payload_capacity": 59392,
+      "cxf_bytes": 65260,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 119439264,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 119540448,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 86034,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 119536528,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 86757,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 119536192,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 86757,
+          "token_scratch": 196
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 14336,
+      "rep": 2,
+      "mode": "jinja_values",
+      "input_bytes": 86024,
+      "rc": 0,
+      "heap_before": 119437520,
+      "heap_after": 119437520,
+      "sampled_heap_peak": 119565504,
+      "peak_since_probe": "jinja_values",
+      "rss_after": 2600337408,
+      "stored": 14511,
+      "logical": 14504,
+      "payload_capacity": 59392,
+      "cxf_bytes": 65260,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 119439264,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 119540448,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 86034,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 119536528,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 86757,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 119536192,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 86757,
+          "token_scratch": 196
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 14336,
+      "rep": 2,
+      "mode": "normalized_json",
+      "input_bytes": 86024,
+      "rc": 0,
+      "heap_before": 119437520,
+      "heap_after": 119437520,
+      "sampled_heap_peak": 119961536,
+      "peak_since_probe": "normalized",
+      "rss_after": 2600337408,
+      "stored": 14511,
+      "logical": 14504,
+      "payload_capacity": 59392,
+      "cxf_bytes": 65260,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 119439264,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 119537984,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 86034,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 119536528,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 86757,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 119536032,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 86757,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 16384,
+      "rep": 0,
+      "mode": "jinja_values",
+      "input_bytes": 98312,
+      "rc": 2,
+      "heap_before": 118234192,
+      "heap_after": 118234192,
+      "sampled_heap_peak": 120241952,
+      "peak_since_probe": "rendered",
+      "rss_after": 2614181888,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118235936,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 118353504,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 98322,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118349584,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 99045,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 16384,
+      "rep": 0,
+      "mode": "normalized_json",
+      "input_bytes": 98312,
+      "rc": 2,
+      "heap_before": 118234192,
+      "heap_after": 118234192,
+      "sampled_heap_peak": 120176416,
+      "peak_since_probe": "rendered",
+      "rss_after": 2614411264,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118235936,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118351040,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 98322,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118349584,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 99045,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 16384,
+      "rep": 1,
+      "mode": "normalized_json",
+      "input_bytes": 98312,
+      "rc": 2,
+      "heap_before": 118234192,
+      "heap_after": 118234192,
+      "sampled_heap_peak": 120759040,
+      "peak_since_probe": "rendered",
+      "rss_after": 2614427648,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118235936,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118351040,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 98322,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118349584,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 99045,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 16384,
+      "rep": 1,
+      "mode": "jinja_values",
+      "input_bytes": 98312,
+      "rc": 2,
+      "heap_before": 118234192,
+      "heap_after": 118234192,
+      "sampled_heap_peak": 120241952,
+      "peak_since_probe": "rendered",
+      "rss_after": 2614427648,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118235936,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 118353504,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 98322,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118349584,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 99045,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 16384,
+      "rep": 2,
+      "mode": "jinja_values",
+      "input_bytes": 98312,
+      "rc": 2,
+      "heap_before": 118234192,
+      "heap_after": 118234192,
+      "sampled_heap_peak": 120726272,
+      "peak_since_probe": "rendered",
+      "rss_after": 2614427648,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118235936,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 118353504,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 98322,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118349584,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 99045,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 16384,
+      "rep": 2,
+      "mode": "normalized_json",
+      "input_bytes": 98312,
+      "rc": 2,
+      "heap_before": 118234192,
+      "heap_after": 118234192,
+      "sampled_heap_peak": 120569600,
+      "peak_since_probe": "rendered",
+      "rss_after": 2613903360,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118235936,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118351040,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 98322,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118349584,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 99045,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 65536,
+      "rep": 0,
+      "mode": "jinja_values",
+      "input_bytes": 393224,
+      "rc": 2,
+      "heap_before": 118529104,
+      "heap_after": 118529104,
+      "sampled_heap_peak": 128967424,
+      "peak_since_probe": "rendered",
+      "rss_after": 2622144512,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118530848,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 118943328,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 393234,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118939408,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 393957,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 65536,
+      "rep": 0,
+      "mode": "normalized_json",
+      "input_bytes": 393224,
+      "rc": 2,
+      "heap_before": 118529104,
+      "heap_after": 118529104,
+      "sampled_heap_peak": 128901888,
+      "peak_since_probe": "rendered",
+      "rss_after": 2622849024,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118530848,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118940864,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 393234,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118939408,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 393957,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 65536,
+      "rep": 1,
+      "mode": "normalized_json",
+      "input_bytes": 393224,
+      "rc": 2,
+      "heap_before": 118529104,
+      "heap_after": 118529104,
+      "sampled_heap_peak": 129613600,
+      "peak_since_probe": "rendered",
+      "rss_after": 2622849024,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118530848,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118940864,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 393234,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118939408,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 393957,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 65536,
+      "rep": 1,
+      "mode": "jinja_values",
+      "input_bytes": 393224,
+      "rc": 2,
+      "heap_before": 118529104,
+      "heap_after": 118529104,
+      "sampled_heap_peak": 128967424,
+      "peak_since_probe": "rendered",
+      "rss_after": 2622849024,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118530848,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 118943328,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 393234,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118939408,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 393957,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 65536,
+      "rep": 2,
+      "mode": "jinja_values",
+      "input_bytes": 393224,
+      "rc": 2,
+      "heap_before": 118529104,
+      "heap_after": 118529104,
+      "sampled_heap_peak": 129679136,
+      "peak_since_probe": "rendered",
+      "rss_after": 2622849024,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118530848,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 118943328,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 393234,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118939408,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 393957,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 65536,
+      "rep": 2,
+      "mode": "normalized_json",
+      "input_bytes": 393224,
+      "rc": 2,
+      "heap_before": 118529104,
+      "heap_after": 118529104,
+      "sampled_heap_peak": 128901888,
+      "peak_since_probe": "rendered",
+      "rss_after": 2622849024,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118530848,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118940864,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 393234,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118939408,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 393957,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 16,
+      "rep": 0,
+      "mode": "jinja_values",
+      "input_bytes": 1688,
+      "rc": 0,
+      "heap_before": 118228448,
+      "heap_after": 118207824,
+      "sampled_heap_peak": 118419088,
+      "peak_since_probe": "jinja_values",
+      "rss_after": 2623717376,
+      "stored": 846,
+      "logical": 839,
+      "payload_capacity": 5120,
+      "cxf_bytes": 10988,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118230192,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 118354128,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 1042,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118234272,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 4453,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118234960,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 4453,
+          "token_scratch": 196
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 16,
+      "rep": 0,
+      "mode": "normalized_json",
+      "input_bytes": 1688,
+      "rc": 0,
+      "heap_before": 118207824,
+      "heap_after": 118207824,
+      "sampled_heap_peak": 118433504,
+      "peak_since_probe": "normalized",
+      "rss_after": 2623913984,
+      "stored": 846,
+      "logical": 839,
+      "payload_capacity": 5120,
+      "cxf_bytes": 10988,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118209568,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118229920,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 1042,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118213648,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 4453,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118213152,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 4453,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 16,
+      "rep": 1,
+      "mode": "normalized_json",
+      "input_bytes": 1688,
+      "rc": 0,
+      "heap_before": 118207824,
+      "heap_after": 118207824,
+      "sampled_heap_peak": 118431568,
+      "peak_since_probe": "normalized",
+      "rss_after": 2623913984,
+      "stored": 846,
+      "logical": 839,
+      "payload_capacity": 5120,
+      "cxf_bytes": 10988,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118209568,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118229920,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 1042,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118213648,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 4453,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118213152,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 4453,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 16,
+      "rep": 1,
+      "mode": "jinja_values",
+      "input_bytes": 1688,
+      "rc": 0,
+      "heap_before": 118207824,
+      "heap_after": 118207824,
+      "sampled_heap_peak": 118402432,
+      "peak_since_probe": "jinja_values",
+      "rss_after": 2623913984,
+      "stored": 846,
+      "logical": 839,
+      "payload_capacity": 5120,
+      "cxf_bytes": 10988,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118209568,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 118333504,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 1042,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118213648,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 4453,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118213312,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 4453,
+          "token_scratch": 196
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 16,
+      "rep": 2,
+      "mode": "jinja_values",
+      "input_bytes": 1688,
+      "rc": 0,
+      "heap_before": 118207824,
+      "heap_after": 118207824,
+      "sampled_heap_peak": 118392112,
+      "peak_since_probe": "jinja_values",
+      "rss_after": 2623913984,
+      "stored": 846,
+      "logical": 839,
+      "payload_capacity": 5120,
+      "cxf_bytes": 10988,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118209568,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 118333504,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 1042,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118213648,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 4453,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118213312,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 4453,
+          "token_scratch": 196
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 16,
+      "rep": 2,
+      "mode": "normalized_json",
+      "input_bytes": 1688,
+      "rc": 0,
+      "heap_before": 118207824,
+      "heap_after": 118207824,
+      "sampled_heap_peak": 118434032,
+      "peak_since_probe": "normalized",
+      "rss_after": 2623913984,
+      "stored": 846,
+      "logical": 839,
+      "payload_capacity": 5120,
+      "cxf_bytes": 10988,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118209568,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118229920,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 1042,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118213648,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 4453,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118213152,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 4453,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 128,
+      "rep": 0,
+      "mode": "jinja_values",
+      "input_bytes": 13448,
+      "rc": 0,
+      "heap_before": 118642208,
+      "heap_after": 118616912,
+      "sampled_heap_peak": 119862976,
+      "peak_since_probe": "jinja_values",
+      "rss_after": 2597109760,
+      "stored": 5550,
+      "logical": 5543,
+      "payload_capacity": 23552,
+      "cxf_bytes": 29420,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118643952,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 119615504,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 8210,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118675680,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 30437,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118676368,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 30437,
+          "token_scratch": 196
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 128,
+      "rep": 0,
+      "mode": "normalized_json",
+      "input_bytes": 13448,
+      "rc": 0,
+      "heap_before": 118616912,
+      "heap_after": 118616912,
+      "sampled_heap_peak": 120146448,
+      "peak_since_probe": "normalized",
+      "rss_after": 2598387712,
+      "stored": 5550,
+      "logical": 5543,
+      "payload_capacity": 23552,
+      "cxf_bytes": 29420,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118618656,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118778784,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 8210,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118650384,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 30437,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118649888,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 30437,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 128,
+      "rep": 1,
+      "mode": "normalized_json",
+      "input_bytes": 13448,
+      "rc": 0,
+      "heap_before": 118616912,
+      "heap_after": 118616912,
+      "sampled_heap_peak": 120143616,
+      "peak_since_probe": "normalized",
+      "rss_after": 2597617664,
+      "stored": 5550,
+      "logical": 5543,
+      "payload_capacity": 23552,
+      "cxf_bytes": 29420,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118618656,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118778784,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 8210,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118650384,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 30437,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118649888,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 30437,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 128,
+      "rep": 1,
+      "mode": "jinja_values",
+      "input_bytes": 13448,
+      "rc": 0,
+      "heap_before": 118616912,
+      "heap_after": 118616912,
+      "sampled_heap_peak": 119830016,
+      "peak_since_probe": "jinja_values",
+      "rss_after": 2597322752,
+      "stored": 5550,
+      "logical": 5543,
+      "payload_capacity": 23552,
+      "cxf_bytes": 29420,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118618656,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 119590208,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 8210,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118650384,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 30437,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118650048,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 30437,
+          "token_scratch": 196
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 128,
+      "rep": 2,
+      "mode": "jinja_values",
+      "input_bytes": 13448,
+      "rc": 0,
+      "heap_before": 118616912,
+      "heap_after": 118616912,
+      "sampled_heap_peak": 119838336,
+      "peak_since_probe": "jinja_values",
+      "rss_after": 2597322752,
+      "stored": 5550,
+      "logical": 5543,
+      "payload_capacity": 23552,
+      "cxf_bytes": 29420,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118618656,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 119590208,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 8210,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118650384,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 30437,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118650048,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 30437,
+          "token_scratch": 196
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 128,
+      "rep": 2,
+      "mode": "normalized_json",
+      "input_bytes": 13448,
+      "rc": 0,
+      "heap_before": 118616912,
+      "heap_after": 118616912,
+      "sampled_heap_peak": 120140288,
+      "peak_since_probe": "normalized",
+      "rss_after": 2597339136,
+      "stored": 5550,
+      "logical": 5543,
+      "payload_capacity": 23552,
+      "cxf_bytes": 29420,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118618656,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118778784,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 8210,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118650384,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 30437,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118649888,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 30437,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 512,
+      "rep": 0,
+      "mode": "jinja_values",
+      "input_bytes": 53768,
+      "rc": 2,
+      "heap_before": 118199072,
+      "heap_after": 118199072,
+      "sampled_heap_peak": 122977840,
+      "peak_since_probe": "jinja_values",
+      "rss_after": 2611445760,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118200816,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 122078480,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 32786,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118330848,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 119525,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 512,
+      "rep": 0,
+      "mode": "normalized_json",
+      "input_bytes": 53768,
+      "rc": 2,
+      "heap_before": 118199072,
+      "heap_after": 118199072,
+      "sampled_heap_peak": 124281392,
+      "peak_since_probe": "normalized",
+      "rss_after": 2615246848,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118200816,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118840176,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 32786,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118330848,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 119525,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 512,
+      "rep": 1,
+      "mode": "normalized_json",
+      "input_bytes": 53768,
+      "rc": 2,
+      "heap_before": 118199072,
+      "heap_after": 118199072,
+      "sampled_heap_peak": 124353888,
+      "peak_since_probe": "normalized",
+      "rss_after": 2614050816,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118200816,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118840176,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 32786,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118330848,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 119525,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 512,
+      "rep": 1,
+      "mode": "jinja_values",
+      "input_bytes": 53768,
+      "rc": 2,
+      "heap_before": 118199072,
+      "heap_after": 118199072,
+      "sampled_heap_peak": 123080032,
+      "peak_since_probe": "jinja_values",
+      "rss_after": 2613198848,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118200816,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 122078480,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 32786,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118330848,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 119525,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 512,
+      "rep": 2,
+      "mode": "jinja_values",
+      "input_bytes": 53768,
+      "rc": 2,
+      "heap_before": 118199072,
+      "heap_after": 118199072,
+      "sampled_heap_peak": 122982944,
+      "peak_since_probe": "jinja_values",
+      "rss_after": 2612690944,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118200816,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "jinja_values",
+          "heap": 122078480,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 32786,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118330848,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 119525,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 512,
+      "rep": 2,
+      "mode": "normalized_json",
+      "input_bytes": 53768,
+      "rc": 2,
+      "heap_before": 118199072,
+      "heap_after": 118199072,
+      "sampled_heap_peak": 124199024,
+      "peak_since_probe": "normalized",
+      "rss_after": 2612707328,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118200816,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118840176,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 32786,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118330848,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 119525,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 1024,
+      "rep": 0,
+      "mode": "jinja_values",
+      "rc": 0,
+      "wall_ms": 10.930625,
+      "render_ms": 0.180166,
+      "tokenize_ms": 0.019875,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 1024,
+      "rep": 0,
+      "mode": "normalized_json",
+      "rc": 0,
+      "wall_ms": 10.741166,
+      "render_ms": 0.174584,
+      "tokenize_ms": 0.021542,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 1024,
+      "rep": 1,
+      "mode": "normalized_json",
+      "rc": 0,
+      "wall_ms": 11.351916,
+      "render_ms": 0.183542,
+      "tokenize_ms": 0.026166,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 1024,
+      "rep": 1,
+      "mode": "jinja_values",
+      "rc": 0,
+      "wall_ms": 10.522083,
+      "render_ms": 0.15175,
+      "tokenize_ms": 0.015584,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 1024,
+      "rep": 2,
+      "mode": "jinja_values",
+      "rc": 0,
+      "wall_ms": 11.037334,
+      "render_ms": 0.166459,
+      "tokenize_ms": 0.014083,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 1024,
+      "rep": 2,
+      "mode": "normalized_json",
+      "rc": 0,
+      "wall_ms": 11.112333,
+      "render_ms": 0.170083,
+      "tokenize_ms": 0.023083,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 4096,
+      "rep": 0,
+      "mode": "jinja_values",
+      "rc": 0,
+      "wall_ms": 19.585667,
+      "render_ms": 0.344333,
+      "tokenize_ms": 0.136875,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 4096,
+      "rep": 0,
+      "mode": "normalized_json",
+      "rc": 0,
+      "wall_ms": 17.9255,
+      "render_ms": 0.336542,
+      "tokenize_ms": 0.030501,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 4096,
+      "rep": 1,
+      "mode": "normalized_json",
+      "rc": 0,
+      "wall_ms": 18.8335,
+      "render_ms": 0.355542,
+      "tokenize_ms": 0.034708,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 4096,
+      "rep": 1,
+      "mode": "jinja_values",
+      "rc": 0,
+      "wall_ms": 17.919625,
+      "render_ms": 0.247125,
+      "tokenize_ms": 0.024791,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 4096,
+      "rep": 2,
+      "mode": "jinja_values",
+      "rc": 0,
+      "wall_ms": 18.2905,
+      "render_ms": 0.234917,
+      "tokenize_ms": 0.021458,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 4096,
+      "rep": 2,
+      "mode": "normalized_json",
+      "rc": 0,
+      "wall_ms": 17.468125,
+      "render_ms": 0.269167,
+      "tokenize_ms": 0.031958,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 7168,
+      "rep": 0,
+      "mode": "jinja_values",
+      "rc": 0,
+      "wall_ms": 23.625542,
+      "render_ms": 0.366042,
+      "tokenize_ms": 0.18,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 7168,
+      "rep": 0,
+      "mode": "normalized_json",
+      "rc": 0,
+      "wall_ms": 21.689917,
+      "render_ms": 0.34475,
+      "tokenize_ms": 0.028333,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 7168,
+      "rep": 1,
+      "mode": "normalized_json",
+      "rc": 0,
+      "wall_ms": 22.014583,
+      "render_ms": 0.299625,
+      "tokenize_ms": 0.028375,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 7168,
+      "rep": 1,
+      "mode": "jinja_values",
+      "rc": 0,
+      "wall_ms": 22.147125,
+      "render_ms": 0.238125,
+      "tokenize_ms": 0.018749,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 7168,
+      "rep": 2,
+      "mode": "jinja_values",
+      "rc": 0,
+      "wall_ms": 21.527,
+      "render_ms": 0.245083,
+      "tokenize_ms": 0.021041,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 7168,
+      "rep": 2,
+      "mode": "normalized_json",
+      "rc": 0,
+      "wall_ms": 22.066,
+      "render_ms": 0.262792,
+      "tokenize_ms": 0.028,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 14336,
+      "rep": 0,
+      "mode": "jinja_values",
+      "rc": 0,
+      "wall_ms": 36.770417,
+      "render_ms": 0.674959,
+      "tokenize_ms": 0.233666,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 14336,
+      "rep": 0,
+      "mode": "normalized_json",
+      "rc": 0,
+      "wall_ms": 34.673542,
+      "render_ms": 0.564417,
+      "tokenize_ms": 0.035458,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 14336,
+      "rep": 1,
+      "mode": "normalized_json",
+      "rc": 0,
+      "wall_ms": 34.32725,
+      "render_ms": 0.438209,
+      "tokenize_ms": 0.032001,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 14336,
+      "rep": 1,
+      "mode": "jinja_values",
+      "rc": 0,
+      "wall_ms": 35.08525,
+      "render_ms": 0.424959,
+      "tokenize_ms": 0.026,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 14336,
+      "rep": 2,
+      "mode": "jinja_values",
+      "rc": 0,
+      "wall_ms": 34.887875,
+      "render_ms": 0.406375,
+      "tokenize_ms": 0.024541,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 14336,
+      "rep": 2,
+      "mode": "normalized_json",
+      "rc": 0,
+      "wall_ms": 34.580791,
+      "render_ms": 0.40925,
+      "tokenize_ms": 0.032375,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 65536,
+      "rep": 0,
+      "mode": "jinja_values",
+      "rc": 2,
+      "wall_ms": 49.723,
+      "render_ms": 0.772167,
+      "tokenize_ms": 48.8155,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 65536,
+      "rep": 0,
+      "mode": "normalized_json",
+      "rc": 2,
+      "wall_ms": 48.895458,
+      "render_ms": 0.97175,
+      "tokenize_ms": 47.788417,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 65536,
+      "rep": 1,
+      "mode": "normalized_json",
+      "rc": 2,
+      "wall_ms": 46.233959,
+      "render_ms": 0.830708,
+      "tokenize_ms": 45.268833,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 65536,
+      "rep": 1,
+      "mode": "jinja_values",
+      "rc": 2,
+      "wall_ms": 45.554042,
+      "render_ms": 0.686292,
+      "tokenize_ms": 44.743083,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 65536,
+      "rep": 2,
+      "mode": "jinja_values",
+      "rc": 2,
+      "wall_ms": 47.288625,
+      "render_ms": 0.679958,
+      "tokenize_ms": 46.484417,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 65536,
+      "rep": 2,
+      "mode": "normalized_json",
+      "rc": 2,
+      "wall_ms": 50.022667,
+      "render_ms": 0.812667,
+      "tokenize_ms": 49.085417,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "tool_turns",
+      "size": 128,
+      "rep": 0,
+      "mode": "jinja_values",
+      "rc": 0,
+      "wall_ms": 37.634917,
+      "render_ms": 18.027125,
+      "tokenize_ms": 0.023666,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "tool_turns",
+      "size": 128,
+      "rep": 0,
+      "mode": "normalized_json",
+      "rc": 0,
+      "wall_ms": 35.333416,
+      "render_ms": 16.048375,
+      "tokenize_ms": 0.028458,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "tool_turns",
+      "size": 128,
+      "rep": 1,
+      "mode": "normalized_json",
+      "rc": 0,
+      "wall_ms": 35.750541,
+      "render_ms": 16.315084,
+      "tokenize_ms": 0.041458,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "tool_turns",
+      "size": 128,
+      "rep": 1,
+      "mode": "jinja_values",
+      "rc": 0,
+      "wall_ms": 35.628708,
+      "render_ms": 16.746584,
+      "tokenize_ms": 0.025292,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "tool_turns",
+      "size": 128,
+      "rep": 2,
+      "mode": "jinja_values",
+      "rc": 0,
+      "wall_ms": 37.104292,
+      "render_ms": 17.581,
+      "tokenize_ms": 0.023333,
+      "tokenizer_calls": 2,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "tool_turns",
+      "size": 128,
+      "rep": 2,
+      "mode": "normalized_json",
+      "rc": 0,
+      "wall_ms": 35.610417,
+      "render_ms": 17.686542,
+      "tokenize_ms": 0.02875,
+      "tokenizer_calls": 4,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "tool_turns",
+      "size": 512,
+      "rep": 0,
+      "mode": "jinja_values",
+      "rc": 2,
+      "wall_ms": 119.267375,
+      "render_ms": 66.686042,
+      "tokenize_ms": 52.514792,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "tool_turns",
+      "size": 512,
+      "rep": 0,
+      "mode": "normalized_json",
+      "rc": 2,
+      "wall_ms": 129.65525,
+      "render_ms": 76.989584,
+      "tokenize_ms": 52.604792,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "tool_turns",
+      "size": 512,
+      "rep": 1,
+      "mode": "normalized_json",
+      "rc": 2,
+      "wall_ms": 118.64325,
+      "render_ms": 68.681208,
+      "tokenize_ms": 49.9065,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "tool_turns",
+      "size": 512,
+      "rep": 1,
+      "mode": "jinja_values",
+      "rc": 2,
+      "wall_ms": 130.146375,
+      "render_ms": 84.403959,
+      "tokenize_ms": 45.69,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "tool_turns",
+      "size": 512,
+      "rep": 2,
+      "mode": "jinja_values",
+      "rc": 2,
+      "wall_ms": 103.111125,
+      "render_ms": 58.895666,
+      "tokenize_ms": 44.163,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "timing",
+      "shape": "tool_turns",
+      "size": 512,
+      "rep": 2,
+      "mode": "normalized_json",
+      "rc": 2,
+      "wall_ms": 102.721125,
+      "render_ms": 61.811583,
+      "tokenize_ms": 40.85925,
+      "tokenizer_calls": 1,
+      "tokenizer_retries": 0
+    },
+    {
+      "kind": "branch_shared",
+      "branches": 8,
+      "stored": 6000,
+      "logical": 48000,
+      "payload_capacity": 24576,
+      "cxf_bytes_before": 30444,
+      "cxf_bytes_after": 30444,
+      "shared_kv_tokens": 42000
+    },
+    {
+      "kind": "branch_suffix",
+      "stored": 6256,
+      "logical": 48256,
+      "payload_capacity": 31744,
+      "new_decode_tokens": 256,
+      "cxf_bytes": 37612
+    },
+    {
+      "kind": "closed",
+      "cxf_live_bytes": 0
+    }
+  ],
+  "summary": [
+    {
+      "shape": "single_text",
+      "size": 1024,
+      "mode": "jinja_values",
+      "samples": 3,
+      "rc": 0,
+      "input_bytes": 6152,
+      "stored": 1199,
+      "heap_extra_median": 59536,
+      "heap_extra_min": 35056,
+      "heap_extra_max": 62336,
+      "steady_cxf_bytes": 8748
+    },
+    {
+      "shape": "single_text",
+      "size": 1024,
+      "mode": "normalized_json",
+      "samples": 3,
+      "rc": 0,
+      "input_bytes": 6152,
+      "stored": 1199,
+      "heap_extra_median": 60880,
+      "heap_extra_min": 51840,
+      "heap_extra_max": 63664,
+      "steady_cxf_bytes": 8748
+    },
+    {
+      "shape": "single_text",
+      "size": 4096,
+      "mode": "jinja_values",
+      "samples": 3,
+      "rc": 0,
+      "input_bytes": 24584,
+      "stored": 4271,
+      "heap_extra_median": 58240,
+      "heap_extra_min": 55152,
+      "heap_extra_max": 75040,
+      "steady_cxf_bytes": 22124
+    },
+    {
+      "shape": "single_text",
+      "size": 4096,
+      "mode": "normalized_json",
+      "samples": 3,
+      "rc": 0,
+      "input_bytes": 24584,
+      "stored": 4271,
+      "heap_extra_median": 125504,
+      "heap_extra_min": 83680,
+      "heap_extra_max": 242688,
+      "steady_cxf_bytes": 22124
+    },
+    {
+      "shape": "single_text",
+      "size": 7168,
+      "mode": "jinja_values",
+      "samples": 3,
+      "rc": 0,
+      "input_bytes": 43016,
+      "stored": 7343,
+      "heap_extra_median": 85984,
+      "heap_extra_min": 81456,
+      "heap_extra_max": 175200,
+      "steady_cxf_bytes": 34412
+    },
+    {
+      "shape": "single_text",
+      "size": 7168,
+      "mode": "normalized_json",
+      "samples": 3,
+      "rc": 0,
+      "input_bytes": 43016,
+      "stored": 7343,
+      "heap_extra_median": 68752,
+      "heap_extra_min": 68240,
+      "heap_extra_max": 427008,
+      "steady_cxf_bytes": 34412
+    },
+    {
+      "shape": "single_text",
+      "size": 14336,
+      "mode": "jinja_values",
+      "samples": 3,
+      "rc": 0,
+      "input_bytes": 86024,
+      "stored": 14511,
+      "heap_extra_median": 144672,
+      "heap_extra_min": 127984,
+      "heap_extra_max": 219568,
+      "steady_cxf_bytes": 65260
+    },
+    {
+      "shape": "single_text",
+      "size": 14336,
+      "mode": "normalized_json",
+      "samples": 3,
+      "rc": 0,
+      "input_bytes": 86024,
+      "stored": 14511,
+      "heap_extra_median": 524016,
+      "heap_extra_min": 420640,
+      "heap_extra_max": 623552,
+      "steady_cxf_bytes": 65260
+    },
+    {
+      "shape": "single_text",
+      "size": 16384,
+      "mode": "jinja_values",
+      "samples": 3,
+      "rc": 2,
+      "input_bytes": 98312,
+      "stored": 0,
+      "heap_extra_median": 2007760,
+      "heap_extra_min": 2007760,
+      "heap_extra_max": 2492080,
+      "steady_cxf_bytes": 5868
+    },
+    {
+      "shape": "single_text",
+      "size": 16384,
+      "mode": "normalized_json",
+      "samples": 3,
+      "rc": 2,
+      "input_bytes": 98312,
+      "stored": 0,
+      "heap_extra_median": 2335408,
+      "heap_extra_min": 1942224,
+      "heap_extra_max": 2524848,
+      "steady_cxf_bytes": 5868
+    },
+    {
+      "shape": "single_text",
+      "size": 65536,
+      "mode": "jinja_values",
+      "samples": 3,
+      "rc": 2,
+      "input_bytes": 393224,
+      "stored": 0,
+      "heap_extra_median": 10438320,
+      "heap_extra_min": 10438320,
+      "heap_extra_max": 11150032,
+      "steady_cxf_bytes": 5868
+    },
+    {
+      "shape": "single_text",
+      "size": 65536,
+      "mode": "normalized_json",
+      "samples": 3,
+      "rc": 2,
+      "input_bytes": 393224,
+      "stored": 0,
+      "heap_extra_median": 10372784,
+      "heap_extra_min": 10372784,
+      "heap_extra_max": 11084496,
+      "steady_cxf_bytes": 5868
+    },
+    {
+      "shape": "tool_turns",
+      "size": 16,
+      "mode": "jinja_values",
+      "samples": 3,
+      "rc": 0,
+      "input_bytes": 1688,
+      "stored": 846,
+      "heap_extra_median": 190640,
+      "heap_extra_min": 184288,
+      "heap_extra_max": 194608,
+      "steady_cxf_bytes": 10988
+    },
+    {
+      "shape": "tool_turns",
+      "size": 16,
+      "mode": "normalized_json",
+      "samples": 3,
+      "rc": 0,
+      "input_bytes": 1688,
+      "stored": 846,
+      "heap_extra_median": 225680,
+      "heap_extra_min": 223744,
+      "heap_extra_max": 226208,
+      "steady_cxf_bytes": 10988
+    },
+    {
+      "shape": "tool_turns",
+      "size": 128,
+      "mode": "jinja_values",
+      "samples": 3,
+      "rc": 0,
+      "input_bytes": 13448,
+      "stored": 5550,
+      "heap_extra_median": 1220768,
+      "heap_extra_min": 1213104,
+      "heap_extra_max": 1221424,
+      "steady_cxf_bytes": 29420
+    },
+    {
+      "shape": "tool_turns",
+      "size": 128,
+      "mode": "normalized_json",
+      "samples": 3,
+      "rc": 0,
+      "input_bytes": 13448,
+      "stored": 5550,
+      "heap_extra_median": 1526704,
+      "heap_extra_min": 1523376,
+      "heap_extra_max": 1529536,
+      "steady_cxf_bytes": 29420
+    },
+    {
+      "shape": "tool_turns",
+      "size": 512,
+      "mode": "jinja_values",
+      "samples": 3,
+      "rc": 2,
+      "input_bytes": 53768,
+      "stored": 0,
+      "heap_extra_median": 4783872,
+      "heap_extra_min": 4778768,
+      "heap_extra_max": 4880960,
+      "steady_cxf_bytes": 5868
+    },
+    {
+      "shape": "tool_turns",
+      "size": 512,
+      "mode": "normalized_json",
+      "samples": 3,
+      "rc": 2,
+      "input_bytes": 53768,
+      "stored": 0,
+      "heap_extra_median": 6082320,
+      "heap_extra_min": 5999952,
+      "heap_extra_max": 6154816,
+      "steady_cxf_bytes": 5868
+    }
+  ],
+  "timing_summary": [
+    {
+      "shape": "single_text",
+      "size": 1024,
+      "mode": "jinja_values",
+      "samples": 3,
+      "rc": 0,
+      "wall_ms": {
+        "median": 10.930625,
+        "min": 10.522083,
+        "max": 11.037334
+      },
+      "render_ms": {
+        "median": 0.166459,
+        "min": 0.15175,
+        "max": 0.180166
+      },
+      "tokenize_ms": {
+        "median": 0.015584,
+        "min": 0.014083,
+        "max": 0.019875
+      },
+      "tokenizer_calls": {
+        "median": 2,
+        "min": 2,
+        "max": 2
+      },
+      "tokenizer_retries": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    {
+      "shape": "single_text",
+      "size": 1024,
+      "mode": "normalized_json",
+      "samples": 3,
+      "rc": 0,
+      "wall_ms": {
+        "median": 11.112333,
+        "min": 10.741166,
+        "max": 11.351916
+      },
+      "render_ms": {
+        "median": 0.174584,
+        "min": 0.170083,
+        "max": 0.183542
+      },
+      "tokenize_ms": {
+        "median": 0.023083,
+        "min": 0.021542,
+        "max": 0.026166
+      },
+      "tokenizer_calls": {
+        "median": 4,
+        "min": 4,
+        "max": 4
+      },
+      "tokenizer_retries": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    {
+      "shape": "single_text",
+      "size": 4096,
+      "mode": "jinja_values",
+      "samples": 3,
+      "rc": 0,
+      "wall_ms": {
+        "median": 18.2905,
+        "min": 17.919625,
+        "max": 19.585667
+      },
+      "render_ms": {
+        "median": 0.247125,
+        "min": 0.234917,
+        "max": 0.344333
+      },
+      "tokenize_ms": {
+        "median": 0.024791,
+        "min": 0.021458,
+        "max": 0.136875
+      },
+      "tokenizer_calls": {
+        "median": 2,
+        "min": 2,
+        "max": 2
+      },
+      "tokenizer_retries": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    {
+      "shape": "single_text",
+      "size": 4096,
+      "mode": "normalized_json",
+      "samples": 3,
+      "rc": 0,
+      "wall_ms": {
+        "median": 17.9255,
+        "min": 17.468125,
+        "max": 18.8335
+      },
+      "render_ms": {
+        "median": 0.336542,
+        "min": 0.269167,
+        "max": 0.355542
+      },
+      "tokenize_ms": {
+        "median": 0.031958,
+        "min": 0.030501,
+        "max": 0.034708
+      },
+      "tokenizer_calls": {
+        "median": 4,
+        "min": 4,
+        "max": 4
+      },
+      "tokenizer_retries": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    {
+      "shape": "single_text",
+      "size": 7168,
+      "mode": "jinja_values",
+      "samples": 3,
+      "rc": 0,
+      "wall_ms": {
+        "median": 22.147125,
+        "min": 21.527,
+        "max": 23.625542
+      },
+      "render_ms": {
+        "median": 0.245083,
+        "min": 0.238125,
+        "max": 0.366042
+      },
+      "tokenize_ms": {
+        "median": 0.021041,
+        "min": 0.018749,
+        "max": 0.18
+      },
+      "tokenizer_calls": {
+        "median": 2,
+        "min": 2,
+        "max": 2
+      },
+      "tokenizer_retries": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    {
+      "shape": "single_text",
+      "size": 7168,
+      "mode": "normalized_json",
+      "samples": 3,
+      "rc": 0,
+      "wall_ms": {
+        "median": 22.014583,
+        "min": 21.689917,
+        "max": 22.066
+      },
+      "render_ms": {
+        "median": 0.299625,
+        "min": 0.262792,
+        "max": 0.34475
+      },
+      "tokenize_ms": {
+        "median": 0.028333,
+        "min": 0.028,
+        "max": 0.028375
+      },
+      "tokenizer_calls": {
+        "median": 4,
+        "min": 4,
+        "max": 4
+      },
+      "tokenizer_retries": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    {
+      "shape": "single_text",
+      "size": 14336,
+      "mode": "jinja_values",
+      "samples": 3,
+      "rc": 0,
+      "wall_ms": {
+        "median": 35.08525,
+        "min": 34.887875,
+        "max": 36.770417
+      },
+      "render_ms": {
+        "median": 0.424959,
+        "min": 0.406375,
+        "max": 0.674959
+      },
+      "tokenize_ms": {
+        "median": 0.026,
+        "min": 0.024541,
+        "max": 0.233666
+      },
+      "tokenizer_calls": {
+        "median": 2,
+        "min": 2,
+        "max": 2
+      },
+      "tokenizer_retries": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    {
+      "shape": "single_text",
+      "size": 14336,
+      "mode": "normalized_json",
+      "samples": 3,
+      "rc": 0,
+      "wall_ms": {
+        "median": 34.580791,
+        "min": 34.32725,
+        "max": 34.673542
+      },
+      "render_ms": {
+        "median": 0.438209,
+        "min": 0.40925,
+        "max": 0.564417
+      },
+      "tokenize_ms": {
+        "median": 0.032375,
+        "min": 0.032001,
+        "max": 0.035458
+      },
+      "tokenizer_calls": {
+        "median": 4,
+        "min": 4,
+        "max": 4
+      },
+      "tokenizer_retries": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    {
+      "shape": "single_text",
+      "size": 65536,
+      "mode": "jinja_values",
+      "samples": 3,
+      "rc": 2,
+      "wall_ms": {
+        "median": 47.288625,
+        "min": 45.554042,
+        "max": 49.723
+      },
+      "render_ms": {
+        "median": 0.686292,
+        "min": 0.679958,
+        "max": 0.772167
+      },
+      "tokenize_ms": {
+        "median": 46.484417,
+        "min": 44.743083,
+        "max": 48.8155
+      },
+      "tokenizer_calls": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "tokenizer_retries": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    {
+      "shape": "single_text",
+      "size": 65536,
+      "mode": "normalized_json",
+      "samples": 3,
+      "rc": 2,
+      "wall_ms": {
+        "median": 48.895458,
+        "min": 46.233959,
+        "max": 50.022667
+      },
+      "render_ms": {
+        "median": 0.830708,
+        "min": 0.812667,
+        "max": 0.97175
+      },
+      "tokenize_ms": {
+        "median": 47.788417,
+        "min": 45.268833,
+        "max": 49.085417
+      },
+      "tokenizer_calls": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "tokenizer_retries": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    {
+      "shape": "tool_turns",
+      "size": 128,
+      "mode": "jinja_values",
+      "samples": 3,
+      "rc": 0,
+      "wall_ms": {
+        "median": 37.104292,
+        "min": 35.628708,
+        "max": 37.634917
+      },
+      "render_ms": {
+        "median": 17.581,
+        "min": 16.746584,
+        "max": 18.027125
+      },
+      "tokenize_ms": {
+        "median": 0.023666,
+        "min": 0.023333,
+        "max": 0.025292
+      },
+      "tokenizer_calls": {
+        "median": 2,
+        "min": 2,
+        "max": 2
+      },
+      "tokenizer_retries": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    {
+      "shape": "tool_turns",
+      "size": 128,
+      "mode": "normalized_json",
+      "samples": 3,
+      "rc": 0,
+      "wall_ms": {
+        "median": 35.610417,
+        "min": 35.333416,
+        "max": 35.750541
+      },
+      "render_ms": {
+        "median": 16.315084,
+        "min": 16.048375,
+        "max": 17.686542
+      },
+      "tokenize_ms": {
+        "median": 0.02875,
+        "min": 0.028458,
+        "max": 0.041458
+      },
+      "tokenizer_calls": {
+        "median": 4,
+        "min": 4,
+        "max": 4
+      },
+      "tokenizer_retries": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    {
+      "shape": "tool_turns",
+      "size": 512,
+      "mode": "jinja_values",
+      "samples": 3,
+      "rc": 2,
+      "wall_ms": {
+        "median": 119.267375,
+        "min": 103.111125,
+        "max": 130.146375
+      },
+      "render_ms": {
+        "median": 66.686042,
+        "min": 58.895666,
+        "max": 84.403959
+      },
+      "tokenize_ms": {
+        "median": 45.69,
+        "min": 44.163,
+        "max": 52.514792
+      },
+      "tokenizer_calls": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "tokenizer_retries": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    {
+      "shape": "tool_turns",
+      "size": 512,
+      "mode": "normalized_json",
+      "samples": 3,
+      "rc": 2,
+      "wall_ms": {
+        "median": 118.64325,
+        "min": 102.721125,
+        "max": 129.65525
+      },
+      "render_ms": {
+        "median": 68.681208,
+        "min": 61.811583,
+        "max": 76.989584
+      },
+      "tokenize_ms": {
+        "median": 49.9065,
+        "min": 40.85925,
+        "max": 52.604792
+      },
+      "tokenizer_calls": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "tokenizer_retries": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    }
+  ],
+  "sources_sha256": {
+    "src/algo.c": "f54e1a77dfb260ddf2957723cec2a2dbe94470b727f1535ca81cfc68ca383d6c",
+    "src/alloc.c": "5afbb7848c5cec41fc2d0dba6b348da6b1cb9064ff102a41df9cfac7e4229619",
+    "src/arena.c": "101b99b827395575c24e683f9fa32be68f8eb91c8d213df7251f4a7a0cdc53ab",
+    "src/base.c": "d552e4f05a2285f77f3413327abfa3fe32265f3b022c9128fa419a27c3b66174",
+    "src/bitmap.c": "462076512d2fe487fcef766895ed9123e841badd2e076d5bcacdafd4cc85bc19",
+    "src/blob.c": "6df2ddd2dbffe34499966116479943347866dbfc6e09db509451772959a30706",
+    "src/buf.c": "bc3ad7e775ceaf8c1ed28f8f55bcc94e9d8ab70beeae28704adffaceeda4dd34",
+    "src/csr.c": "50fbe7c1df29f557de56899d10989d5ebb4c4150046bd3c4d41442fd79d3dff9",
+    "src/llama.c": "0f855a590737f587067dd71c7d70a567d3efca30bf63ab5ce6e6363f6933cee6",
+    "src/namemap.c": "999b71b7ddca9869a099f436d1254308669b60954219f2ec6d06cdec1669571c",
+    "src/pqueue.c": "0e55b07a6be11d8761741dd7ccab2f96366f180d8f1476014857294ede9f7de3",
+    "src/ring.c": "7db9c3c868b9a6a286fd1d82e9421921f14d3525fe5b2cab9d5c519251621cf6",
+    "src/sb.c": "e4a7cf42bcbff87fab745c6752d35e4d086b5752f50f7bacc409757fbc9c1d85",
+    "src/service.c": "8854fec1eecc40e3678c246bfb76a3086676838ab35f0a78c3b90b37a5766184",
+    "src/soa.c": "0c22553252ef28abefde1fae4f59a6a4e8dd28d74b57cac8081c12d1fc70b52e",
+    "src/str.c": "6bf536db204924fb2d3492b23ffb45223e596b998d35e1e291be5ae89a289966",
+    "src/table.c": "295e575dbc3b28ae9c0c23d658941bdcb35c676b7dc323d0e90c50f740386e89",
+    "src/type.c": "c767ed22c04fe0d4406629a57491eae0e71d0ce3d67916bb7720b94b1981b357",
+    "src/vec.c": "c20493e1be3d05d7437ee29382ede06e6be7211f0d8bfe245aa40bbbea427084",
+    "src/world.c": "20335e81db1339dd6de476de67515a8b5beeb7aab6b5c0818d44eaf65cb5046b",
+    "tests/agent_types.gen.c": "1d32e73e577ca9cd7129932a9be70858f663276a234c6e07233e49effc6d06c0",
+    "tests/agent_caps.c": "66b328806444ce4a7823f4aa10272b9dd09917054167093be2ce131438724f4e",
+    "tests/agent_caps.gen.c": "e4eb560513ba51fb988b5023c7f3f71635fe0a2634af7b3609c15c8ac7c00f57",
+    "tests/agent_fs.c": "4fcad4bbcec1005902f1f6f3c8990e80c153eccb94c718876c9a591d379cafb2",
+    "tests/agent_fs.gen.c": "b49bbaeb6535a9f54280ba012fb189fb830b709ee82ffbda0901e48a4c47344d",
+    "tests/agent_net.c": "6d3eeccecc80099b7a40eb696e4b318f920d8f0152dc535432ee4fc27b998d39",
+    "tests/agent.c": "42a93ab6afbc3eebb67ace36fb15ca37ab7c355f36e78a3a737dae00b5400c8a",
+    "tests/agent_http.c": "0ae0e5e23a1ac6d86c733379990f7a90550e39de28366103b8694972ff3e7666",
+    "tests/agent_llm.c": "28f7eb20d711e64ae2edab7666dc7b5379581218abc4a9c52353c038701d2eba",
+    "tests/agent_basic.c": "dd96278d70fc04d06ed53cb64d8ccdf636c6c1cb688e2fe7d559b58e05b88674",
+    "build/llama.cpp-b10938/vendor/hash/sha256/sha256.c": "ba7a8ea69ad125385db28ef17e77be4a09dfdc30bb9532c30b259baaf670129c",
+    "tests/agent_native.cpp": "e7c30260079495984dede6e73fc8952ef3d3974efff858c763892978b0068a04",
+    "tests/agent_native_messages.cpp": "14dacb1d11fe1d2ac2290531d4f220c9e564b8e21ba42803d30aa0a71f28a140",
+    "tests/agentctl.c": "b9ea7f9c7325f2bdee645699efd9422ea0813418a7845deb7542ecea183786f6",
+    "tests/agentctl_config.c": "5139b05a93a2e67b3f98a8a2a77b1d871343ee10ffb41138ea4035defaff9c1c",
+    "tests/test_native_chat.c": "d6efc2e905c1ee5727dfdd70b0f81fa7ec812275abb8c196abbe17cf3c87d011",
+    "tests/native_chat_reference.cpp": "7779715a57ec72a21fe47e6e123f2954de9733ac2aff57892220d9694d1c1bbf",
+    "tests/bench_context_memory.cpp": "01d350567fb79004fb931f9d30091f0086d416759153f71098323710e292653c"
+  },
+  "headers_sha256": {
+    "tests/agent_llm.h": "d62021579daf22a8c9ee61cb548d0219e02b84108e322ac37c86ffcf4227bda1",
+    "tests/agent_native_messages.h": "9307ea14d7272cd4b177a93169dad7ebedf962dedf832f7f8a16d35761798bc3",
+    "tests/agent_native.h": "46078e00b183dd2924642abffb99054f7fa35fb84bfc0f877c5c534facf580f5",
+    "tests/native_context_audit.h": "9aff5c8d14d611dc1345516ccc70961444c178aa63f5e8074852324fccf5a6c8"
+  },
+  "validation": {
+    "compatibility": [
+      "PASS borrowed messages: exact upstream message fields, 256 byte/escape corpora, malformed UTF-8 rejection",
+      "PASS template: incremental suffix tokens equal independent full tokenization; changed prefix rebuilds; malformed tool rejected",
+      "PASS scripted integration: real native prefill -> tool parser -> read -> failing test -> write -> passing test -> read -> DONE",
+      "PASS real model generation: OK",
+      "PASS long context: 14357 tokens match full upstream tokenization; cached suffix preserves greedy result",
+      "native counters: tokenized=17292 reused_prefix=17756 rebuilds=4",
+      "all native chat tests passed"
+    ],
+    "additional_assertions": [
+      "Jinja message fields equal request-JSON reference for 256 byte/escape corpora",
+      "Input string provenance marked; object key provenance matches upstream",
+      "Direct flattened nested runtime values match upstream gather output including NUL/scalars/ignored nodes and output limit",
+      "Chinese real tokenizer retry matches full oracle",
+      "Repeated same context uses two tokenizer calls (empty suffix and header)"
+    ],
+    "sanitizers": {
+      "directory": "build/jinja-values-sanitized-20261030",
+      "output": [
+        "PASS borrowed messages: exact upstream message fields, 256 byte/escape corpora, malformed UTF-8 rejection",
+        "PASS template: incremental suffix tokens equal independent full tokenization; changed prefix rebuilds; malformed tool rejected",
+        "PASS scripted integration: real native prefill -> tool parser -> read -> failing test -> write -> passing test -> read -> DONE",
+        "PASS real model generation: OK",
+        "PASS long context: 14357 tokens match full upstream tokenization; cached suffix preserves greedy result",
+        "native counters: tokenized=17292 reused_prefix=17756 rebuilds=4",
+        "all native chat tests passed"
+      ],
+      "sources_sha256": {
+        "src/algo.c": "f54e1a77dfb260ddf2957723cec2a2dbe94470b727f1535ca81cfc68ca383d6c",
+        "src/alloc.c": "5afbb7848c5cec41fc2d0dba6b348da6b1cb9064ff102a41df9cfac7e4229619",
+        "src/arena.c": "101b99b827395575c24e683f9fa32be68f8eb91c8d213df7251f4a7a0cdc53ab",
+        "src/base.c": "d552e4f05a2285f77f3413327abfa3fe32265f3b022c9128fa419a27c3b66174",
+        "src/bitmap.c": "462076512d2fe487fcef766895ed9123e841badd2e076d5bcacdafd4cc85bc19",
+        "src/blob.c": "6df2ddd2dbffe34499966116479943347866dbfc6e09db509451772959a30706",
+        "src/buf.c": "bc3ad7e775ceaf8c1ed28f8f55bcc94e9d8ab70beeae28704adffaceeda4dd34",
+        "src/csr.c": "50fbe7c1df29f557de56899d10989d5ebb4c4150046bd3c4d41442fd79d3dff9",
+        "src/llama.c": "0f855a590737f587067dd71c7d70a567d3efca30bf63ab5ce6e6363f6933cee6",
+        "src/namemap.c": "999b71b7ddca9869a099f436d1254308669b60954219f2ec6d06cdec1669571c",
+        "src/pqueue.c": "0e55b07a6be11d8761741dd7ccab2f96366f180d8f1476014857294ede9f7de3",
+        "src/ring.c": "7db9c3c868b9a6a286fd1d82e9421921f14d3525fe5b2cab9d5c519251621cf6",
+        "src/sb.c": "e4a7cf42bcbff87fab745c6752d35e4d086b5752f50f7bacc409757fbc9c1d85",
+        "src/service.c": "8854fec1eecc40e3678c246bfb76a3086676838ab35f0a78c3b90b37a5766184",
+        "src/soa.c": "0c22553252ef28abefde1fae4f59a6a4e8dd28d74b57cac8081c12d1fc70b52e",
+        "src/str.c": "6bf536db204924fb2d3492b23ffb45223e596b998d35e1e291be5ae89a289966",
+        "src/table.c": "295e575dbc3b28ae9c0c23d658941bdcb35c676b7dc323d0e90c50f740386e89",
+        "src/type.c": "c767ed22c04fe0d4406629a57491eae0e71d0ce3d67916bb7720b94b1981b357",
+        "src/vec.c": "c20493e1be3d05d7437ee29382ede06e6be7211f0d8bfe245aa40bbbea427084",
+        "src/world.c": "20335e81db1339dd6de476de67515a8b5beeb7aab6b5c0818d44eaf65cb5046b",
+        "tests/agent_types.gen.c": "1d32e73e577ca9cd7129932a9be70858f663276a234c6e07233e49effc6d06c0",
+        "tests/agent_caps.c": "66b328806444ce4a7823f4aa10272b9dd09917054167093be2ce131438724f4e",
+        "tests/agent_caps.gen.c": "e4eb560513ba51fb988b5023c7f3f71635fe0a2634af7b3609c15c8ac7c00f57",
+        "tests/agent_fs.c": "4fcad4bbcec1005902f1f6f3c8990e80c153eccb94c718876c9a591d379cafb2",
+        "tests/agent_fs.gen.c": "b49bbaeb6535a9f54280ba012fb189fb830b709ee82ffbda0901e48a4c47344d",
+        "tests/agent_net.c": "6d3eeccecc80099b7a40eb696e4b318f920d8f0152dc535432ee4fc27b998d39",
+        "tests/agent.c": "42a93ab6afbc3eebb67ace36fb15ca37ab7c355f36e78a3a737dae00b5400c8a",
+        "tests/agent_http.c": "0ae0e5e23a1ac6d86c733379990f7a90550e39de28366103b8694972ff3e7666",
+        "tests/agent_llm.c": "28f7eb20d711e64ae2edab7666dc7b5379581218abc4a9c52353c038701d2eba",
+        "tests/agent_basic.c": "dd96278d70fc04d06ed53cb64d8ccdf636c6c1cb688e2fe7d559b58e05b88674",
+        "build/llama.cpp-b10938/vendor/hash/sha256/sha256.c": "ba7a8ea69ad125385db28ef17e77be4a09dfdc30bb9532c30b259baaf670129c",
+        "tests/agent_native.cpp": "e7c30260079495984dede6e73fc8952ef3d3974efff858c763892978b0068a04",
+        "tests/agent_native_messages.cpp": "14dacb1d11fe1d2ac2290531d4f220c9e564b8e21ba42803d30aa0a71f28a140",
+        "tests/agentctl.c": "b9ea7f9c7325f2bdee645699efd9422ea0813418a7845deb7542ecea183786f6",
+        "tests/agentctl_config.c": "5139b05a93a2e67b3f98a8a2a77b1d871343ee10ffb41138ea4035defaff9c1c",
+        "tests/test_native_chat.c": "d6efc2e905c1ee5727dfdd70b0f81fa7ec812275abb8c196abbe17cf3c87d011",
+        "tests/native_chat_reference.cpp": "7779715a57ec72a21fe47e6e123f2954de9733ac2aff57892220d9694d1c1bbf"
+      },
+      "compile_diagnostics": "",
+      "engine_sanitizer_diagnostics": false,
+      "precompiled_upstream_libraries_instrumented": false
+    },
+    "normal_native_object_has_request_builder_reference": false,
+    "normal_native_object_has_request_messages_parser_reference": false,
+    "measurement_and_sanitizer_common_sources_match": true,
+    "cli": [
+      {
+        "case": "repl",
+        "exit": 0,
+        "passed": true
+      },
+      {
+        "case": "generation-limit",
+        "exit": 1,
+        "passed": true
+      },
+      {
+        "case": "missing-model",
+        "exit": 2,
+        "passed": true
+      },
+      {
+        "case": "explicit-http-config",
+        "exit": 2,
+        "passed": true
+      },
+      {
+        "case": "bad-threads",
+        "exit": 2,
+        "passed": true
+      }
+    ],
+    "cli_used_sanitized_binary": true,
+    "default_regression": {
+      "command": "make test",
+      "passed": true,
+      "log": "build/jinja-values-default-regression-20261030.log"
+    }
+  },
+  "limits": [
+    "No persistent extra message or rendered-text history",
+    "Raw transcript, canonical tokens and KV remain distinct representations",
+    "Full transcript scan, Jinja execution/rendering and prefix hashing remain O(N)",
+    "Jinja AST and upstream tokenizer still allocate and copy internally",
+    "C++ common/Jinja types are pinned to the accepted build, not stable C ABI",
+    "New tokenizer guess can require retry and add up to context-sized output scratch; invalid scratch is freed before retry",
+    "FULL rows are frontend rejection tests, not long-KV successes",
+    "Observed temporary-heap improvements are not universal and total warm synchronization did not reliably speed up",
+    "KV allocation, native Windows and physical KV offload were not changed"
+  ]
+}

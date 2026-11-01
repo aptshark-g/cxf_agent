@@ -1,0 +1,16 @@
+{
+  "raw_records": 35520,
+  "evidence_files": 50,
+  "performance_record_files": 46,
+  "metal_auxiliary_records": 23465,
+  "metal_command_records": 16530,
+  "metal_batch_records": 1397,
+  "metal_wait_records": 5510,
+  "summary_scalar_comparisons": 94290,
+  "all_archived_summary_values_match_raw": true,
+  "stream_token_and_timestamp_invariants": true,
+  "stream_paired_summaries_match_raw": true,
+  "metric_summary_rows": 107612,
+  "validation_rows": 124,
+  "inference_rerun_during_consolidation": false
+}

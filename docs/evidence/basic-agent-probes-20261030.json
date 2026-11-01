@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-30",
+  "model": "Qwen3-0.6B-Q8_0.gguf",
+  "scope": "Historical basic-agent capability probes, before later protocol guards; separate from engine optimization acceptance",
+  "evidence_level": "sanitized_summary_private_raw_logs_not_published",
+  "cases": [
+    {
+      "id": "basic-http-1",
+      "n": 1,
+      "passed": false,
+      "final_source_bytes": 0,
+      "observation": "Missing-body write cleared the fixture file; compilation failed; not autonomous repair acceptance",
+      "artifact_hashes": {
+        "stdout.txt": "d82002206b3b2726b04391a6f880d6495e9c967ab83602d0146bf0ba0338025e",
+        "stderr.txt": "9c2f9e8811f798eecf664733de934eef7304265f78d1ad7c5ee8e97a6ad5ba29",
+        "trace.txt": "913bece78ece3a0bddb284d36ee5f8830269bd9e460801dd5a0ed8637a010c13",
+        "answer.c": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "basic-http-2",
+      "n": 1,
+      "passed": false,
+      "elapsed_seconds": 2.832,
+      "independent_test_exit": 1,
+      "model_ran_test": true,
+      "observation": "No independently passing final C program; runtime success status did not establish task success",
+      "artifact_hashes": {
+        "report.json": "d2457c33fd49e4163f634028cd99476f3ee7f55b5a7cdd0f9618c5529f61d0ae",
+        "independent-test.txt": "aa965b83b3341bb08f6ed9f52df9ffbd7195ade0c543278f52fe63accc9490f3",
+        "trace.txt": "8f12d773a0e6a05f4ec0e205be238559de4581bbce489d6057adb6ce5aef50ba",
+        "answer.c": "4256c43b744fb4803c806230d3328609eea2ca773efca155d6bd9b370b03ef82"
+      }
+    }
+  ],
+  "limits": [
+    "Two individual probes, not a coding benchmark",
+    "Configuration and request traces stay local because they can contain private endpoints or prompts",
+    "Protocol guards changed afterwards; these are historical failures, not current implementation acceptance results"
+  ]
+}

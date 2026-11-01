@@ -1,0 +1,1417 @@
+{
+  "date": "2026-10-30",
+  "llama_commit": "f1e44dcc11d8802d107bd7331a3d3fd3e6f57b93",
+  "hardware": "Apple M5, 16 GiB unified memory, Metal",
+  "model": "Qwen3-0.6B-Q8_0.gguf",
+  "model_sha256": "710d7b1aa4e2ae03238a9e65e82f48cfa70edf501becae8979c35acf5830e1ed",
+  "template_sha256": "57f1fd00f0013a2be96aa79b857391f27e23df5b5f847072b524c897e24d0361",
+  "repeats_per_mode": 5,
+  "warmup_per_mode": 1,
+  "kv_pool_tokens": 8192,
+  "scope": "Six continuation rounds; old native checkpoint vs cached parser preparation; each has its own full-tokenization cached-KV control. Cold initial prefix, teacher-forced completion and correctness checks excluded. No model task scoring.",
+  "rows": [
+    {
+      "mode": "full_cached_control_0",
+      "rep": 0,
+      "prefix_lines": 16,
+      "prefix_tokens": 345,
+      "wall_ms": 282.844042,
+      "front_ms": 50.897792,
+      "render_ms": 45.630208,
+      "tokenize_ms": 5.139165,
+      "guard_ms": 0.012082,
+      "commit_ms": 0.108042,
+      "prefill_ms": 231.94625,
+      "tokenized": 4044,
+      "evaluated": 588,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "native_checkpoint",
+      "rep": 0,
+      "prefix_lines": 16,
+      "prefix_tokens": 345,
+      "wall_ms": 277.366875,
+      "front_ms": 40.787917,
+      "render_ms": 37.834874,
+      "tokenize_ms": 1.121165,
+      "guard_ms": 0.069708,
+      "commit_ms": 1.660083,
+      "prefill_ms": 236.578958,
+      "tokenized": 606,
+      "evaluated": 606,
+      "cache_hits": 0,
+      "cache_misses": 6,
+      "correct": true
+    },
+    {
+      "mode": "full_cached_control_1",
+      "rep": 0,
+      "prefix_lines": 16,
+      "prefix_tokens": 345,
+      "wall_ms": 282.136166,
+      "front_ms": 48.434622,
+      "render_ms": 44.086626,
+      "tokenize_ms": 4.239166,
+      "guard_ms": 0.010167,
+      "commit_ms": 0.093542,
+      "prefill_ms": 233.701544,
+      "tokenized": 4044,
+      "evaluated": 588,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "native_prepare_cache",
+      "rep": 0,
+      "prefix_lines": 16,
+      "prefix_tokens": 345,
+      "wall_ms": 246.482208,
+      "front_ms": 11.170333,
+      "render_ms": 8.906792,
+      "tokenize_ms": 1.657165,
+      "guard_ms": 0.061293,
+      "commit_ms": 0.463501,
+      "prefill_ms": 235.311875,
+      "tokenized": 606,
+      "evaluated": 606,
+      "cache_hits": 6,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "full_cached_control_1",
+      "rep": 1,
+      "prefix_lines": 16,
+      "prefix_tokens": 345,
+      "wall_ms": 310.756415,
+      "front_ms": 73.499664,
+      "render_ms": 63.619875,
+      "tokenize_ms": 9.735833,
+      "guard_ms": 0.012542,
+      "commit_ms": 0.125125,
+      "prefill_ms": 237.256751,
+      "tokenized": 4044,
+      "evaluated": 588,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "native_prepare_cache",
+      "rep": 1,
+      "prefix_lines": 16,
+      "prefix_tokens": 345,
+      "wall_ms": 240.018375,
+      "front_ms": 9.932501,
+      "render_ms": 7.662251,
+      "tokenize_ms": 1.895376,
+      "guard_ms": 0.087374,
+      "commit_ms": 0.183959,
+      "prefill_ms": 230.085874,
+      "tokenized": 606,
+      "evaluated": 606,
+      "cache_hits": 6,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "full_cached_control_0",
+      "rep": 1,
+      "prefix_lines": 16,
+      "prefix_tokens": 345,
+      "wall_ms": 310.650291,
+      "front_ms": 62.185916,
+      "render_ms": 56.770917,
+      "tokenize_ms": 5.269208,
+      "guard_ms": 0.011332,
+      "commit_ms": 0.128708,
+      "prefill_ms": 248.464375,
+      "tokenized": 4044,
+      "evaluated": 588,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "native_checkpoint",
+      "rep": 1,
+      "prefix_lines": 16,
+      "prefix_tokens": 345,
+      "wall_ms": 297.966125,
+      "front_ms": 53.018499,
+      "render_ms": 49.098876,
+      "tokenize_ms": 1.349166,
+      "guard_ms": 0.073792,
+      "commit_ms": 2.392794,
+      "prefill_ms": 244.947626,
+      "tokenized": 606,
+      "evaluated": 606,
+      "cache_hits": 0,
+      "cache_misses": 6,
+      "correct": true
+    },
+    {
+      "mode": "full_cached_control_0",
+      "rep": 2,
+      "prefix_lines": 16,
+      "prefix_tokens": 345,
+      "wall_ms": 304.807542,
+      "front_ms": 54.117584,
+      "render_ms": 48.875998,
+      "tokenize_ms": 5.097249,
+      "guard_ms": 0.012251,
+      "commit_ms": 0.123626,
+      "prefill_ms": 250.689958,
+      "tokenized": 4044,
+      "evaluated": 588,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "native_checkpoint",
+      "rep": 2,
+      "prefix_lines": 16,
+      "prefix_tokens": 345,
+      "wall_ms": 313.066709,
+      "front_ms": 55.36471,
+      "render_ms": 51.535209,
+      "tokenize_ms": 1.344207,
+      "guard_ms": 0.080457,
+      "commit_ms": 2.233083,
+      "prefill_ms": 257.701999,
+      "tokenized": 606,
+      "evaluated": 606,
+      "cache_hits": 0,
+      "cache_misses": 6,
+      "correct": true
+    },
+    {
+      "mode": "full_cached_control_1",
+      "rep": 2,
+      "prefix_lines": 16,
+      "prefix_tokens": 345,
+      "wall_ms": 304.779124,
+      "front_ms": 53.099,
+      "render_ms": 48.085417,
+      "tokenize_ms": 4.834459,
+      "guard_ms": 0.013874,
+      "commit_ms": 0.157042,
+      "prefill_ms": 251.680124,
+      "tokenized": 4044,
+      "evaluated": 588,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "native_prepare_cache",
+      "rep": 2,
+      "prefix_lines": 16,
+      "prefix_tokens": 345,
+      "wall_ms": 264.570126,
+      "front_ms": 9.080167,
+      "render_ms": 7.090334,
+      "tokenize_ms": 1.620666,
+      "guard_ms": 0.074334,
+      "commit_ms": 0.19225,
+      "prefill_ms": 255.489959,
+      "tokenized": 606,
+      "evaluated": 606,
+      "cache_hits": 6,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "full_cached_control_1",
+      "rep": 3,
+      "prefix_lines": 16,
+      "prefix_tokens": 345,
+      "wall_ms": 303.4695,
+      "front_ms": 51.305167,
+      "render_ms": 45.365958,
+      "tokenize_ms": 5.775166,
+      "guard_ms": 0.012292,
+      "commit_ms": 0.144875,
+      "prefill_ms": 252.164333,
+      "tokenized": 4044,
+      "evaluated": 588,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "native_prepare_cache",
+      "rep": 3,
+      "prefix_lines": 16,
+      "prefix_tokens": 345,
+      "wall_ms": 260.992916,
+      "front_ms": 8.339959,
+      "render_ms": 6.560707,
+      "tokenize_ms": 1.35425,
+      "guard_ms": 0.110834,
+      "commit_ms": 0.15204,
+      "prefill_ms": 252.652957,
+      "tokenized": 606,
+      "evaluated": 606,
+      "cache_hits": 6,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "full_cached_control_0",
+      "rep": 3,
+      "prefix_lines": 16,
+      "prefix_tokens": 345,
+      "wall_ms": 336.807667,
+      "front_ms": 92.460875,
+      "render_ms": 80.683583,
+      "tokenize_ms": 11.143665,
+      "guard_ms": 0.018957,
+      "commit_ms": 0.605126,
+      "prefill_ms": 244.346792,
+      "tokenized": 4044,
+      "evaluated": 588,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "native_checkpoint",
+      "rep": 3,
+      "prefix_lines": 16,
+      "prefix_tokens": 345,
+      "wall_ms": 363.018459,
+      "front_ms": 122.443293,
+      "render_ms": 116.7345,
+      "tokenize_ms": 2.159459,
+      "guard_ms": 0.08925,
+      "commit_ms": 3.3045,
+      "prefill_ms": 240.575166,
+      "tokenized": 606,
+      "evaluated": 606,
+      "cache_hits": 0,
+      "cache_misses": 6,
+      "correct": true
+    },
+    {
+      "mode": "full_cached_control_0",
+      "rep": 4,
+      "prefix_lines": 16,
+      "prefix_tokens": 345,
+      "wall_ms": 317.905542,
+      "front_ms": 68.172125,
+      "render_ms": 59.603625,
+      "tokenize_ms": 8.412959,
+      "guard_ms": 0.011084,
+      "commit_ms": 0.135417,
+      "prefill_ms": 249.733417,
+      "tokenized": 4044,
+      "evaluated": 588,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "native_checkpoint",
+      "rep": 4,
+      "prefix_lines": 16,
+      "prefix_tokens": 345,
+      "wall_ms": 355.909707,
+      "front_ms": 108.275831,
+      "render_ms": 104.033082,
+      "tokenize_ms": 1.679419,
+      "guard_ms": 0.089708,
+      "commit_ms": 2.359166,
+      "prefill_ms": 247.633876,
+      "tokenized": 606,
+      "evaluated": 606,
+      "cache_hits": 0,
+      "cache_misses": 6,
+      "correct": true
+    },
+    {
+      "mode": "full_cached_control_1",
+      "rep": 4,
+      "prefix_lines": 16,
+      "prefix_tokens": 345,
+      "wall_ms": 301.960043,
+      "front_ms": 48.536669,
+      "render_ms": 43.980665,
+      "tokenize_ms": 4.421083,
+      "guard_ms": 0.010168,
+      "commit_ms": 0.118458,
+      "prefill_ms": 253.423374,
+      "tokenized": 4044,
+      "evaluated": 588,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "native_prepare_cache",
+      "rep": 4,
+      "prefix_lines": 16,
+      "prefix_tokens": 345,
+      "wall_ms": 262.645875,
+      "front_ms": 7.637918,
+      "render_ms": 6.095874,
+      "tokenize_ms": 1.1855,
+      "guard_ms": 0.064292,
+      "commit_ms": 0.208958,
+      "prefill_ms": 255.007957,
+      "tokenized": 606,
+      "evaluated": 606,
+      "cache_hits": 6,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "full_cached_control_0",
+      "rep": 0,
+      "prefix_lines": 96,
+      "prefix_tokens": 1225,
+      "wall_ms": 523.729916,
+      "front_ms": 188.462167,
+      "render_ms": 114.761834,
+      "tokenize_ms": 65.597166,
+      "guard_ms": 0.030874,
+      "commit_ms": 0.169959,
+      "prefill_ms": 335.267749,
+      "tokenized": 9324,
+      "evaluated": 588,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "native_checkpoint",
+      "rep": 0,
+      "prefix_lines": 96,
+      "prefix_tokens": 1225,
+      "wall_ms": 468.850333,
+      "front_ms": 142.590872,
+      "render_ms": 135.034208,
+      "tokenize_ms": 3.033458,
+      "guard_ms": 0.196917,
+      "commit_ms": 2.724876,
+      "prefill_ms": 326.259461,
+      "tokenized": 606,
+      "evaluated": 606,
+      "cache_hits": 0,
+      "cache_misses": 6,
+      "correct": true
+    },
+    {
+      "mode": "full_cached_control_1",
+      "rep": 0,
+      "prefix_lines": 96,
+      "prefix_tokens": 1225,
+      "wall_ms": 415.010458,
+      "front_ms": 82.857206,
+      "render_ms": 67.064582,
+      "tokenize_ms": 15.60704,
+      "guard_ms": 0.022666,
+      "commit_ms": 0.146084,
+      "prefill_ms": 332.153252,
+      "tokenized": 9324,
+      "evaluated": 588,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "native_prepare_cache",
+      "rep": 0,
+      "prefix_lines": 96,
+      "prefix_tokens": 1225,
+      "wall_ms": 365.855417,
+      "front_ms": 23.266874,
+      "render_ms": 10.931956,
+      "tokenize_ms": 10.696876,
+      "guard_ms": 0.717917,
+      "commit_ms": 0.318334,
+      "prefill_ms": 342.588543,
+      "tokenized": 606,
+      "evaluated": 606,
+      "cache_hits": 6,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "full_cached_control_1",
+      "rep": 1,
+      "prefix_lines": 96,
+      "prefix_tokens": 1225,
+      "wall_ms": 385.395957,
+      "front_ms": 49.150584,
+      "render_ms": 41.770502,
+      "tokenize_ms": 7.251958,
+      "guard_ms": 0.015708,
+      "commit_ms": 0.106333,
+      "prefill_ms": 336.245373,
+      "tokenized": 9324,
+      "evaluated": 588,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "native_prepare_cache",
+      "rep": 1,
+      "prefix_lines": 96,
+      "prefix_tokens": 1225,
+      "wall_ms": 347.468333,
+      "front_ms": 7.382832,
+      "render_ms": 5.941293,
+      "tokenize_ms": 0.991664,
+      "guard_ms": 0.139042,
+      "commit_ms": 0.231125,
+      "prefill_ms": 340.085501,
+      "tokenized": 606,
+      "evaluated": 606,
+      "cache_hits": 6,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "full_cached_control_0",
+      "rep": 1,
+      "prefix_lines": 96,
+      "prefix_tokens": 1225,
+      "wall_ms": 402.760042,
+      "front_ms": 62.170293,
+      "render_ms": 52.699874,
+      "tokenize_ms": 9.247458,
+      "guard_ms": 0.016999,
+      "commit_ms": 0.196875,
+      "prefill_ms": 340.589749,
+      "tokenized": 9324,
+      "evaluated": 588,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "native_checkpoint",
+      "rep": 1,
+      "prefix_lines": 96,
+      "prefix_tokens": 1225,
+      "wall_ms": 389.809957,
+      "front_ms": 48.016791,
+      "render_ms": 44.451251,
+      "tokenize_ms": 1.175667,
+      "guard_ms": 0.144666,
+      "commit_ms": 2.10975,
+      "prefill_ms": 341.793166,
+      "tokenized": 606,
+      "evaluated": 606,
+      "cache_hits": 0,
+      "cache_misses": 6,
+      "correct": true
+    },
+    {
+      "mode": "full_cached_control_0",
+      "rep": 2,
+      "prefix_lines": 96,
+      "prefix_tokens": 1225,
+      "wall_ms": 385.551793,
+      "front_ms": 55.623086,
+      "render_ms": 46.719583,
+      "tokenize_ms": 8.696667,
+      "guard_ms": 0.021708,
+      "commit_ms": 0.177831,
+      "prefill_ms": 329.928707,
+      "tokenized": 9324,
+      "evaluated": 588,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "native_checkpoint",
+      "rep": 2,
+      "prefix_lines": 96,
+      "prefix_tokens": 1225,
+      "wall_ms": 376.843167,
+      "front_ms": 46.50375,
+      "render_ms": 42.643584,
+      "tokenize_ms": 1.355127,
+      "guard_ms": 0.17625,
+      "commit_ms": 2.213665,
+      "prefill_ms": 330.339417,
+      "tokenized": 606,
+      "evaluated": 606,
+      "cache_hits": 0,
+      "cache_misses": 6,
+      "correct": true
+    },
+    {
+      "mode": "full_cached_control_1",
+      "rep": 2,
+      "prefix_lines": 96,
+      "prefix_tokens": 1225,
+      "wall_ms": 398.842168,
+      "front_ms": 71.559127,
+      "render_ms": 61.45725,
+      "tokenize_ms": 9.864793,
+      "guard_ms": 0.017873,
+      "commit_ms": 0.211416,
+      "prefill_ms": 327.283041,
+      "tokenized": 9324,
+      "evaluated": 588,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "native_prepare_cache",
+      "rep": 2,
+      "prefix_lines": 96,
+      "prefix_tokens": 1225,
+      "wall_ms": 350.235001,
+      "front_ms": 8.987001,
+      "render_ms": 7.050292,
+      "tokenize_ms": 1.450166,
+      "guard_ms": 0.142168,
+      "commit_ms": 0.261582,
+      "prefill_ms": 341.248,
+      "tokenized": 606,
+      "evaluated": 606,
+      "cache_hits": 6,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "full_cached_control_1",
+      "rep": 3,
+      "prefix_lines": 96,
+      "prefix_tokens": 1225,
+      "wall_ms": 390.551709,
+      "front_ms": 60.689543,
+      "render_ms": 49.032708,
+      "tokenize_ms": 11.507125,
+      "guard_ms": 0.017583,
+      "commit_ms": 0.124541,
+      "prefill_ms": 329.862166,
+      "tokenized": 9324,
+      "evaluated": 588,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "native_prepare_cache",
+      "rep": 3,
+      "prefix_lines": 96,
+      "prefix_tokens": 1225,
+      "wall_ms": 344.101916,
+      "front_ms": 8.602541,
+      "render_ms": 6.922708,
+      "tokenize_ms": 1.162044,
+      "guard_ms": 0.155293,
+      "commit_ms": 0.279792,
+      "prefill_ms": 335.499375,
+      "tokenized": 606,
+      "evaluated": 606,
+      "cache_hits": 6,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "full_cached_control_0",
+      "rep": 3,
+      "prefix_lines": 96,
+      "prefix_tokens": 1225,
+      "wall_ms": 313.808123,
+      "front_ms": 39.683708,
+      "render_ms": 33.17104,
+      "tokenize_ms": 6.405208,
+      "guard_ms": 0.012293,
+      "commit_ms": 0.087667,
+      "prefill_ms": 274.124415,
+      "tokenized": 9324,
+      "evaluated": 588,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "native_checkpoint",
+      "rep": 3,
+      "prefix_lines": 96,
+      "prefix_tokens": 1225,
+      "wall_ms": 308.923251,
+      "front_ms": 35.506793,
+      "render_ms": 32.86175,
+      "tokenize_ms": 0.953459,
+      "guard_ms": 0.128791,
+      "commit_ms": 1.479083,
+      "prefill_ms": 273.416458,
+      "tokenized": 606,
+      "evaluated": 606,
+      "cache_hits": 0,
+      "cache_misses": 6,
+      "correct": true
+    },
+    {
+      "mode": "full_cached_control_0",
+      "rep": 4,
+      "prefix_lines": 96,
+      "prefix_tokens": 1225,
+      "wall_ms": 314.810085,
+      "front_ms": 39.057043,
+      "render_ms": 32.377291,
+      "tokenize_ms": 6.562875,
+      "guard_ms": 0.01454,
+      "commit_ms": 0.095668,
+      "prefill_ms": 275.753042,
+      "tokenized": 9324,
+      "evaluated": 588,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "native_checkpoint",
+      "rep": 4,
+      "prefix_lines": 96,
+      "prefix_tokens": 1225,
+      "wall_ms": 307.766835,
+      "front_ms": 33.872376,
+      "render_ms": 31.401625,
+      "tokenize_ms": 0.839791,
+      "guard_ms": 0.124458,
+      "commit_ms": 1.42975,
+      "prefill_ms": 273.894459,
+      "tokenized": 606,
+      "evaluated": 606,
+      "cache_hits": 0,
+      "cache_misses": 6,
+      "correct": true
+    },
+    {
+      "mode": "full_cached_control_1",
+      "rep": 4,
+      "prefix_lines": 96,
+      "prefix_tokens": 1225,
+      "wall_ms": 334.364249,
+      "front_ms": 49.327997,
+      "render_ms": 41.274207,
+      "tokenize_ms": 7.928876,
+      "guard_ms": 0.016209,
+      "commit_ms": 0.101334,
+      "prefill_ms": 285.036252,
+      "tokenized": 9324,
+      "evaluated": 588,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "correct": true
+    },
+    {
+      "mode": "native_prepare_cache",
+      "rep": 4,
+      "prefix_lines": 96,
+      "prefix_tokens": 1225,
+      "wall_ms": 313.576709,
+      "front_ms": 18.090501,
+      "render_ms": 16.455624,
+      "tokenize_ms": 1.121337,
+      "guard_ms": 0.150666,
+      "commit_ms": 0.262459,
+      "prefill_ms": 295.486208,
+      "tokenized": 606,
+      "evaluated": 606,
+      "cache_hits": 6,
+      "cache_misses": 0,
+      "correct": true
+    }
+  ],
+  "summary": [
+    {
+      "prefix_lines": 16,
+      "mode": "full_cached_control_0",
+      "samples": 5,
+      "correct": true,
+      "prefix_tokens": {
+        "median": 345,
+        "min": 345,
+        "max": 345
+      },
+      "wall_ms": {
+        "median": 310.650291,
+        "min": 282.844042,
+        "max": 336.807667
+      },
+      "front_ms": {
+        "median": 62.185916,
+        "min": 50.897792,
+        "max": 92.460875
+      },
+      "render_ms": {
+        "median": 56.770917,
+        "min": 45.630208,
+        "max": 80.683583
+      },
+      "tokenize_ms": {
+        "median": 5.269208,
+        "min": 5.097249,
+        "max": 11.143665
+      },
+      "guard_ms": {
+        "median": 0.012082,
+        "min": 0.011084,
+        "max": 0.018957
+      },
+      "commit_ms": {
+        "median": 0.128708,
+        "min": 0.108042,
+        "max": 0.605126
+      },
+      "prefill_ms": {
+        "median": 248.464375,
+        "min": 231.94625,
+        "max": 250.689958
+      },
+      "tokenized": {
+        "median": 4044,
+        "min": 4044,
+        "max": 4044
+      },
+      "evaluated": {
+        "median": 588,
+        "min": 588,
+        "max": 588
+      },
+      "cache_hits": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "cache_misses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    {
+      "prefix_lines": 16,
+      "mode": "full_cached_control_1",
+      "samples": 5,
+      "correct": true,
+      "prefix_tokens": {
+        "median": 345,
+        "min": 345,
+        "max": 345
+      },
+      "wall_ms": {
+        "median": 303.4695,
+        "min": 282.136166,
+        "max": 310.756415
+      },
+      "front_ms": {
+        "median": 51.305167,
+        "min": 48.434622,
+        "max": 73.499664
+      },
+      "render_ms": {
+        "median": 45.365958,
+        "min": 43.980665,
+        "max": 63.619875
+      },
+      "tokenize_ms": {
+        "median": 4.834459,
+        "min": 4.239166,
+        "max": 9.735833
+      },
+      "guard_ms": {
+        "median": 0.012292,
+        "min": 0.010167,
+        "max": 0.013874
+      },
+      "commit_ms": {
+        "median": 0.125125,
+        "min": 0.093542,
+        "max": 0.157042
+      },
+      "prefill_ms": {
+        "median": 251.680124,
+        "min": 233.701544,
+        "max": 253.423374
+      },
+      "tokenized": {
+        "median": 4044,
+        "min": 4044,
+        "max": 4044
+      },
+      "evaluated": {
+        "median": 588,
+        "min": 588,
+        "max": 588
+      },
+      "cache_hits": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "cache_misses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    {
+      "prefix_lines": 16,
+      "mode": "native_checkpoint",
+      "samples": 5,
+      "correct": true,
+      "prefix_tokens": {
+        "median": 345,
+        "min": 345,
+        "max": 345
+      },
+      "wall_ms": {
+        "median": 313.066709,
+        "min": 277.366875,
+        "max": 363.018459
+      },
+      "front_ms": {
+        "median": 55.36471,
+        "min": 40.787917,
+        "max": 122.443293
+      },
+      "render_ms": {
+        "median": 51.535209,
+        "min": 37.834874,
+        "max": 116.7345
+      },
+      "tokenize_ms": {
+        "median": 1.349166,
+        "min": 1.121165,
+        "max": 2.159459
+      },
+      "guard_ms": {
+        "median": 0.080457,
+        "min": 0.069708,
+        "max": 0.089708
+      },
+      "commit_ms": {
+        "median": 2.359166,
+        "min": 1.660083,
+        "max": 3.3045
+      },
+      "prefill_ms": {
+        "median": 244.947626,
+        "min": 236.578958,
+        "max": 257.701999
+      },
+      "tokenized": {
+        "median": 606,
+        "min": 606,
+        "max": 606
+      },
+      "evaluated": {
+        "median": 606,
+        "min": 606,
+        "max": 606
+      },
+      "cache_hits": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "cache_misses": {
+        "median": 6,
+        "min": 6,
+        "max": 6
+      }
+    },
+    {
+      "prefix_lines": 16,
+      "mode": "native_prepare_cache",
+      "samples": 5,
+      "correct": true,
+      "prefix_tokens": {
+        "median": 345,
+        "min": 345,
+        "max": 345
+      },
+      "wall_ms": {
+        "median": 260.992916,
+        "min": 240.018375,
+        "max": 264.570126
+      },
+      "front_ms": {
+        "median": 9.080167,
+        "min": 7.637918,
+        "max": 11.170333
+      },
+      "render_ms": {
+        "median": 7.090334,
+        "min": 6.095874,
+        "max": 8.906792
+      },
+      "tokenize_ms": {
+        "median": 1.620666,
+        "min": 1.1855,
+        "max": 1.895376
+      },
+      "guard_ms": {
+        "median": 0.074334,
+        "min": 0.061293,
+        "max": 0.110834
+      },
+      "commit_ms": {
+        "median": 0.19225,
+        "min": 0.15204,
+        "max": 0.463501
+      },
+      "prefill_ms": {
+        "median": 252.652957,
+        "min": 230.085874,
+        "max": 255.489959
+      },
+      "tokenized": {
+        "median": 606,
+        "min": 606,
+        "max": 606
+      },
+      "evaluated": {
+        "median": 606,
+        "min": 606,
+        "max": 606
+      },
+      "cache_hits": {
+        "median": 6,
+        "min": 6,
+        "max": 6
+      },
+      "cache_misses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    {
+      "prefix_lines": 96,
+      "mode": "full_cached_control_0",
+      "samples": 5,
+      "correct": true,
+      "prefix_tokens": {
+        "median": 1225,
+        "min": 1225,
+        "max": 1225
+      },
+      "wall_ms": {
+        "median": 385.551793,
+        "min": 313.808123,
+        "max": 523.729916
+      },
+      "front_ms": {
+        "median": 55.623086,
+        "min": 39.057043,
+        "max": 188.462167
+      },
+      "render_ms": {
+        "median": 46.719583,
+        "min": 32.377291,
+        "max": 114.761834
+      },
+      "tokenize_ms": {
+        "median": 8.696667,
+        "min": 6.405208,
+        "max": 65.597166
+      },
+      "guard_ms": {
+        "median": 0.016999,
+        "min": 0.012293,
+        "max": 0.030874
+      },
+      "commit_ms": {
+        "median": 0.169959,
+        "min": 0.087667,
+        "max": 0.196875
+      },
+      "prefill_ms": {
+        "median": 329.928707,
+        "min": 274.124415,
+        "max": 340.589749
+      },
+      "tokenized": {
+        "median": 9324,
+        "min": 9324,
+        "max": 9324
+      },
+      "evaluated": {
+        "median": 588,
+        "min": 588,
+        "max": 588
+      },
+      "cache_hits": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "cache_misses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    {
+      "prefix_lines": 96,
+      "mode": "full_cached_control_1",
+      "samples": 5,
+      "correct": true,
+      "prefix_tokens": {
+        "median": 1225,
+        "min": 1225,
+        "max": 1225
+      },
+      "wall_ms": {
+        "median": 390.551709,
+        "min": 334.364249,
+        "max": 415.010458
+      },
+      "front_ms": {
+        "median": 60.689543,
+        "min": 49.150584,
+        "max": 82.857206
+      },
+      "render_ms": {
+        "median": 49.032708,
+        "min": 41.274207,
+        "max": 67.064582
+      },
+      "tokenize_ms": {
+        "median": 9.864793,
+        "min": 7.251958,
+        "max": 15.60704
+      },
+      "guard_ms": {
+        "median": 0.017583,
+        "min": 0.015708,
+        "max": 0.022666
+      },
+      "commit_ms": {
+        "median": 0.124541,
+        "min": 0.101334,
+        "max": 0.211416
+      },
+      "prefill_ms": {
+        "median": 329.862166,
+        "min": 285.036252,
+        "max": 336.245373
+      },
+      "tokenized": {
+        "median": 9324,
+        "min": 9324,
+        "max": 9324
+      },
+      "evaluated": {
+        "median": 588,
+        "min": 588,
+        "max": 588
+      },
+      "cache_hits": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "cache_misses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    {
+      "prefix_lines": 96,
+      "mode": "native_checkpoint",
+      "samples": 5,
+      "correct": true,
+      "prefix_tokens": {
+        "median": 1225,
+        "min": 1225,
+        "max": 1225
+      },
+      "wall_ms": {
+        "median": 376.843167,
+        "min": 307.766835,
+        "max": 468.850333
+      },
+      "front_ms": {
+        "median": 46.50375,
+        "min": 33.872376,
+        "max": 142.590872
+      },
+      "render_ms": {
+        "median": 42.643584,
+        "min": 31.401625,
+        "max": 135.034208
+      },
+      "tokenize_ms": {
+        "median": 1.175667,
+        "min": 0.839791,
+        "max": 3.033458
+      },
+      "guard_ms": {
+        "median": 0.144666,
+        "min": 0.124458,
+        "max": 0.196917
+      },
+      "commit_ms": {
+        "median": 2.10975,
+        "min": 1.42975,
+        "max": 2.724876
+      },
+      "prefill_ms": {
+        "median": 326.259461,
+        "min": 273.416458,
+        "max": 341.793166
+      },
+      "tokenized": {
+        "median": 606,
+        "min": 606,
+        "max": 606
+      },
+      "evaluated": {
+        "median": 606,
+        "min": 606,
+        "max": 606
+      },
+      "cache_hits": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "cache_misses": {
+        "median": 6,
+        "min": 6,
+        "max": 6
+      }
+    },
+    {
+      "prefix_lines": 96,
+      "mode": "native_prepare_cache",
+      "samples": 5,
+      "correct": true,
+      "prefix_tokens": {
+        "median": 1225,
+        "min": 1225,
+        "max": 1225
+      },
+      "wall_ms": {
+        "median": 347.468333,
+        "min": 313.576709,
+        "max": 365.855417
+      },
+      "front_ms": {
+        "median": 8.987001,
+        "min": 7.382832,
+        "max": 23.266874
+      },
+      "render_ms": {
+        "median": 7.050292,
+        "min": 5.941293,
+        "max": 16.455624
+      },
+      "tokenize_ms": {
+        "median": 1.162044,
+        "min": 0.991664,
+        "max": 10.696876
+      },
+      "guard_ms": {
+        "median": 0.150666,
+        "min": 0.139042,
+        "max": 0.717917
+      },
+      "commit_ms": {
+        "median": 0.262459,
+        "min": 0.231125,
+        "max": 0.318334
+      },
+      "prefill_ms": {
+        "median": 340.085501,
+        "min": 295.486208,
+        "max": 342.588543
+      },
+      "tokenized": {
+        "median": 606,
+        "min": 606,
+        "max": 606
+      },
+      "evaluated": {
+        "median": 606,
+        "min": 606,
+        "max": 606
+      },
+      "cache_hits": {
+        "median": 6,
+        "min": 6,
+        "max": 6
+      },
+      "cache_misses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    }
+  ],
+  "paired_ratios": [
+    {
+      "prefix_lines": 16,
+      "mode": "native_checkpoint",
+      "control": "full_cached_control_0",
+      "paired_wall_ratio": [
+        0.980635381388023,
+        0.9591689872262182,
+        1.027096334118924,
+        1.0778212450846614,
+        1.1195454623436543
+      ],
+      "median": 1.027096334118924
+    },
+    {
+      "prefix_lines": 16,
+      "mode": "native_prepare_cache",
+      "control": "full_cached_control_1",
+      "paired_wall_ratio": [
+        0.8736285443107638,
+        0.7723682067834383,
+        0.8680716793450722,
+        0.8600301381193167,
+        0.8698034097180202
+      ],
+      "median": 0.8680716793450722
+    },
+    {
+      "prefix_lines": 96,
+      "mode": "native_checkpoint",
+      "control": "full_cached_control_0",
+      "paired_wall_ratio": [
+        0.8952139617703259,
+        0.9678466489980155,
+        0.9774125651647534,
+        0.9844335705739522,
+        0.9776269873946383
+      ],
+      "median": 0.9774125651647534
+    },
+    {
+      "prefix_lines": 96,
+      "mode": "native_prepare_cache",
+      "control": "full_cached_control_1",
+      "paired_wall_ratio": [
+        0.8815571028332977,
+        0.9015879037879995,
+        0.8781293180614744,
+        0.8810662149733417,
+        0.9378296571413651
+      ],
+      "median": 0.8815571028332977
+    }
+  ],
+  "validation": {
+    "acceptance": {
+      "directory": "build/native-template-cache-final-20261030",
+      "output": [
+        "PASS template: incremental suffix tokens equal independent full tokenization; changed prefix rebuilds; malformed tool rejected",
+        "PASS scripted integration: real native prefill -> tool parser -> read -> failing test -> write -> passing test -> read -> DONE",
+        "PASS real model generation: OK",
+        "native counters: tokenized=2098 reused_prefix=3386 rebuilds=3",
+        "all native chat tests passed"
+      ],
+      "compile_diagnostics": ""
+    },
+    "sanitizers": {
+      "directory": "build/native-template-cache-sanitized-20261030",
+      "output": [
+        "PASS template: incremental suffix tokens equal independent full tokenization; changed prefix rebuilds; malformed tool rejected",
+        "PASS scripted integration: real native prefill -> tool parser -> read -> failing test -> write -> passing test -> read -> DONE",
+        "PASS real model generation: OK",
+        "native counters: tokenized=2098 reused_prefix=3386 rebuilds=3",
+        "all native chat tests passed"
+      ],
+      "compile_diagnostics": ""
+    },
+    "cli": {
+      "directory": "build/native-template-cache-cli-20261030",
+      "results": [
+        {
+          "case": "repl",
+          "exit": 0,
+          "passed": true
+        },
+        {
+          "case": "generation-limit",
+          "exit": 1,
+          "passed": true
+        },
+        {
+          "case": "missing-model",
+          "exit": 2,
+          "passed": true
+        },
+        {
+          "case": "explicit-http-config",
+          "exit": 2,
+          "passed": true
+        },
+        {
+          "case": "bad-threads",
+          "exit": 2,
+          "passed": true
+        }
+      ]
+    }
+  },
+  "sources_sha256": {
+    "src/algo.c": "f54e1a77dfb260ddf2957723cec2a2dbe94470b727f1535ca81cfc68ca383d6c",
+    "src/alloc.c": "5afbb7848c5cec41fc2d0dba6b348da6b1cb9064ff102a41df9cfac7e4229619",
+    "src/arena.c": "101b99b827395575c24e683f9fa32be68f8eb91c8d213df7251f4a7a0cdc53ab",
+    "src/base.c": "d552e4f05a2285f77f3413327abfa3fe32265f3b022c9128fa419a27c3b66174",
+    "src/bitmap.c": "462076512d2fe487fcef766895ed9123e841badd2e076d5bcacdafd4cc85bc19",
+    "src/blob.c": "6df2ddd2dbffe34499966116479943347866dbfc6e09db509451772959a30706",
+    "src/buf.c": "bc3ad7e775ceaf8c1ed28f8f55bcc94e9d8ab70beeae28704adffaceeda4dd34",
+    "src/csr.c": "50fbe7c1df29f557de56899d10989d5ebb4c4150046bd3c4d41442fd79d3dff9",
+    "src/llama.c": "0f855a590737f587067dd71c7d70a567d3efca30bf63ab5ce6e6363f6933cee6",
+    "src/namemap.c": "999b71b7ddca9869a099f436d1254308669b60954219f2ec6d06cdec1669571c",
+    "src/pqueue.c": "0e55b07a6be11d8761741dd7ccab2f96366f180d8f1476014857294ede9f7de3",
+    "src/ring.c": "7db9c3c868b9a6a286fd1d82e9421921f14d3525fe5b2cab9d5c519251621cf6",
+    "src/sb.c": "e4a7cf42bcbff87fab745c6752d35e4d086b5752f50f7bacc409757fbc9c1d85",
+    "src/service.c": "8854fec1eecc40e3678c246bfb76a3086676838ab35f0a78c3b90b37a5766184",
+    "src/soa.c": "0c22553252ef28abefde1fae4f59a6a4e8dd28d74b57cac8081c12d1fc70b52e",
+    "src/str.c": "6bf536db204924fb2d3492b23ffb45223e596b998d35e1e291be5ae89a289966",
+    "src/table.c": "295e575dbc3b28ae9c0c23d658941bdcb35c676b7dc323d0e90c50f740386e89",
+    "src/type.c": "c767ed22c04fe0d4406629a57491eae0e71d0ce3d67916bb7720b94b1981b357",
+    "src/vec.c": "c20493e1be3d05d7437ee29382ede06e6be7211f0d8bfe245aa40bbbea427084",
+    "src/world.c": "20335e81db1339dd6de476de67515a8b5beeb7aab6b5c0818d44eaf65cb5046b",
+    "tests/agent_types.gen.c": "1d32e73e577ca9cd7129932a9be70858f663276a234c6e07233e49effc6d06c0",
+    "tests/agent_caps.c": "66b328806444ce4a7823f4aa10272b9dd09917054167093be2ce131438724f4e",
+    "tests/agent_caps.gen.c": "e4eb560513ba51fb988b5023c7f3f71635fe0a2634af7b3609c15c8ac7c00f57",
+    "tests/agent_fs.c": "4fcad4bbcec1005902f1f6f3c8990e80c153eccb94c718876c9a591d379cafb2",
+    "tests/agent_fs.gen.c": "b49bbaeb6535a9f54280ba012fb189fb830b709ee82ffbda0901e48a4c47344d",
+    "tests/agent_net.c": "6d3eeccecc80099b7a40eb696e4b318f920d8f0152dc535432ee4fc27b998d39",
+    "tests/agent.c": "42a93ab6afbc3eebb67ace36fb15ca37ab7c355f36e78a3a737dae00b5400c8a",
+    "tests/agent_http.c": "0ae0e5e23a1ac6d86c733379990f7a90550e39de28366103b8694972ff3e7666",
+    "tests/agent_llm.c": "2f8d36cdcf73661107147e7f2d384c317ad41b5c92f97a93878f150f45fe0457",
+    "tests/agent_basic.c": "dd96278d70fc04d06ed53cb64d8ccdf636c6c1cb688e2fe7d559b58e05b88674",
+    "build/llama.cpp-b10938/vendor/hash/sha256/sha256.c": "ba7a8ea69ad125385db28ef17e77be4a09dfdc30bb9532c30b259baaf670129c",
+    "tests/agent_native.cpp": "7ba544487997daa8036e02e99dfc0f77eda0ae272a0099a83e68bcb22ff16da9",
+    "tests/agentctl.c": "b9ea7f9c7325f2bdee645699efd9422ea0813418a7845deb7542ecea183786f6",
+    "tests/agentctl_config.c": "5139b05a93a2e67b3f98a8a2a77b1d871343ee10ffb41138ea4035defaff9c1c",
+    "tests/test_native_chat.c": "300bf02f8a3c51b6c3bf2276ad944b62bcc80b3779e759d3bde7f895b269ac7f",
+    "tests/native_chat_reference.cpp": "921f465e343bd148245c20062fac9aa05f388615ae5dea5766fdaa8c374d00ce",
+    "tests/bench_native_chat.cpp": "e8b6805782e6e73f6b772e014d5cddc3b645b5cb0b8abfa7b8ff690ca7209238"
+  },
+  "headers_sha256": {
+    "tests/agent_native.h": "b2d43e9f1697a0aff2fdbb238c56271a42ddf1281d97f054a24bc7d0465ac447",
+    "include/cxf/llama.h": "bbe885322116a552a4ae36411b86239b207864a98e8eb33261f0e70ab959c192",
+    "src/llama_internal.h": "4a7c65697bcbf9d5607266319f7c4c82e1cec7db7e200ee3241a54f7f772a0bb"
+  },
+  "sanitizer_scope": "Project sources instrumented; precompiled libllama-common/libllama/Metal excluded; no diagnostics observed."
+}

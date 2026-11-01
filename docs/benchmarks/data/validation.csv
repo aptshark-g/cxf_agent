@@ -1,0 +1,125 @@
+category,case,result,evidence,detail
+implementation,native_context,PASS,E03:runs,"Shared tokens, revisions, rollback, OOM, lifetime, independent libllama reference, capacity retry"
+implementation,chat_tokens_and_actions,PASS,E04:runs; E09:validation,Upstream token oracle and parser; 256 byte/escape corpora; Chinese tokenizer retry
+implementation,long_context_14357_tokens,PASS,E11:validation.native_chat_sanitized_output,Independent full upstream tokenization and cached greedy result
+executor,scripted_read_fail_fix_pass_read,PASS,E04:runs,Real tools and model prefill; action selection supplied by test script
+implementation,kv_worker:resident,PASS,E10:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,kv_worker:disk_roundtrip,PASS,E10:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,kv_worker:token_and_greedy_oracle,PASS,E10:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,kv_worker:canonical_single_owner,PASS,E10:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,kv_worker:queue_bound,PASS,E10:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,kv_worker:snapshot_bound,PASS,E10:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,kv_worker:queued_cancel,PASS,E10:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,kv_worker:inflight_cancel,PASS,E10:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,kv_worker:ready_cancel,PASS,E10:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,kv_worker:drop_in_use,PASS,E10:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,kv_worker:stale_revision,PASS,E10:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,kv_worker:slot_reuse,PASS,E10:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,kv_worker:truncated_snapshot,PASS,E10:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,kv_worker:unknown_snapshot,PASS,E10:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,kv_worker:no_token_list,PASS,E10:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,stream_pipeline:arbitrary_byte_splits,PASS,E11:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,stream_pipeline:unicode_escape_nul,PASS,E11:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,stream_pipeline:full_token_oracle,PASS,E11:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,stream_pipeline:independent_full_prefill_greedy,PASS,E11:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,stream_pipeline:greedy_batch_equivalence,PASS,E11:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,stream_pipeline:real_C_test,PASS,E11:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,stream_pipeline:receipt_feedback_before_end,PASS,E11:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,stream_pipeline:partial_file_not_executed,PASS,E11:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,stream_pipeline:invalid_UTF8_JSON,PASS,E11:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,stream_pipeline:sequence_and_end_validation,PASS,E11:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,stream_pipeline:capacity_limits,PASS,E11:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,stream_pipeline:versioned_stale_receipts,PASS,E11:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,stream_pipeline:active_processor_cancel,PASS,E11:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,stream_pipeline:cancellation,PASS,E11:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,stream_pipeline:bounded_backpressure,PASS,E11:rows.correctness,"Functional acceptance, not a performance sample"
+implementation,stream_pipeline:session_cleanup,PASS,E11:rows.correctness,"Functional acceptance, not a performance sample"
+cli,replay_cli:file,PASS,E11:validation.replay_cli,Expected exit=0; expected rejection can pass with a nonzero exit
+cli,replay_cli:stdin,PASS,E11:validation.replay_cli,Expected exit=0; expected rejection can pass with a nonzero exit
+cli,replay_cli:unfinished,PASS,E11:validation.replay_cli,Expected exit=1; expected rejection can pass with a nonzero exit
+cli,replay_cli:invalid-utf8,PASS,E11:validation.replay_cli,Expected exit=1; expected rejection can pass with a nonzero exit
+cli,replay_cli:missing-end,PASS,E11:validation.replay_cli,Expected exit=1; expected rejection can pass with a nonzero exit
+cli,replay_cli:missing-file,PASS,E11:validation.replay_cli,Expected exit=1; expected rejection can pass with a nonzero exit
+cli,native_cli:repl,PASS,E11:validation.native_cli,Expected exit=0; expected rejection can pass with a nonzero exit
+cli,native_cli:generation-limit,PASS,E11:validation.native_cli,Expected exit=1; expected rejection can pass with a nonzero exit
+cli,native_cli:missing-model,PASS,E11:validation.native_cli,Expected exit=2; expected rejection can pass with a nonzero exit
+cli,native_cli:explicit-http-config,PASS,E11:validation.native_cli,Expected exit=2; expected rejection can pass with a nonzero exit
+cli,native_cli:bad-threads,PASS,E11:validation.native_cli,Expected exit=2; expected rejection can pass with a nonzero exit
+regression,default_make_test,PASS,E11:validation.default_regression,Recorded at the measured revision; no inference benchmark rerun during report consolidation
+sanitizer,native_chat_kv_stream,PASS,E11:validation,ASan/UBSan on cxf/adapters; precompiled llama/common/Metal libraries not instrumented
+implementation,cost_estimator,PASS,E13:validation.unit,"Profile isolation, invalid state atomicity, unseen synthetic workloads, bounded window and speed-drift correction"
+sanitizer,cost_estimator_asan_ubsan,PASS,E13:validation.sanitizers,Standalone C estimator and unit test
+regression,default_make_test_after_cost,PASS,E13:validation.default_regression,"Current estimator change; local loopback enabled, no GPU test running concurrently"
+implementation,cost_real_model_21_shapes,PASS,E13:rows.correctness,"Canonical IDs, fresh-KV greedy, exact evaluated token/batch counts; estimator never changes inference"
+implementation,roofline_estimator,PASS,E14:validation.unit,"Hand-derived FLOPs/bytes, GQA, chunk logits, missing rates, atomic failures and calibrated unseen shapes; original cost regression"
+sanitizer,roofline_asan_ubsan,PASS,E14:validation.sanitizers,C cost/roofline and unit tests
+regression,default_make_test_after_roofline,PASS,E14:validation.default_regression,Completed before GPU performance run; local loopback enabled
+implementation,roofline_real_model_21_shapes,PASS,E14:rows.correctness,"Fresh-KV greedy, canonical tokens, exact token/batch counts; microprobe output verified"
+implementation,roofline_diagnosis,PASS,E15:validation.unit,"Last-layer FFN pruning hand counts, original semantics and failure atomicity; E14 147-row independent arithmetic audit"
+sanitizer,roofline_diagnosis_asan_ubsan,PASS,E15:validation.sanitizers,C cost/roofline unit suites
+regression,default_make_test_after_diagnosis,PASS,E15:validation.default_regression,"Completed before performance; estimator only, inference/scheduling unchanged"
+implementation,diagnosis_real_model_21_shapes,PASS,E15:rows.correctness,Fresh-KV greedy and token/batch oracles; dependent primitive output checks and separated depth ranges
+implementation,E16:shape_estimator,PASS,E16:validation.unit,"Interpolation hand counts, kernel boundary, advancing chunk context, extrapolation and atomic failures"
+sanitizer,E16:shape_asan_ubsan,PASS,E16:validation.sanitizers,C cost/roofline unit suites
+regression,E16:default_make_test,PASS,E16:validation.default_regression,Completed before GPU timing
+implementation,E16:60_fresh_shapes,PASS,E16:rows.correctness,"Two batch limits, fresh KV greedy, canonical tokens and token/batch checks; fair prequential replay"
+implementation,E17:shape_estimator,PASS,E17:validation.unit,"Interpolation hand counts, kernel boundary, advancing chunk context, extrapolation and atomic failures"
+sanitizer,E17:shape_asan_ubsan,PASS,E17:validation.sanitizers,C cost/roofline unit suites
+regression,E17:default_make_test,PASS,E17:validation.default_regression,Completed before GPU timing
+implementation,E17:60_fresh_shapes,PASS,E17:rows.correctness,"Two batch limits, fresh KV greedy, canonical tokens and token/batch checks; fair prequential replay"
+implementation,E19:residual_calibration,PASS,E19:validation.unit,"Analytic normalized ridge, collinear/zero features, signed correction, window/drift, profile and failure atomicity"
+sanitizer,E19:residual_asan_ubsan,PASS,E19:validation.sanitizers,Residual and shape estimator C unit suites
+regression,E19:default_make_test,PASS,E19:validation.default_regression,Completed before GPU timing
+implementation,E19:78_fresh_shapes,PASS,E19:rows.correctness,"Two unseen batch limits, equal-label/interleaved coverage, new context/token shapes, canonical IDs/greedy/batch counts"
+implementation,E20:kalman,PASS,E20:validation.unit,"Analytic gain/Joseph covariance, read-only prediction, EWMA equivalence, step and spike propagation, profile/range/atomic failure"
+sanitizer,E20:kalman_asan_ubsan,PASS,E20:validation.sanitizers,Standalone C Kalman tests
+regression,E20:default_make_test,PASS,E20:validation.default_regression,Completed before native timing
+implementation,E20:78_fresh_shapes,PASS,E20:rows.correctness,"Fresh context/token grid, token/greedy/batch oracles; filter C replay checked independently in Python"
+implementation,E21:actual_tool_flow,PASS,E21:rows.correctness,"Single owner, borrowed Native, cancellation/drain, real read and fail/repair/pass tools, canonical IDs and fresh greedy reference"
+sanitizer,E21:native_asan_ubsan,PASS,E21:validation.native_sanitizers,Tool preparation + existing Native/14K/KV/Stream regression; measured source hashes retained
+regression,E21:default_make_test,PASS,E21:validation.default_regression,Completed before performance run
+implementation,E21:cli_integration,PASS,E21:validation.cli_integration,Explicit native CLI option wraps registered test.run; model capability is separate
+model_capability,E21:native_cli_tool_probe,FAIL,E21:validation.model_cli_probe,Single0.6B probe emitted bare JSON as prose; no actual tool executed. Preserved separately from deterministic CLI and timing
+implementation,E22:stage_trace,PASS,E22:validation,"Same-clock parent process trace, exact adjacent-stage partition and old-strategy controls; past-label ETA replay"
+sanitizer,E22:stage_trace_asan_ubsan,PASS,E22:validation,Tool/KV acceptance and trace executor semantics before timing
+implementation,E27:resident_multitool,PASS,E27:validation,"Six actual read/test-fail/write/test-pass/read/test-pass calls; resident prefixes, direct vs wrapper,12 fresh references; save/evict/restore all zero"
+implementation,E28:resident_real_process_stream,PASS,E28:validation,"12 complete units from real CPU/file process without sleep;84 canonical/greedy task checks,4 fresh references after normal close, no snapshots"
+validation_setup,E28:initial_oracle_capacity,FAIL,E28:validation.initial_qualification_failure,Diagnostic second full KV reference exceeded shared8192 capacity;9 completed sanitizer tasks excluded; reference moved after normal close without workload/capacity change
+sanitizer,E27_E28:normal_resident,PASS,E27/E28:validation,"Final flow/stream ASan; Native14K, existing Stream and default regressions; no snapshot/evict test required this round"
+implementation,E26:main_launch_and_incremental,PASS,E26:validation,"New main/compute bounds, same-artifact rerun with matching exit, real correction rebuild, unchanged-source reuse, three fresh-KV reference prompts"
+sanitizer,E26:new_task_driver,PASS,E26:validation.sanitizers,ASan/UBSan new workload/driver; same production runtime as E25 prior full regressions
+implementation,E25:unlink_hold,PASS,E25:validation,"Owner-only retained fd; snapshot slot/budget held until last close; live-ticket and duplicate rejection, stale restore refusal, cancellation and final cleanup"
+sanitizer,E25:resource_phase_driver,PASS,E25:validation,ASan/UBSan Native14K/KV/Stream and actual CLI once plus default regression before isolated timing
+implementation,E24:early_snapshot_release,PASS,E24:validation,"Ticket drained before early drop; timer/inflight/ready cancellation, tool exception, snapshot reuse, token and fresh-greedy oracle"
+sanitizer,E24:asan_ubsan_and_cli,PASS,E24:validation,Native/14K/KV/Stream; actual CLI early release executes tool once; default regression passed before timing
+implementation,E23:progress_and_spawn,PASS,E23:validation,"Epoch/duplicate/time-bound progress, no-event fallback, cancellation, Native token/fresh-greedy oracle, one tool execution"
+sanitizer,E23:asan_ubsan_legacy,PASS,E23:validation.sanitizers,Current progress/spawn plus Native/14K/KV/Stream and CLI routing
+regression,E23:default_make_test,PASS,E23:validation.default_regression,New macOS spawn backend: stdout/stderr/cwd/timeout/process group and existing regression before timing
+implementation,E29:actual_cli_output,PASS,E29:rows; validation,"Real CLI/store/test.run,192 actual tool invocations,256 full-token oracles, exact off/on transcript and canonical hashes; scripted actions, resident KV"
+sanitizer,E29:output_native_stream,PASS,E29:validation,"Output13 cases, CLI16 tasks, Native14357-token and original Stream ASan/UBSan; default regression"
+model_capability,E29:production_native_tool_probe,FAIL,E29:validation.production_model_probe,Single0.6B production completion failed Native format validation (rc7); zero actual tools; separate from deterministic-choice CLI timing
+validation_setup,E29:initial_cli_qualification,FAIL,E29:validation.initial_qualification_failure,"Initial CLI newline changed first user message and safely invalidated prefix; first collector expected tool-only executed count; failures preserved, no performance samples"
+implementation,E31:matched_isolation,PASS,E31:validation,13 ASan unit cases;40 CLI tasks; thread/token controls preserve final canonical/greedy
+implementation,E33:process_attribution,PASS,E33:validation,"Child CPU/wall, EOF waits, callback and worker observations; matched controls"
+implementation,E36:contention,PASS,E36:validation,13 native sanitizer cases and40 actual CLI tasks; same growth gate and CPU/decode observations
+implementation,E38:decode_scheduler,PASS,E38:validation,"22 sanitizer cases,32 real CLI tasks, Mach unit calibration and decode/sync accounting"
+implementation,E40/E41:idle_source,PASS,E40:validation;E41:validation,"32 model fixtures,96 actual tools and384 producer controls; model CPU sampled without other PID inventory"
+implementation,E42/E43:metal_timeline,PASS,E42:validation;E43:validation,"30 native sanitizer cases and48 actual CLI tasks each; per-buffer timestamps, completion-marker and bare controls; diagnostics only"
+implementation,E47/E48/E49:isolation_quantum,PASS,E47:validation;E48:validation;E49:validation,"Same-capacity CLI controls, pressure/fresh-greedy isolation and larger-quantum timeout/cancel checks; final14K/Stream/default acceptance"
+implementation,E45/E46:tail_capacity,PASS,E45:validation;E46:validation,Matched device/notification controls and rotating fresh capacity validation; all negative pairs and allocation costs retained
+implementation,E44:tail_coalescing,PASS,E44:validation,"Budget, default reset, canonical/greedy, actual CLI and long-context/Stream/default acceptance; strict synchronized public returns"
+implementation,E39:deferred_sync,PASS,E39:validation,"30 sanitizer cases,32 real CLI tasks; 14,357-token deferred native and full strict Stream/default regression"
+implementation,E37:lazy_consumer,PASS,E37:validation,22 eager/lazy sanitizer cases and24 actual CLI tasks; no eligible burst growth means no consumer
+implementation,E35:exit_race,PASS,E35:validation,Bounded 1ms retry only after ESRCH or NOTE_EXIT; original modes retained
+implementation,E34:exit_event,PASS,E34:validation,Optional macOS NOTE_EXIT wait; timeout/once semantics and six-mode actual CLI checks
+implementation,E32:growth_gate,PASS,E32:validation,13 ASan cases;24 CLI tasks;42 evaluated burst tools perform zero speculative updates; default regression passed
+model_capability,real-tool-probe,PASS,E04:capability_probes,single file read and receipt-based answer; not autonomous code repair acceptance; n=1
+model_capability,real-repair-probe,FAIL,E04:capability_probes,one instructed trivial C repair; not a general coding benchmark; n=1
+historical_model_capability,basic-http-1,FAIL,E12:cases,Missing-body write cleared the fixture file; compilation failed; not autonomous repair acceptance; n=1; raw logs private
+historical_model_capability,basic-http-2,FAIL,E12:cases,No independently passing final C program; runtime success status did not establish task success; n=1; raw logs private
+not_validated,native_windows_cuda,NOT_MEASURED,E10:limits; E11:limits,No build or performance acceptance on the second machine
+not_validated,live_cloud_sse,NOT_MEASURED,E10:limits; E11:limits,Controlled replay only; no provider-specific SSE integration
+not_validated,general_agent_scheduling,NOT_MEASURED,E10:limits; E11:limits,"E21 opt-in serial native test.run wrapper only; no general multi-consumer, HTTP/cloud or cold-start scheduler"
+not_validated,physical_kv_buffer_release,NOT_MEASURED,E10:limits; E11:limits,"Logical cells reusable, preallocated KV buffer size unchanged"
+not_validated,cold_ssd_and_tail_latency,NOT_MEASURED,E10:limits; E11:limits,Warm OS cache; n=7 does not support p95/p99 or stability claims
+not_validated,general_coding_or_summary_quality,NOT_MEASURED,E10:limits; E11:limits,"0.6B used as compatibility vehicle, no capability benchmark"

@@ -1,0 +1,4130 @@
+{
+  "date": "2026-10-30",
+  "llama_commit": "f1e44dcc11d8802d107bd7331a3d3fd3e6f57b93",
+  "hardware": "Apple M5, 16 GiB unified memory, Metal",
+  "model": "Qwen3-0.6B-Q8_0.gguf",
+  "model_sha256": "710d7b1aa4e2ae03238a9e65e82f48cfa70edf501becae8979c35acf5830e1ed",
+  "kv_pool_tokens": 16384,
+  "scope": "Direct borrowed transcript visitor -> upstream messages compared with previous early-release request JSON path; full Jinja rendering remains",
+  "baseline": "request_json means prior early-release pipeline, not retained-all-temporaries baseline",
+  "rows": [
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 1024,
+      "rep": 0,
+      "mode": "direct_messages",
+      "input_bytes": 6152,
+      "rc": 0,
+      "heap_before": 118228528,
+      "heap_after": 118264400,
+      "sampled_heap_peak": 118287808,
+      "peak_since_probe": "committed",
+      "rss_after": 2629976064,
+      "stored": 1199,
+      "logical": 1192,
+      "payload_capacity": 6144,
+      "cxf_bytes": 8748,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118230272,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118237856,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 6162,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118236400,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 6885,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118236928,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 6885,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 1024,
+      "rep": 0,
+      "mode": "request_json",
+      "input_bytes": 6152,
+      "rc": 0,
+      "heap_before": 118268496,
+      "heap_after": 118268496,
+      "sampled_heap_peak": 118296288,
+      "peak_since_probe": "committed",
+      "rss_after": 2630025216,
+      "stored": 1199,
+      "logical": 1192,
+      "payload_capacity": 6144,
+      "cxf_bytes": 8748,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 118275664,
+          "request": 6539,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 118292544,
+          "request": 6539,
+          "json_strings": 6162,
+          "messages": 6162,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118278208,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 6162,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118276752,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 6885,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118276256,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 6885,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 1024,
+      "rep": 1,
+      "mode": "request_json",
+      "input_bytes": 6152,
+      "rc": 0,
+      "heap_before": 118268496,
+      "heap_after": 118268496,
+      "sampled_heap_peak": 118316096,
+      "peak_since_probe": "normalized",
+      "rss_after": 2630074368,
+      "stored": 1199,
+      "logical": 1192,
+      "payload_capacity": 6144,
+      "cxf_bytes": 8748,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 118275664,
+          "request": 6539,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 118292544,
+          "request": 6539,
+          "json_strings": 6162,
+          "messages": 6162,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118278208,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 6162,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118276752,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 6885,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118276256,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 6885,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 1024,
+      "rep": 1,
+      "mode": "direct_messages",
+      "input_bytes": 6152,
+      "rc": 0,
+      "heap_before": 118268496,
+      "heap_after": 118268496,
+      "sampled_heap_peak": 118320688,
+      "peak_since_probe": "normalized",
+      "rss_after": 2616311808,
+      "stored": 1199,
+      "logical": 1192,
+      "payload_capacity": 6144,
+      "cxf_bytes": 8748,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118270240,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118277824,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 6162,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118276368,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 6885,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118275872,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 6885,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 1024,
+      "rep": 2,
+      "mode": "direct_messages",
+      "input_bytes": 6152,
+      "rc": 0,
+      "heap_before": 118268496,
+      "heap_after": 118268496,
+      "sampled_heap_peak": 118295776,
+      "peak_since_probe": "committed",
+      "rss_after": 2616311808,
+      "stored": 1199,
+      "logical": 1192,
+      "payload_capacity": 6144,
+      "cxf_bytes": 8748,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118270240,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118277824,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 6162,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118276368,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 6885,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118275872,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 6885,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 1024,
+      "rep": 2,
+      "mode": "request_json",
+      "input_bytes": 6152,
+      "rc": 0,
+      "heap_before": 118268496,
+      "heap_after": 118268496,
+      "sampled_heap_peak": 118321072,
+      "peak_since_probe": "normalized",
+      "rss_after": 2616311808,
+      "stored": 1199,
+      "logical": 1192,
+      "payload_capacity": 6144,
+      "cxf_bytes": 8748,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 118275664,
+          "request": 6539,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 118292544,
+          "request": 6539,
+          "json_strings": 6162,
+          "messages": 6162,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118278208,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 6162,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118276752,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 6885,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118276256,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 6885,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 4096,
+      "rep": 0,
+      "mode": "direct_messages",
+      "input_bytes": 24584,
+      "rc": 0,
+      "heap_before": 118558848,
+      "heap_after": 118566112,
+      "sampled_heap_peak": 118689216,
+      "peak_since_probe": "normalized",
+      "rss_after": 2610528256,
+      "stored": 4271,
+      "logical": 4264,
+      "payload_capacity": 18432,
+      "cxf_bytes": 22124,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118560592,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118589680,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 24594,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118588224,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 25317,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118588752,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 25317,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 4096,
+      "rep": 0,
+      "mode": "request_json",
+      "input_bytes": 24584,
+      "rc": 0,
+      "heap_before": 118566112,
+      "heap_after": 118566112,
+      "sampled_heap_peak": 118701856,
+      "peak_since_probe": "request",
+      "rss_after": 2610577408,
+      "stored": 4271,
+      "logical": 4264,
+      "payload_capacity": 18432,
+      "cxf_bytes": 22124,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 118594784,
+          "request": 24971,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 118654672,
+          "request": 24971,
+          "json_strings": 24594,
+          "messages": 24594,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118597328,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 24594,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118595872,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 25317,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118595376,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 25317,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 4096,
+      "rep": 1,
+      "mode": "request_json",
+      "input_bytes": 24584,
+      "rc": 0,
+      "heap_before": 118566112,
+      "heap_after": 118566112,
+      "sampled_heap_peak": 118715696,
+      "peak_since_probe": "normalized",
+      "rss_after": 2610577408,
+      "stored": 4271,
+      "logical": 4264,
+      "payload_capacity": 18432,
+      "cxf_bytes": 22124,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 118594784,
+          "request": 24971,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 118654672,
+          "request": 24971,
+          "json_strings": 24594,
+          "messages": 24594,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118597328,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 24594,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118595872,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 25317,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118595376,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 25317,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 4096,
+      "rep": 1,
+      "mode": "direct_messages",
+      "input_bytes": 24584,
+      "rc": 0,
+      "heap_before": 118566112,
+      "heap_after": 118566112,
+      "sampled_heap_peak": 118614736,
+      "peak_since_probe": "committed",
+      "rss_after": 2610577408,
+      "stored": 4271,
+      "logical": 4264,
+      "payload_capacity": 18432,
+      "cxf_bytes": 22124,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118567856,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118596944,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 24594,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118595488,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 25317,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118594992,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 25317,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 4096,
+      "rep": 2,
+      "mode": "direct_messages",
+      "input_bytes": 24584,
+      "rc": 0,
+      "heap_before": 118566112,
+      "heap_after": 118566112,
+      "sampled_heap_peak": 118690176,
+      "peak_since_probe": "normalized",
+      "rss_after": 2610577408,
+      "stored": 4271,
+      "logical": 4264,
+      "payload_capacity": 18432,
+      "cxf_bytes": 22124,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118567856,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118596944,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 24594,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118595488,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 25317,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118594992,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 25317,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 4096,
+      "rep": 2,
+      "mode": "request_json",
+      "input_bytes": 24584,
+      "rc": 0,
+      "heap_before": 118566112,
+      "heap_after": 118566112,
+      "sampled_heap_peak": 118850144,
+      "peak_since_probe": "normalized",
+      "rss_after": 2610577408,
+      "stored": 4271,
+      "logical": 4264,
+      "payload_capacity": 18432,
+      "cxf_bytes": 22124,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 118594784,
+          "request": 24971,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 118654672,
+          "request": 24971,
+          "json_strings": 24594,
+          "messages": 24594,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118597328,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 24594,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118595872,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 25317,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118595376,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 25317,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 7168,
+      "rep": 0,
+      "mode": "direct_messages",
+      "input_bytes": 43016,
+      "rc": 0,
+      "heap_before": 118778496,
+      "heap_after": 118768784,
+      "sampled_heap_peak": 118956640,
+      "peak_since_probe": "normalized",
+      "rss_after": 2584739840,
+      "stored": 7343,
+      "logical": 7336,
+      "payload_capacity": 30720,
+      "cxf_bytes": 34412,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118780240,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118829808,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 43026,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118828352,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 43749,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118828880,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 43749,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 7168,
+      "rep": 0,
+      "mode": "request_json",
+      "input_bytes": 43016,
+      "rc": 0,
+      "heap_before": 118768784,
+      "heap_after": 118768784,
+      "sampled_heap_peak": 118999856,
+      "peak_since_probe": "normalized",
+      "rss_after": 2584805376,
+      "stored": 7343,
+      "logical": 7336,
+      "payload_capacity": 30720,
+      "cxf_bytes": 34412,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 118817936,
+          "request": 43403,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 118918784,
+          "request": 43403,
+          "json_strings": 43026,
+          "messages": 43026,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118820480,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 43026,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118819024,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 43749,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118818528,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 43749,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 7168,
+      "rep": 1,
+      "mode": "request_json",
+      "input_bytes": 43016,
+      "rc": 0,
+      "heap_before": 118768784,
+      "heap_after": 118768784,
+      "sampled_heap_peak": 118957024,
+      "peak_since_probe": "normalized",
+      "rss_after": 2584805376,
+      "stored": 7343,
+      "logical": 7336,
+      "payload_capacity": 30720,
+      "cxf_bytes": 34412,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 118817936,
+          "request": 43403,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 118918784,
+          "request": 43403,
+          "json_strings": 43026,
+          "messages": 43026,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118820480,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 43026,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118819024,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 43749,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118818528,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 43749,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 7168,
+      "rep": 1,
+      "mode": "direct_messages",
+      "input_bytes": 43016,
+      "rc": 0,
+      "heap_before": 118768784,
+      "heap_after": 118768784,
+      "sampled_heap_peak": 118838208,
+      "peak_since_probe": "committed",
+      "rss_after": 2584805376,
+      "stored": 7343,
+      "logical": 7336,
+      "payload_capacity": 30720,
+      "cxf_bytes": 34412,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118770528,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118820096,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 43026,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118818640,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 43749,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118818144,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 43749,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 7168,
+      "rep": 2,
+      "mode": "direct_messages",
+      "input_bytes": 43016,
+      "rc": 0,
+      "heap_before": 118768784,
+      "heap_after": 118768784,
+      "sampled_heap_peak": 119171216,
+      "peak_since_probe": "normalized",
+      "rss_after": 2584887296,
+      "stored": 7343,
+      "logical": 7336,
+      "payload_capacity": 30720,
+      "cxf_bytes": 34412,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118770528,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118820096,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 43026,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118818640,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 43749,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118818144,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 43749,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 7168,
+      "rep": 2,
+      "mode": "request_json",
+      "input_bytes": 43016,
+      "rc": 0,
+      "heap_before": 118768784,
+      "heap_after": 118768784,
+      "sampled_heap_peak": 118967808,
+      "peak_since_probe": "request",
+      "rss_after": 2584887296,
+      "stored": 7343,
+      "logical": 7336,
+      "payload_capacity": 30720,
+      "cxf_bytes": 34412,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 118817936,
+          "request": 43403,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 118918784,
+          "request": 43403,
+          "json_strings": 43026,
+          "messages": 43026,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118820480,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 43026,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118819024,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 43749,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118818528,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 43749,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 14336,
+      "rep": 0,
+      "mode": "direct_messages",
+      "input_bytes": 86024,
+      "rc": 0,
+      "heap_before": 119426576,
+      "heap_after": 119416848,
+      "sampled_heap_peak": 120123920,
+      "peak_since_probe": "normalized",
+      "rss_after": 2590228480,
+      "stored": 14511,
+      "logical": 14504,
+      "payload_capacity": 59392,
+      "cxf_bytes": 65260,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 119428320,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 119527040,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 86034,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 119525584,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 86757,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 119526112,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 86757,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 14336,
+      "rep": 0,
+      "mode": "request_json",
+      "input_bytes": 86024,
+      "rc": 0,
+      "heap_before": 119416848,
+      "heap_after": 119416848,
+      "sampled_heap_peak": 119755376,
+      "peak_since_probe": "normalized",
+      "rss_after": 2590310400,
+      "stored": 14511,
+      "logical": 14504,
+      "payload_capacity": 59392,
+      "cxf_bytes": 65260,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 119515152,
+          "request": 86411,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 119714304,
+          "request": 86411,
+          "json_strings": 86034,
+          "messages": 86034,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 119517696,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 86034,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 119516240,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 86757,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 119515744,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 86757,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 14336,
+      "rep": 1,
+      "mode": "request_json",
+      "input_bytes": 86024,
+      "rc": 0,
+      "heap_before": 119416848,
+      "heap_after": 119416848,
+      "sampled_heap_peak": 119728720,
+      "peak_since_probe": "request",
+      "rss_after": 2590310400,
+      "stored": 14511,
+      "logical": 14504,
+      "payload_capacity": 59392,
+      "cxf_bytes": 65260,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 119515152,
+          "request": 86411,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 119714304,
+          "request": 86411,
+          "json_strings": 86034,
+          "messages": 86034,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 119517696,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 86034,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 119516240,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 86757,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 119515744,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 86757,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 14336,
+      "rep": 1,
+      "mode": "direct_messages",
+      "input_bytes": 86024,
+      "rc": 0,
+      "heap_before": 119416848,
+      "heap_after": 119416848,
+      "sampled_heap_peak": 119625472,
+      "peak_since_probe": "normalized",
+      "rss_after": 2590310400,
+      "stored": 14511,
+      "logical": 14504,
+      "payload_capacity": 59392,
+      "cxf_bytes": 65260,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 119418592,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 119517312,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 86034,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 119515856,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 86757,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 119515360,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 86757,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 14336,
+      "rep": 2,
+      "mode": "direct_messages",
+      "input_bytes": 86024,
+      "rc": 0,
+      "heap_before": 119416848,
+      "heap_after": 119416848,
+      "sampled_heap_peak": 119746448,
+      "peak_since_probe": "normalized",
+      "rss_after": 2590310400,
+      "stored": 14511,
+      "logical": 14504,
+      "payload_capacity": 59392,
+      "cxf_bytes": 65260,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 119418592,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 119517312,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 86034,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 119515856,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 86757,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 119515360,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 86757,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 14336,
+      "rep": 2,
+      "mode": "request_json",
+      "input_bytes": 86024,
+      "rc": 0,
+      "heap_before": 119416848,
+      "heap_after": 119416848,
+      "sampled_heap_peak": 119728720,
+      "peak_since_probe": "request",
+      "rss_after": 2590326784,
+      "stored": 14511,
+      "logical": 14504,
+      "payload_capacity": 59392,
+      "cxf_bytes": 65260,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 119515152,
+          "request": 86411,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 119714304,
+          "request": 86411,
+          "json_strings": 86034,
+          "messages": 86034,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 119517696,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 86034,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 119516240,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 86757,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 119515744,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 86757,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 16384,
+      "rep": 0,
+      "mode": "direct_messages",
+      "input_bytes": 98312,
+      "rc": 2,
+      "heap_before": 118213520,
+      "heap_after": 118213520,
+      "sampled_heap_peak": 120942176,
+      "peak_since_probe": "rendered",
+      "rss_after": 2606678016,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118215264,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118330368,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 98322,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118328912,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 99045,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 16384,
+      "rep": 0,
+      "mode": "request_json",
+      "input_bytes": 98312,
+      "rc": 2,
+      "heap_before": 118213520,
+      "heap_after": 118213520,
+      "sampled_heap_peak": 120607680,
+      "peak_since_probe": "rendered",
+      "rss_after": 2606972928,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 118328208,
+          "request": 98699,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 118560128,
+          "request": 98699,
+          "json_strings": 98322,
+          "messages": 98322,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118330752,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 98322,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118329296,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 99045,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 16384,
+      "rep": 1,
+      "mode": "request_json",
+      "input_bytes": 98312,
+      "rc": 2,
+      "heap_before": 118213520,
+      "heap_after": 118213520,
+      "sampled_heap_peak": 120640448,
+      "peak_since_probe": "rendered",
+      "rss_after": 2606972928,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 118328208,
+          "request": 98699,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 118560128,
+          "request": 98699,
+          "json_strings": 98322,
+          "messages": 98322,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118330752,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 98322,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118329296,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 99045,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 16384,
+      "rep": 1,
+      "mode": "direct_messages",
+      "input_bytes": 98312,
+      "rc": 2,
+      "heap_before": 118213520,
+      "heap_after": 118213520,
+      "sampled_heap_peak": 120942176,
+      "peak_since_probe": "rendered",
+      "rss_after": 2606972928,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118215264,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118330368,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 98322,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118328912,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 99045,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 16384,
+      "rep": 2,
+      "mode": "direct_messages",
+      "input_bytes": 98312,
+      "rc": 2,
+      "heap_before": 118213520,
+      "heap_after": 118213520,
+      "sampled_heap_peak": 120607296,
+      "peak_since_probe": "rendered",
+      "rss_after": 2606972928,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118215264,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118330368,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 98322,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118328912,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 99045,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 16384,
+      "rep": 2,
+      "mode": "request_json",
+      "input_bytes": 98312,
+      "rc": 2,
+      "heap_before": 118213520,
+      "heap_after": 118213520,
+      "sampled_heap_peak": 120558528,
+      "peak_since_probe": "rendered",
+      "rss_after": 2607005696,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 118328208,
+          "request": 98699,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 118560128,
+          "request": 98699,
+          "json_strings": 98322,
+          "messages": 98322,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118330752,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 98322,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118329296,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 99045,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 65536,
+      "rep": 0,
+      "mode": "direct_messages",
+      "input_bytes": 393224,
+      "rc": 2,
+      "heap_before": 118508432,
+      "heap_after": 118508432,
+      "sampled_heap_peak": 128881216,
+      "peak_since_probe": "rendered",
+      "rss_after": 2617442304,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118510176,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118920192,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 393234,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118918736,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 393957,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 65536,
+      "rep": 0,
+      "mode": "request_json",
+      "input_bytes": 393224,
+      "rc": 2,
+      "heap_before": 118508432,
+      "heap_after": 118508432,
+      "sampled_heap_peak": 128881600,
+      "peak_since_probe": "rendered",
+      "rss_after": 2617475072,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 118918032,
+          "request": 393611,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 119739776,
+          "request": 393611,
+          "json_strings": 393234,
+          "messages": 393234,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118920576,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 393234,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118919120,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 393957,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 65536,
+      "rep": 1,
+      "mode": "request_json",
+      "input_bytes": 393224,
+      "rc": 2,
+      "heap_before": 118508432,
+      "heap_after": 118508432,
+      "sampled_heap_peak": 129593312,
+      "peak_since_probe": "rendered",
+      "rss_after": 2617540608,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 118918032,
+          "request": 393611,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 119739776,
+          "request": 393611,
+          "json_strings": 393234,
+          "messages": 393234,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118920576,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 393234,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118919120,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 393957,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 65536,
+      "rep": 1,
+      "mode": "direct_messages",
+      "input_bytes": 393224,
+      "rc": 2,
+      "heap_before": 118508432,
+      "heap_after": 118508432,
+      "sampled_heap_peak": 128881216,
+      "peak_since_probe": "rendered",
+      "rss_after": 2617540608,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118510176,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118920192,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 393234,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118918736,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 393957,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 65536,
+      "rep": 2,
+      "mode": "direct_messages",
+      "input_bytes": 393224,
+      "rc": 2,
+      "heap_before": 118508432,
+      "heap_after": 118508432,
+      "sampled_heap_peak": 128881216,
+      "peak_since_probe": "rendered",
+      "rss_after": 2617540608,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118510176,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118920192,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 393234,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118918736,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 393957,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "single_text",
+      "size": 65536,
+      "rep": 2,
+      "mode": "request_json",
+      "input_bytes": 393224,
+      "rc": 2,
+      "heap_before": 118508432,
+      "heap_after": 118508432,
+      "sampled_heap_peak": 129593312,
+      "peak_since_probe": "rendered",
+      "rss_after": 2617540608,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 118918032,
+          "request": 393611,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 119739776,
+          "request": 393611,
+          "json_strings": 393234,
+          "messages": 393234,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118920576,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 393234,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118919120,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 393957,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 16,
+      "rep": 0,
+      "mode": "direct_messages",
+      "input_bytes": 1688,
+      "rc": 0,
+      "heap_before": 118207776,
+      "heap_after": 118187152,
+      "sampled_heap_peak": 118440064,
+      "peak_since_probe": "normalized",
+      "rss_after": 2620145664,
+      "stored": 846,
+      "logical": 839,
+      "payload_capacity": 5120,
+      "cxf_bytes": 10988,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118209520,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118229872,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 1042,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118213600,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 4453,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118214128,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 4453,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 16,
+      "rep": 0,
+      "mode": "request_json",
+      "input_bytes": 1688,
+      "rc": 0,
+      "heap_before": 118187152,
+      "heap_after": 118187152,
+      "sampled_heap_peak": 118437936,
+      "peak_since_probe": "normalized",
+      "rss_after": 2620145664,
+      "stored": 846,
+      "logical": 839,
+      "payload_capacity": 5120,
+      "cxf_bytes": 10988,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 118192272,
+          "request": 4489,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 118226016,
+          "request": 4489,
+          "json_strings": 1042,
+          "messages": 1042,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118221024,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 1042,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118205264,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 4453,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118204768,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 4453,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 16,
+      "rep": 1,
+      "mode": "request_json",
+      "input_bytes": 1688,
+      "rc": 0,
+      "heap_before": 118187152,
+      "heap_after": 118187152,
+      "sampled_heap_peak": 118431776,
+      "peak_since_probe": "normalized",
+      "rss_after": 2620145664,
+      "stored": 846,
+      "logical": 839,
+      "payload_capacity": 5120,
+      "cxf_bytes": 10988,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 118192272,
+          "request": 4489,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 118226016,
+          "request": 4489,
+          "json_strings": 1042,
+          "messages": 1042,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118221024,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 1042,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118205264,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 4453,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118204768,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 4453,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 16,
+      "rep": 1,
+      "mode": "direct_messages",
+      "input_bytes": 1688,
+      "rc": 0,
+      "heap_before": 118187152,
+      "heap_after": 118187152,
+      "sampled_heap_peak": 118411904,
+      "peak_since_probe": "normalized",
+      "rss_after": 2620145664,
+      "stored": 846,
+      "logical": 839,
+      "payload_capacity": 5120,
+      "cxf_bytes": 10988,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118188896,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118209248,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 1042,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118192976,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 4453,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118192480,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 4453,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 16,
+      "rep": 2,
+      "mode": "direct_messages",
+      "input_bytes": 1688,
+      "rc": 0,
+      "heap_before": 118187152,
+      "heap_after": 118187152,
+      "sampled_heap_peak": 118427392,
+      "peak_since_probe": "normalized",
+      "rss_after": 2620145664,
+      "stored": 846,
+      "logical": 839,
+      "payload_capacity": 5120,
+      "cxf_bytes": 10988,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118188896,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118209248,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 1042,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118192976,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 4453,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118192480,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 4453,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 16,
+      "rep": 2,
+      "mode": "request_json",
+      "input_bytes": 1688,
+      "rc": 0,
+      "heap_before": 118187152,
+      "heap_after": 118187152,
+      "sampled_heap_peak": 118424416,
+      "peak_since_probe": "normalized",
+      "rss_after": 2620162048,
+      "stored": 846,
+      "logical": 839,
+      "payload_capacity": 5120,
+      "cxf_bytes": 10988,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 118192272,
+          "request": 4489,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 118226016,
+          "request": 4489,
+          "json_strings": 1042,
+          "messages": 1042,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118221024,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 1042,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118205264,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 4453,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118204768,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 4453,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 128,
+      "rep": 0,
+      "mode": "direct_messages",
+      "input_bytes": 13448,
+      "rc": 0,
+      "heap_before": 118616160,
+      "heap_after": 118590864,
+      "sampled_heap_peak": 120243232,
+      "peak_since_probe": "normalized",
+      "rss_after": 2619867136,
+      "stored": 5550,
+      "logical": 5543,
+      "payload_capacity": 23552,
+      "cxf_bytes": 29420,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118617904,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118778032,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 8210,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118649632,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 30437,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118650160,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 30437,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 128,
+      "rep": 0,
+      "mode": "request_json",
+      "input_bytes": 13448,
+      "rc": 0,
+      "heap_before": 118590864,
+      "heap_after": 118590864,
+      "sampled_heap_peak": 120312144,
+      "peak_since_probe": "normalized",
+      "rss_after": 2619916288,
+      "stored": 5550,
+      "logical": 5543,
+      "payload_capacity": 23552,
+      "cxf_bytes": 29420,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 118640016,
+          "request": 33331,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 118895072,
+          "request": 33331,
+          "json_strings": 8210,
+          "messages": 8210,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118846944,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 8210,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118722640,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 30437,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118722144,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 30437,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 128,
+      "rep": 1,
+      "mode": "request_json",
+      "input_bytes": 13448,
+      "rc": 0,
+      "heap_before": 118590864,
+      "heap_after": 118590864,
+      "sampled_heap_peak": 120223520,
+      "peak_since_probe": "normalized",
+      "rss_after": 2619916288,
+      "stored": 5550,
+      "logical": 5543,
+      "payload_capacity": 23552,
+      "cxf_bytes": 29420,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 118640016,
+          "request": 33331,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 118895072,
+          "request": 33331,
+          "json_strings": 8210,
+          "messages": 8210,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118846944,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 8210,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118722640,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 30437,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118722144,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 30437,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 128,
+      "rep": 1,
+      "mode": "direct_messages",
+      "input_bytes": 13448,
+      "rc": 0,
+      "heap_before": 118590864,
+      "heap_after": 118590864,
+      "sampled_heap_peak": 120112992,
+      "peak_since_probe": "normalized",
+      "rss_after": 2619916288,
+      "stored": 5550,
+      "logical": 5543,
+      "payload_capacity": 23552,
+      "cxf_bytes": 29420,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118592608,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118752736,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 8210,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118624336,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 30437,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118623840,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 30437,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 128,
+      "rep": 2,
+      "mode": "direct_messages",
+      "input_bytes": 13448,
+      "rc": 0,
+      "heap_before": 118590864,
+      "heap_after": 118590864,
+      "sampled_heap_peak": 120119872,
+      "peak_since_probe": "normalized",
+      "rss_after": 2619703296,
+      "stored": 5550,
+      "logical": 5543,
+      "payload_capacity": 23552,
+      "cxf_bytes": 29420,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118592608,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118752736,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 8210,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118624336,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 30437,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118623840,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 30437,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 128,
+      "rep": 2,
+      "mode": "request_json",
+      "input_bytes": 13448,
+      "rc": 0,
+      "heap_before": 118590864,
+      "heap_after": 118590864,
+      "sampled_heap_peak": 120213856,
+      "peak_since_probe": "normalized",
+      "rss_after": 2619703296,
+      "stored": 5550,
+      "logical": 5543,
+      "payload_capacity": 23552,
+      "cxf_bytes": 29420,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 118640016,
+          "request": 33331,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 118895072,
+          "request": 33331,
+          "json_strings": 8210,
+          "messages": 8210,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118846944,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 8210,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118722640,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 30437,
+          "token_scratch": 0
+        },
+        {
+          "stage": "committed",
+          "heap": 118722144,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 30437,
+          "token_scratch": 56
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 512,
+      "rep": 0,
+      "mode": "direct_messages",
+      "input_bytes": 53768,
+      "rc": 2,
+      "heap_before": 118173024,
+      "heap_after": 118173024,
+      "sampled_heap_peak": 124584960,
+      "peak_since_probe": "normalized",
+      "rss_after": 2625650688,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118174768,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118814128,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 32786,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118304800,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 119525,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 512,
+      "rep": 0,
+      "mode": "request_json",
+      "input_bytes": 53768,
+      "rc": 2,
+      "heap_before": 118173024,
+      "heap_after": 118173024,
+      "sampled_heap_peak": 124797088,
+      "peak_since_probe": "normalized",
+      "rss_after": 2625552384,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 118320480,
+          "request": 132787,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 119285168,
+          "request": 132787,
+          "json_strings": 32786,
+          "messages": 32786,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 119141808,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 32786,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118648864,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 119525,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 512,
+      "rep": 1,
+      "mode": "request_json",
+      "input_bytes": 53768,
+      "rc": 2,
+      "heap_before": 118173024,
+      "heap_after": 118173024,
+      "sampled_heap_peak": 124583024,
+      "peak_since_probe": "normalized",
+      "rss_after": 2623242240,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 118320480,
+          "request": 132787,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 119285168,
+          "request": 132787,
+          "json_strings": 32786,
+          "messages": 32786,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 119141808,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 32786,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118648864,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 119525,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 512,
+      "rep": 1,
+      "mode": "direct_messages",
+      "input_bytes": 53768,
+      "rc": 2,
+      "heap_before": 118173024,
+      "heap_after": 118173024,
+      "sampled_heap_peak": 124171728,
+      "peak_since_probe": "normalized",
+      "rss_after": 2618507264,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118174768,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118814128,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 32786,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118304800,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 119525,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 512,
+      "rep": 2,
+      "mode": "direct_messages",
+      "input_bytes": 53768,
+      "rc": 2,
+      "heap_before": 118173024,
+      "heap_after": 118173024,
+      "sampled_heap_peak": 124238128,
+      "peak_since_probe": "normalized",
+      "rss_after": 2615853056,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "points": [
+        {
+          "stage": "borrowed",
+          "heap": 118174768,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 118814128,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 32786,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118304800,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 119525,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "shape": "tool_turns",
+      "size": 512,
+      "rep": 2,
+      "mode": "request_json",
+      "input_bytes": 53768,
+      "rc": 2,
+      "heap_before": 118173024,
+      "heap_after": 118173024,
+      "sampled_heap_peak": 124912640,
+      "peak_since_probe": "normalized",
+      "rss_after": 2615853056,
+      "stored": 0,
+      "logical": 0,
+      "payload_capacity": 0,
+      "cxf_bytes": 5868,
+      "points": [
+        {
+          "stage": "request",
+          "heap": 118320480,
+          "request": 132787,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "messages",
+          "heap": 119285168,
+          "request": 132787,
+          "json_strings": 32786,
+          "messages": 32786,
+          "normalized": 0,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "normalized",
+          "heap": 119141808,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 32786,
+          "rendered": 0,
+          "token_scratch": 0
+        },
+        {
+          "stage": "rendered",
+          "heap": 118648864,
+          "request": 0,
+          "json_strings": 0,
+          "messages": 0,
+          "normalized": 0,
+          "rendered": 119525,
+          "token_scratch": 0
+        }
+      ]
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 1024,
+      "rep": 0,
+      "mode": "direct_messages",
+      "rc": 0,
+      "wall_ms": 14.135666
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 1024,
+      "rep": 0,
+      "mode": "request_json",
+      "rc": 0,
+      "wall_ms": 11.788416
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 1024,
+      "rep": 1,
+      "mode": "request_json",
+      "rc": 0,
+      "wall_ms": 13.285583
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 1024,
+      "rep": 1,
+      "mode": "direct_messages",
+      "rc": 0,
+      "wall_ms": 11.403916
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 1024,
+      "rep": 2,
+      "mode": "direct_messages",
+      "rc": 0,
+      "wall_ms": 12.7855
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 1024,
+      "rep": 2,
+      "mode": "request_json",
+      "rc": 0,
+      "wall_ms": 11.766958
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 4096,
+      "rep": 0,
+      "mode": "direct_messages",
+      "rc": 0,
+      "wall_ms": 21.416
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 4096,
+      "rep": 0,
+      "mode": "request_json",
+      "rc": 0,
+      "wall_ms": 23.280667
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 4096,
+      "rep": 1,
+      "mode": "request_json",
+      "rc": 0,
+      "wall_ms": 22.724167
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 4096,
+      "rep": 1,
+      "mode": "direct_messages",
+      "rc": 0,
+      "wall_ms": 22.649125
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 4096,
+      "rep": 2,
+      "mode": "direct_messages",
+      "rc": 0,
+      "wall_ms": 21.623541
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 4096,
+      "rep": 2,
+      "mode": "request_json",
+      "rc": 0,
+      "wall_ms": 19.813375
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 7168,
+      "rep": 0,
+      "mode": "direct_messages",
+      "rc": 0,
+      "wall_ms": 31.724917
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 7168,
+      "rep": 0,
+      "mode": "request_json",
+      "rc": 0,
+      "wall_ms": 31.886334
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 7168,
+      "rep": 1,
+      "mode": "request_json",
+      "rc": 0,
+      "wall_ms": 28.25325
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 7168,
+      "rep": 1,
+      "mode": "direct_messages",
+      "rc": 0,
+      "wall_ms": 30.751041
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 7168,
+      "rep": 2,
+      "mode": "direct_messages",
+      "rc": 0,
+      "wall_ms": 28.689791
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 7168,
+      "rep": 2,
+      "mode": "request_json",
+      "rc": 0,
+      "wall_ms": 30.073916
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 14336,
+      "rep": 0,
+      "mode": "direct_messages",
+      "rc": 0,
+      "wall_ms": 41.473167
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 14336,
+      "rep": 0,
+      "mode": "request_json",
+      "rc": 0,
+      "wall_ms": 34.845167
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 14336,
+      "rep": 1,
+      "mode": "request_json",
+      "rc": 0,
+      "wall_ms": 36.021667
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 14336,
+      "rep": 1,
+      "mode": "direct_messages",
+      "rc": 0,
+      "wall_ms": 35.851458
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 14336,
+      "rep": 2,
+      "mode": "direct_messages",
+      "rc": 0,
+      "wall_ms": 47.815083
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 14336,
+      "rep": 2,
+      "mode": "request_json",
+      "rc": 0,
+      "wall_ms": 44.409083
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 65536,
+      "rep": 0,
+      "mode": "direct_messages",
+      "rc": 2,
+      "wall_ms": 77.351209
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 65536,
+      "rep": 0,
+      "mode": "request_json",
+      "rc": 2,
+      "wall_ms": 126.625125
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 65536,
+      "rep": 1,
+      "mode": "request_json",
+      "rc": 2,
+      "wall_ms": 73.770125
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 65536,
+      "rep": 1,
+      "mode": "direct_messages",
+      "rc": 2,
+      "wall_ms": 62.097458
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 65536,
+      "rep": 2,
+      "mode": "direct_messages",
+      "rc": 2,
+      "wall_ms": 79.79525
+    },
+    {
+      "kind": "timing",
+      "shape": "single_text",
+      "size": 65536,
+      "rep": 2,
+      "mode": "request_json",
+      "rc": 2,
+      "wall_ms": 49.612542
+    },
+    {
+      "kind": "timing",
+      "shape": "tool_turns",
+      "size": 128,
+      "rep": 0,
+      "mode": "direct_messages",
+      "rc": 0,
+      "wall_ms": 86.387584
+    },
+    {
+      "kind": "timing",
+      "shape": "tool_turns",
+      "size": 128,
+      "rep": 0,
+      "mode": "request_json",
+      "rc": 0,
+      "wall_ms": 52.311208
+    },
+    {
+      "kind": "timing",
+      "shape": "tool_turns",
+      "size": 128,
+      "rep": 1,
+      "mode": "request_json",
+      "rc": 0,
+      "wall_ms": 47.350708
+    },
+    {
+      "kind": "timing",
+      "shape": "tool_turns",
+      "size": 128,
+      "rep": 1,
+      "mode": "direct_messages",
+      "rc": 0,
+      "wall_ms": 45.696583
+    },
+    {
+      "kind": "timing",
+      "shape": "tool_turns",
+      "size": 128,
+      "rep": 2,
+      "mode": "direct_messages",
+      "rc": 0,
+      "wall_ms": 45.671625
+    },
+    {
+      "kind": "timing",
+      "shape": "tool_turns",
+      "size": 128,
+      "rep": 2,
+      "mode": "request_json",
+      "rc": 0,
+      "wall_ms": 42.233375
+    },
+    {
+      "kind": "timing",
+      "shape": "tool_turns",
+      "size": 512,
+      "rep": 0,
+      "mode": "direct_messages",
+      "rc": 2,
+      "wall_ms": 114.168417
+    },
+    {
+      "kind": "timing",
+      "shape": "tool_turns",
+      "size": 512,
+      "rep": 0,
+      "mode": "request_json",
+      "rc": 2,
+      "wall_ms": 112.19275
+    },
+    {
+      "kind": "timing",
+      "shape": "tool_turns",
+      "size": 512,
+      "rep": 1,
+      "mode": "request_json",
+      "rc": 2,
+      "wall_ms": 144.204292
+    },
+    {
+      "kind": "timing",
+      "shape": "tool_turns",
+      "size": 512,
+      "rep": 1,
+      "mode": "direct_messages",
+      "rc": 2,
+      "wall_ms": 104.061167
+    },
+    {
+      "kind": "timing",
+      "shape": "tool_turns",
+      "size": 512,
+      "rep": 2,
+      "mode": "direct_messages",
+      "rc": 2,
+      "wall_ms": 117.082916
+    },
+    {
+      "kind": "timing",
+      "shape": "tool_turns",
+      "size": 512,
+      "rep": 2,
+      "mode": "request_json",
+      "rc": 2,
+      "wall_ms": 126.599125
+    },
+    {
+      "kind": "branch_shared",
+      "branches": 8,
+      "stored": 6000,
+      "logical": 48000,
+      "payload_capacity": 24576,
+      "cxf_bytes_before": 30444,
+      "cxf_bytes_after": 30444,
+      "shared_kv_tokens": 42000
+    },
+    {
+      "kind": "branch_suffix",
+      "stored": 6256,
+      "logical": 48256,
+      "payload_capacity": 31744,
+      "new_decode_tokens": 256,
+      "cxf_bytes": 37612
+    },
+    {
+      "kind": "closed",
+      "cxf_live_bytes": 0
+    }
+  ],
+  "summary": [
+    {
+      "shape": "single_text",
+      "size": 1024,
+      "mode": "direct_messages",
+      "samples": 3,
+      "rc": 0,
+      "input_bytes": 6152,
+      "stored": 1199,
+      "heap_extra_median": 52192,
+      "heap_extra_min": 27280,
+      "heap_extra_max": 59280,
+      "steady_cxf_bytes": 8748
+    },
+    {
+      "shape": "single_text",
+      "size": 1024,
+      "mode": "request_json",
+      "samples": 3,
+      "rc": 0,
+      "input_bytes": 6152,
+      "stored": 1199,
+      "heap_extra_median": 47600,
+      "heap_extra_min": 27792,
+      "heap_extra_max": 52576,
+      "steady_cxf_bytes": 8748
+    },
+    {
+      "shape": "single_text",
+      "size": 4096,
+      "mode": "direct_messages",
+      "samples": 3,
+      "rc": 0,
+      "input_bytes": 24584,
+      "stored": 4271,
+      "heap_extra_median": 124064,
+      "heap_extra_min": 48624,
+      "heap_extra_max": 130368,
+      "steady_cxf_bytes": 22124
+    },
+    {
+      "shape": "single_text",
+      "size": 4096,
+      "mode": "request_json",
+      "samples": 3,
+      "rc": 0,
+      "input_bytes": 24584,
+      "stored": 4271,
+      "heap_extra_median": 149584,
+      "heap_extra_min": 135744,
+      "heap_extra_max": 284032,
+      "steady_cxf_bytes": 22124
+    },
+    {
+      "shape": "single_text",
+      "size": 7168,
+      "mode": "direct_messages",
+      "samples": 3,
+      "rc": 0,
+      "input_bytes": 43016,
+      "stored": 7343,
+      "heap_extra_median": 178144,
+      "heap_extra_min": 69424,
+      "heap_extra_max": 402432,
+      "steady_cxf_bytes": 34412
+    },
+    {
+      "shape": "single_text",
+      "size": 7168,
+      "mode": "request_json",
+      "samples": 3,
+      "rc": 0,
+      "input_bytes": 43016,
+      "stored": 7343,
+      "heap_extra_median": 199024,
+      "heap_extra_min": 188240,
+      "heap_extra_max": 231072,
+      "steady_cxf_bytes": 34412
+    },
+    {
+      "shape": "single_text",
+      "size": 14336,
+      "mode": "direct_messages",
+      "samples": 3,
+      "rc": 0,
+      "input_bytes": 86024,
+      "stored": 14511,
+      "heap_extra_median": 329600,
+      "heap_extra_min": 208624,
+      "heap_extra_max": 697344,
+      "steady_cxf_bytes": 65260
+    },
+    {
+      "shape": "single_text",
+      "size": 14336,
+      "mode": "request_json",
+      "samples": 3,
+      "rc": 0,
+      "input_bytes": 86024,
+      "stored": 14511,
+      "heap_extra_median": 311872,
+      "heap_extra_min": 311872,
+      "heap_extra_max": 338528,
+      "steady_cxf_bytes": 65260
+    },
+    {
+      "shape": "single_text",
+      "size": 16384,
+      "mode": "direct_messages",
+      "samples": 3,
+      "rc": 2,
+      "input_bytes": 98312,
+      "stored": 0,
+      "heap_extra_median": 2728656,
+      "heap_extra_min": 2393776,
+      "heap_extra_max": 2728656,
+      "steady_cxf_bytes": 5868
+    },
+    {
+      "shape": "single_text",
+      "size": 16384,
+      "mode": "request_json",
+      "samples": 3,
+      "rc": 2,
+      "input_bytes": 98312,
+      "stored": 0,
+      "heap_extra_median": 2394160,
+      "heap_extra_min": 2345008,
+      "heap_extra_max": 2426928,
+      "steady_cxf_bytes": 5868
+    },
+    {
+      "shape": "single_text",
+      "size": 65536,
+      "mode": "direct_messages",
+      "samples": 3,
+      "rc": 2,
+      "input_bytes": 393224,
+      "stored": 0,
+      "heap_extra_median": 10372784,
+      "heap_extra_min": 10372784,
+      "heap_extra_max": 10372784,
+      "steady_cxf_bytes": 5868
+    },
+    {
+      "shape": "single_text",
+      "size": 65536,
+      "mode": "request_json",
+      "samples": 3,
+      "rc": 2,
+      "input_bytes": 393224,
+      "stored": 0,
+      "heap_extra_median": 11084880,
+      "heap_extra_min": 10373168,
+      "heap_extra_max": 11084880,
+      "steady_cxf_bytes": 5868
+    },
+    {
+      "shape": "tool_turns",
+      "size": 16,
+      "mode": "direct_messages",
+      "samples": 3,
+      "rc": 0,
+      "input_bytes": 1688,
+      "stored": 846,
+      "heap_extra_median": 232288,
+      "heap_extra_min": 224752,
+      "heap_extra_max": 240240,
+      "steady_cxf_bytes": 10988
+    },
+    {
+      "shape": "tool_turns",
+      "size": 16,
+      "mode": "request_json",
+      "samples": 3,
+      "rc": 0,
+      "input_bytes": 1688,
+      "stored": 846,
+      "heap_extra_median": 244624,
+      "heap_extra_min": 237264,
+      "heap_extra_max": 250784,
+      "steady_cxf_bytes": 10988
+    },
+    {
+      "shape": "tool_turns",
+      "size": 128,
+      "mode": "direct_messages",
+      "samples": 3,
+      "rc": 0,
+      "input_bytes": 13448,
+      "stored": 5550,
+      "heap_extra_median": 1529008,
+      "heap_extra_min": 1522128,
+      "heap_extra_max": 1627072,
+      "steady_cxf_bytes": 29420
+    },
+    {
+      "shape": "tool_turns",
+      "size": 128,
+      "mode": "request_json",
+      "samples": 3,
+      "rc": 0,
+      "input_bytes": 13448,
+      "stored": 5550,
+      "heap_extra_median": 1632656,
+      "heap_extra_min": 1622992,
+      "heap_extra_max": 1721280,
+      "steady_cxf_bytes": 29420
+    },
+    {
+      "shape": "tool_turns",
+      "size": 512,
+      "mode": "direct_messages",
+      "samples": 3,
+      "rc": 2,
+      "input_bytes": 53768,
+      "stored": 0,
+      "heap_extra_median": 6065104,
+      "heap_extra_min": 5998704,
+      "heap_extra_max": 6411936,
+      "steady_cxf_bytes": 5868
+    },
+    {
+      "shape": "tool_turns",
+      "size": 512,
+      "mode": "request_json",
+      "samples": 3,
+      "rc": 2,
+      "input_bytes": 53768,
+      "stored": 0,
+      "heap_extra_median": 6624064,
+      "heap_extra_min": 6410000,
+      "heap_extra_max": 6739616,
+      "steady_cxf_bytes": 5868
+    }
+  ],
+  "sources_sha256": {
+    "src/algo.c": "f54e1a77dfb260ddf2957723cec2a2dbe94470b727f1535ca81cfc68ca383d6c",
+    "src/alloc.c": "5afbb7848c5cec41fc2d0dba6b348da6b1cb9064ff102a41df9cfac7e4229619",
+    "src/arena.c": "101b99b827395575c24e683f9fa32be68f8eb91c8d213df7251f4a7a0cdc53ab",
+    "src/base.c": "d552e4f05a2285f77f3413327abfa3fe32265f3b022c9128fa419a27c3b66174",
+    "src/bitmap.c": "462076512d2fe487fcef766895ed9123e841badd2e076d5bcacdafd4cc85bc19",
+    "src/blob.c": "6df2ddd2dbffe34499966116479943347866dbfc6e09db509451772959a30706",
+    "src/buf.c": "bc3ad7e775ceaf8c1ed28f8f55bcc94e9d8ab70beeae28704adffaceeda4dd34",
+    "src/csr.c": "50fbe7c1df29f557de56899d10989d5ebb4c4150046bd3c4d41442fd79d3dff9",
+    "src/llama.c": "0f855a590737f587067dd71c7d70a567d3efca30bf63ab5ce6e6363f6933cee6",
+    "src/namemap.c": "999b71b7ddca9869a099f436d1254308669b60954219f2ec6d06cdec1669571c",
+    "src/pqueue.c": "0e55b07a6be11d8761741dd7ccab2f96366f180d8f1476014857294ede9f7de3",
+    "src/ring.c": "7db9c3c868b9a6a286fd1d82e9421921f14d3525fe5b2cab9d5c519251621cf6",
+    "src/sb.c": "e4a7cf42bcbff87fab745c6752d35e4d086b5752f50f7bacc409757fbc9c1d85",
+    "src/service.c": "8854fec1eecc40e3678c246bfb76a3086676838ab35f0a78c3b90b37a5766184",
+    "src/soa.c": "0c22553252ef28abefde1fae4f59a6a4e8dd28d74b57cac8081c12d1fc70b52e",
+    "src/str.c": "6bf536db204924fb2d3492b23ffb45223e596b998d35e1e291be5ae89a289966",
+    "src/table.c": "295e575dbc3b28ae9c0c23d658941bdcb35c676b7dc323d0e90c50f740386e89",
+    "src/type.c": "c767ed22c04fe0d4406629a57491eae0e71d0ce3d67916bb7720b94b1981b357",
+    "src/vec.c": "c20493e1be3d05d7437ee29382ede06e6be7211f0d8bfe245aa40bbbea427084",
+    "src/world.c": "20335e81db1339dd6de476de67515a8b5beeb7aab6b5c0818d44eaf65cb5046b",
+    "tests/agent_types.gen.c": "1d32e73e577ca9cd7129932a9be70858f663276a234c6e07233e49effc6d06c0",
+    "tests/agent_caps.c": "66b328806444ce4a7823f4aa10272b9dd09917054167093be2ce131438724f4e",
+    "tests/agent_caps.gen.c": "e4eb560513ba51fb988b5023c7f3f71635fe0a2634af7b3609c15c8ac7c00f57",
+    "tests/agent_fs.c": "4fcad4bbcec1005902f1f6f3c8990e80c153eccb94c718876c9a591d379cafb2",
+    "tests/agent_fs.gen.c": "b49bbaeb6535a9f54280ba012fb189fb830b709ee82ffbda0901e48a4c47344d",
+    "tests/agent_net.c": "6d3eeccecc80099b7a40eb696e4b318f920d8f0152dc535432ee4fc27b998d39",
+    "tests/agent.c": "42a93ab6afbc3eebb67ace36fb15ca37ab7c355f36e78a3a737dae00b5400c8a",
+    "tests/agent_http.c": "0ae0e5e23a1ac6d86c733379990f7a90550e39de28366103b8694972ff3e7666",
+    "tests/agent_llm.c": "28f7eb20d711e64ae2edab7666dc7b5379581218abc4a9c52353c038701d2eba",
+    "tests/agent_basic.c": "dd96278d70fc04d06ed53cb64d8ccdf636c6c1cb688e2fe7d559b58e05b88674",
+    "build/llama.cpp-b10938/vendor/hash/sha256/sha256.c": "ba7a8ea69ad125385db28ef17e77be4a09dfdc30bb9532c30b259baaf670129c",
+    "tests/agent_native.cpp": "191b79ed9a69cbef1c0dcf64170ec5a89b2069279b3e8a319f0e0ae08f898802",
+    "tests/agent_native_messages.cpp": "faf37cdd6ac60fe3a245d8388a0740fdac9419adb78a566e748dae2f0f6bd758",
+    "tests/agentctl.c": "b9ea7f9c7325f2bdee645699efd9422ea0813418a7845deb7542ecea183786f6",
+    "tests/agentctl_config.c": "5139b05a93a2e67b3f98a8a2a77b1d871343ee10ffb41138ea4035defaff9c1c",
+    "tests/test_native_chat.c": "93ce536392edcd11a698834b1351d420b1dc36fdbcb985d2d47f60bc1e57c01a",
+    "tests/native_chat_reference.cpp": "1480474cf8f1fee83dab20ca4f0a0b6560be8c83a050f118188fa59a5186cd40",
+    "tests/bench_context_memory.cpp": "2aaf2b406bcdf76702cb8c9538f1f2bd259e5b41c77bdde82f4875186c0b4608"
+  },
+  "headers_sha256": {
+    "tests/agent_llm.h": "d62021579daf22a8c9ee61cb548d0219e02b84108e322ac37c86ffcf4227bda1",
+    "tests/agent_native_messages.h": "9d7446e85dd6ed2abccb76575953a6fc8d380757fd90a86e6e560638b3245097",
+    "tests/agent_native.h": "b2d43e9f1697a0aff2fdbb238c56271a42ddf1281d97f054a24bc7d0465ac447",
+    "tests/native_context_audit.h": "51703efd61439e1c5daab99fb90d394635b7bb05cfa5a8e5a6f97eff3bb86f85"
+  },
+  "validation": {
+    "compatibility": [
+      "PASS borrowed messages: exact upstream message fields, 256 byte/escape corpora, malformed UTF-8 rejection",
+      "PASS template: incremental suffix tokens equal independent full tokenization; changed prefix rebuilds; malformed tool rejected",
+      "PASS scripted integration: real native prefill -> tool parser -> read -> failing test -> write -> passing test -> read -> DONE",
+      "PASS real model generation: OK",
+      "PASS long context: 14357 tokens match full upstream tokenization; cached suffix preserves greedy result",
+      "native counters: tokenized=16462 reused_prefix=17736 rebuilds=3",
+      "all native chat tests passed"
+    ],
+    "sanitizers": {
+      "directory": "build/direct-messages-sanitized-20261030",
+      "output": [
+        "PASS borrowed messages: exact upstream message fields, 256 byte/escape corpora, malformed UTF-8 rejection",
+        "PASS template: incremental suffix tokens equal independent full tokenization; changed prefix rebuilds; malformed tool rejected",
+        "PASS scripted integration: real native prefill -> tool parser -> read -> failing test -> write -> passing test -> read -> DONE",
+        "PASS real model generation: OK",
+        "PASS long context: 14357 tokens match full upstream tokenization; cached suffix preserves greedy result",
+        "native counters: tokenized=16462 reused_prefix=17736 rebuilds=3",
+        "all native chat tests passed"
+      ],
+      "sources_sha256": {
+        "src/algo.c": "f54e1a77dfb260ddf2957723cec2a2dbe94470b727f1535ca81cfc68ca383d6c",
+        "src/alloc.c": "5afbb7848c5cec41fc2d0dba6b348da6b1cb9064ff102a41df9cfac7e4229619",
+        "src/arena.c": "101b99b827395575c24e683f9fa32be68f8eb91c8d213df7251f4a7a0cdc53ab",
+        "src/base.c": "d552e4f05a2285f77f3413327abfa3fe32265f3b022c9128fa419a27c3b66174",
+        "src/bitmap.c": "462076512d2fe487fcef766895ed9123e841badd2e076d5bcacdafd4cc85bc19",
+        "src/blob.c": "6df2ddd2dbffe34499966116479943347866dbfc6e09db509451772959a30706",
+        "src/buf.c": "bc3ad7e775ceaf8c1ed28f8f55bcc94e9d8ab70beeae28704adffaceeda4dd34",
+        "src/csr.c": "50fbe7c1df29f557de56899d10989d5ebb4c4150046bd3c4d41442fd79d3dff9",
+        "src/llama.c": "0f855a590737f587067dd71c7d70a567d3efca30bf63ab5ce6e6363f6933cee6",
+        "src/namemap.c": "999b71b7ddca9869a099f436d1254308669b60954219f2ec6d06cdec1669571c",
+        "src/pqueue.c": "0e55b07a6be11d8761741dd7ccab2f96366f180d8f1476014857294ede9f7de3",
+        "src/ring.c": "7db9c3c868b9a6a286fd1d82e9421921f14d3525fe5b2cab9d5c519251621cf6",
+        "src/sb.c": "e4a7cf42bcbff87fab745c6752d35e4d086b5752f50f7bacc409757fbc9c1d85",
+        "src/service.c": "8854fec1eecc40e3678c246bfb76a3086676838ab35f0a78c3b90b37a5766184",
+        "src/soa.c": "0c22553252ef28abefde1fae4f59a6a4e8dd28d74b57cac8081c12d1fc70b52e",
+        "src/str.c": "6bf536db204924fb2d3492b23ffb45223e596b998d35e1e291be5ae89a289966",
+        "src/table.c": "295e575dbc3b28ae9c0c23d658941bdcb35c676b7dc323d0e90c50f740386e89",
+        "src/type.c": "c767ed22c04fe0d4406629a57491eae0e71d0ce3d67916bb7720b94b1981b357",
+        "src/vec.c": "c20493e1be3d05d7437ee29382ede06e6be7211f0d8bfe245aa40bbbea427084",
+        "src/world.c": "20335e81db1339dd6de476de67515a8b5beeb7aab6b5c0818d44eaf65cb5046b",
+        "tests/agent_types.gen.c": "1d32e73e577ca9cd7129932a9be70858f663276a234c6e07233e49effc6d06c0",
+        "tests/agent_caps.c": "66b328806444ce4a7823f4aa10272b9dd09917054167093be2ce131438724f4e",
+        "tests/agent_caps.gen.c": "e4eb560513ba51fb988b5023c7f3f71635fe0a2634af7b3609c15c8ac7c00f57",
+        "tests/agent_fs.c": "4fcad4bbcec1005902f1f6f3c8990e80c153eccb94c718876c9a591d379cafb2",
+        "tests/agent_fs.gen.c": "b49bbaeb6535a9f54280ba012fb189fb830b709ee82ffbda0901e48a4c47344d",
+        "tests/agent_net.c": "6d3eeccecc80099b7a40eb696e4b318f920d8f0152dc535432ee4fc27b998d39",
+        "tests/agent.c": "42a93ab6afbc3eebb67ace36fb15ca37ab7c355f36e78a3a737dae00b5400c8a",
+        "tests/agent_http.c": "0ae0e5e23a1ac6d86c733379990f7a90550e39de28366103b8694972ff3e7666",
+        "tests/agent_llm.c": "28f7eb20d711e64ae2edab7666dc7b5379581218abc4a9c52353c038701d2eba",
+        "tests/agent_basic.c": "dd96278d70fc04d06ed53cb64d8ccdf636c6c1cb688e2fe7d559b58e05b88674",
+        "build/llama.cpp-b10938/vendor/hash/sha256/sha256.c": "ba7a8ea69ad125385db28ef17e77be4a09dfdc30bb9532c30b259baaf670129c",
+        "tests/agent_native.cpp": "191b79ed9a69cbef1c0dcf64170ec5a89b2069279b3e8a319f0e0ae08f898802",
+        "tests/agent_native_messages.cpp": "faf37cdd6ac60fe3a245d8388a0740fdac9419adb78a566e748dae2f0f6bd758",
+        "tests/agentctl.c": "b9ea7f9c7325f2bdee645699efd9422ea0813418a7845deb7542ecea183786f6",
+        "tests/agentctl_config.c": "5139b05a93a2e67b3f98a8a2a77b1d871343ee10ffb41138ea4035defaff9c1c",
+        "tests/test_native_chat.c": "93ce536392edcd11a698834b1351d420b1dc36fdbcb985d2d47f60bc1e57c01a",
+        "tests/native_chat_reference.cpp": "1480474cf8f1fee83dab20ca4f0a0b6560be8c83a050f118188fa59a5186cd40"
+      },
+      "compile_diagnostics": ""
+    },
+    "normal_native_object_has_request_builder_reference": false,
+    "normal_native_object_has_request_messages_parser_reference": false,
+    "cli": [
+      {
+        "case": "repl",
+        "exit": 0,
+        "passed": true
+      },
+      {
+        "case": "generation-limit",
+        "exit": 1,
+        "passed": true
+      },
+      {
+        "case": "missing-model",
+        "exit": 2,
+        "passed": true
+      },
+      {
+        "case": "explicit-http-config",
+        "exit": 2,
+        "passed": true
+      },
+      {
+        "case": "bad-threads",
+        "exit": 2,
+        "passed": true
+      }
+    ],
+    "default_regression": {
+      "command": "make test",
+      "passed": true,
+      "log": "build/direct-messages-default-regression-20261030.txt"
+    }
+  },
+  "limits": [
+    "Visitor borrows input only synchronously; upstream owns per-call field copies",
+    "No persistent normalized-message history added",
+    "Jinja and tokenizer still allocate/copy internally",
+    "Some measured peak/time cases did not improve",
+    "FULL rows are frontend rejection tests, not large-KV successes",
+    "Native input/rendered caps remain 1MiB; obsolete encoded-request cap removed",
+    "Precompiled dependencies not sanitizer-instrumented"
+  ]
+}

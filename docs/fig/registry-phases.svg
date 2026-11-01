@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="176" viewBox="0 0 680 176">
+<defs>
+<marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+<rect x="0" y="0" width="680" height="176" fill="#ffffff"/>
+
+<rect x="40" y="30" width="176" height="80" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text x="128" y="54" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="500" fill="#0C447C">注册期</text>
+<text x="128" y="74" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#185FA5">bundle 登记进 world</text>
+<text x="128" y="92" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#185FA5">按名字，慢无所谓</text>
+
+<path d="M218 70 L248 70" fill="none" stroke="#185FA5" stroke-width="1.5" marker-end="url(#a)"/>
+
+<rect x="252" y="30" width="176" height="80" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text x="340" y="54" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="500" fill="#0C447C">固化</text>
+<text x="340" y="74" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#185FA5">init 里 find 一次</text>
+<text x="340" y="92" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#185FA5">结果存进 state</text>
+
+<path d="M430 70 L460 70" fill="none" stroke="#185FA5" stroke-width="1.5" marker-end="url(#a)"/>
+
+<rect x="464" y="30" width="176" height="80" rx="8" fill="#FAEEDA" stroke="#BA7517" stroke-width="0.5"/>
+<text x="552" y="54" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="500" fill="#633806">调用期</text>
+<text x="552" y="74" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#854F0B">只用 state 里的指针</text>
+<text x="552" y="92" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#854F0B">零查找</text>
+
+<path d="M40 132 L40 126 L428 126 L428 132" fill="none" stroke="#5F5E5A" stroke-width="0.5"/>
+<text x="234" y="148" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#444441">装配期：允许字符串查找、允许慢</text>
+
+<path d="M464 132 L464 126 L640 126 L640 132" fill="none" stroke="#5F5E5A" stroke-width="0.5"/>
+<text x="552" y="148" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#444441">一次跳转，不再查表</text>
+</svg>

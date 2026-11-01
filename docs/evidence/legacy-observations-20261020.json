@@ -1,0 +1,120 @@
+{
+  "date": "2026-10-20",
+  "scope": "Historical values transcribed in project notes; original per-request CSV is unavailable",
+  "evidence_level": "reported_only_no_raw_samples",
+  "source_document": "docs/agent.md",
+  "source_document_sha256": "83c7e4f8599183aab5921337fbed514d805b807d93eb5047d0e8f190a95d448e",
+  "external_service_capacity": {
+    "source_section": "4.17.5",
+    "rows": [
+      {
+        "concurrency": 1,
+        "ok": 2,
+        "requests": 2,
+        "wall_s": 3.05,
+        "reported_p50_s": 1.34,
+        "reported_p95_s": 1.7,
+        "reported_rps": 0.657
+      },
+      {
+        "concurrency": 2,
+        "ok": 4,
+        "requests": 4,
+        "wall_s": 3,
+        "reported_p50_s": 1.44,
+        "reported_p95_s": 1.56,
+        "reported_rps": 1.332
+      },
+      {
+        "concurrency": 4,
+        "ok": 16,
+        "requests": 16,
+        "wall_s": 6.98,
+        "reported_p50_s": 1.43,
+        "reported_p95_s": 2.39,
+        "reported_rps": 2.292
+      },
+      {
+        "concurrency": 8,
+        "ok": 16,
+        "requests": 16,
+        "wall_s": 4.22,
+        "reported_p50_s": 1.45,
+        "reported_p95_s": 1.69,
+        "reported_rps": 3.793
+      },
+      {
+        "concurrency": 16,
+        "ok": 32,
+        "requests": 32,
+        "wall_s": 4.59,
+        "reported_p50_s": 1.62,
+        "reported_p95_s": 2.49,
+        "reported_rps": 6.97
+      },
+      {
+        "concurrency": 32,
+        "ok": 64,
+        "requests": 64,
+        "wall_s": 4.85,
+        "reported_p50_s": 1.88,
+        "reported_p95_s": 2.72,
+        "reported_rps": 13.191
+      }
+    ]
+  },
+  "context_budget_fixture": {
+    "source_section": "4.15",
+    "files": 12,
+    "corpus_bytes": 10136,
+    "targets": 8,
+    "rows": [
+      {
+        "variant": "ls",
+        "hits": 0,
+        "worst_budget_bytes": null,
+        "noise": null
+      },
+      {
+        "variant": "read_all",
+        "hits": 8,
+        "worst_budget_bytes": 8192,
+        "noise": 7
+      },
+      {
+        "variant": "grep_hits",
+        "hits": 8,
+        "worst_budget_bytes": 96,
+        "noise": 0
+      }
+    ]
+  },
+  "copy_microbench": {
+    "source_section": "4.9",
+    "reported": [
+      {
+        "bytes": 16,
+        "approx_ns_per_op": 1.5
+      },
+      {
+        "bytes": 64,
+        "approx_ns_per_op": 1.1
+      },
+      {
+        "bytes": 512,
+        "approx_ns_per_op": 4.6
+      },
+      {
+        "bytes": 4096,
+        "approx_ns_per_op": 35
+      }
+    ]
+  },
+  "limits": [
+    "Reported quantiles are not recalculated or statistically endorsed; some groups had only two requests",
+    "Remote service capacity is not cxf local-engine speedup",
+    "Retrieval budget results measure marker presence, not model answer accuracy",
+    "No public endpoint, key or private request body is included",
+    "Legacy notes are not included in the publication bundle"
+  ]
+}

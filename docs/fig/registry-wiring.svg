@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="368" viewBox="0 0 680 368">
+<defs>
+<marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+<rect x="0" y="0" width="680" height="368" fill="#ffffff"/>
+
+<rect x="40" y="30" width="600" height="90" rx="12" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text x="60" y="52" font-family="sans-serif" font-size="13" font-weight="500" fill="#0C447C">soa_types.gen.c —— 静态常量，编译期就存在</text>
+<rect x="60" y="64" width="132" height="28" rx="6" fill="#B5D4F4" stroke="#185FA5" stroke-width="0.5"/>
+<text x="126" y="82" text-anchor="middle" font-family="monospace" font-size="11" fill="#0C447C">cxf_type_Particle</text>
+<rect x="202" y="64" width="110" height="28" rx="6" fill="#B5D4F4" stroke="#185FA5" stroke-width="0.5"/>
+<text x="257" y="82" text-anchor="middle" font-family="monospace" font-size="11" fill="#0C447C">cxf_type_Vec3</text>
+<rect x="322" y="64" width="110" height="28" rx="6" fill="#B5D4F4" stroke="#185FA5" stroke-width="0.5"/>
+<text x="377" y="82" text-anchor="middle" font-family="monospace" font-size="11" fill="#0C447C">cxf_type_Node</text>
+<rect x="442" y="64" width="178" height="28" rx="6" fill="#85B7EB" stroke="#185FA5" stroke-width="0.5"/>
+<text x="531" y="82" text-anchor="middle" font-family="monospace" font-size="11" fill="#0C447C">cxf_types_soa_types</text>
+<text x="531" y="106" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#185FA5">bundle（注册项）</text>
+
+<path d="M340 120 L340 152" fill="none" stroke="#185FA5" stroke-width="1.5" marker-end="url(#a)"/>
+<text x="352" y="140" font-family="monospace" font-size="11" fill="#185FA5">cxf_type_register_bundle()</text>
+
+<rect x="40" y="158" width="600" height="76" rx="12" fill="#FAEEDA" stroke="#BA7517" stroke-width="0.5"/>
+<text x="60" y="180" font-family="sans-serif" font-size="13" font-weight="500" fill="#633806">world-&gt;types[] —— 只存指针，不拥有类型（K3）</text>
+<rect x="60" y="192" width="150" height="28" rx="6" fill="#FAC775" stroke="#BA7517" stroke-width="0.5"/>
+<text x="135" y="210" text-anchor="middle" font-family="monospace" font-size="11" fill="#633806">"Particle" &#8594; &#9679;</text>
+<rect x="220" y="192" width="130" height="28" rx="6" fill="#FAC775" stroke="#BA7517" stroke-width="0.5"/>
+<text x="285" y="210" text-anchor="middle" font-family="monospace" font-size="11" fill="#633806">"Vec3" &#8594; &#9679;</text>
+<rect x="360" y="192" width="130" height="28" rx="6" fill="#FAC775" stroke="#BA7517" stroke-width="0.5"/>
+<text x="425" y="210" text-anchor="middle" font-family="monospace" font-size="11" fill="#633806">"Node" &#8594; &#9679;</text>
+<text x="510" y="210" font-family="sans-serif" font-size="11" fill="#854F0B">&#8230; 只增不减</text>
+
+<path d="M340 234 L340 266" fill="none" stroke="#BA7517" stroke-width="1.5" marker-end="url(#a)"/>
+<text x="352" y="254" font-family="monospace" font-size="11" fill="#854F0B">cxf_type_find() —— 装配期一次</text>
+
+<rect x="40" y="272" width="600" height="76" rx="12" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text x="60" y="294" font-family="sans-serif" font-size="13" font-weight="500" fill="#0C447C">sim 模块 state —— 固化结果，调用期只用这些</text>
+<rect x="60" y="306" width="184" height="28" rx="6" fill="#B5D4F4" stroke="#185FA5" stroke-width="0.5"/>
+<text x="152" y="324" text-anchor="middle" font-family="monospace" font-size="11" fill="#0C447C">const cxf_type *particle</text>
+<rect x="254" y="306" width="104" height="28" rx="6" fill="#B5D4F4" stroke="#185FA5" stroke-width="0.5"/>
+<text x="306" y="324" text-anchor="middle" font-family="monospace" font-size="11" fill="#0C447C">cxf_layout</text>
+<rect x="368" y="306" width="88" height="28" rx="6" fill="#B5D4F4" stroke="#185FA5" stroke-width="0.5"/>
+<text x="412" y="324" text-anchor="middle" font-family="monospace" font-size="11" fill="#0C447C">cxf_soa</text>
+<rect x="466" y="306" width="94" height="28" rx="6" fill="#B5D4F4" stroke="#185FA5" stroke-width="0.5"/>
+<text x="513" y="324" text-anchor="middle" font-family="monospace" font-size="11" fill="#0C447C">col_vx</text>
+</svg>

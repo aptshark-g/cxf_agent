@@ -1,0 +1,79 @@
+# cxf —— 构建产物与本地垃圾
+#
+# 判据：能被一条命令重建的，不进历史。
+# 理由不是省磁盘（那点空间无所谓），是**不可逆** —— 二进制一旦进了历史就删不掉，
+# 要清只能 rewrite，而 rewrite 会打断所有已存在的克隆。
+#
+# ---------------------------------------------------------------------------
+# ⚠️ 改动本文件前先读这一段：不要引入宽通配（例如 `*.gen.*`）。
+# `tests/*.gen.c` 与 `tests/*.gen.h` 是**故意入库**的 —— Makefile 里写着
+# 「生成物进版本库，make 不自动跑生成器」，因为构建不该依赖 clang + python。
+# 下面第 20-22 行的 `!` 否定式是这条决定的护栏，别删。
+# ---------------------------------------------------------------------------
+
+# --- 构建产物（`make` 可重建）---
+build/
+*.o
+*.d
+*.a
+*.so
+*.dylib
+*.dSYM/
+# 注意：.o/.d 不全在 build/ 下。Makefile 的 `%.o: %.c` 规则让它们落在 src/ 与
+# tests/ 的源码旁边，所以按后缀兜，而不是按目录兜。
+
+# --- 生成物护栏：显式声明它们不属于上面任何一条 ---
+!tests/*.gen.c
+!tests/*.gen.h
+
+# --- 大二进制 ---
+*.zip
+*.tar.gz
+*.tgz
+# 当前有一个 DialogMesh-main.zip（33.4 MB），是评审用的外部快照，与 cxf 无关。
+
+# --- macOS ---
+.DS_Store
+._*
+
+# --- 编辑器 ---
+.vscode/
+.idea/
+*.swp
+*~
+
+# --- Python（tools/gen_registry.py 侧）---
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# 本地 API 配置可能含密钥；示例 agentctl.example.json 入库。
+agentctl.json
+
+# --- 本机配置、会话与独立项目（首次公开发布边界）---
+/.workbuddy/
+/.codex/
+/.agents/
+/DialogMesh*/
+.env
+.env.*
+!.env.example
+*.local.json
+*.log
+*.trace
+*.trace.*
+
+# 本地推理依赖与模型，不随源码发布。
+/local-model/
+/models/
+*.gguf
+*.safetensors
+*.ckpt
+*.kv
+*.pem
+*.key
+*.p12
+*.pfx
+
+# docs/ 与源码、测试生成物保留；发布工具另有白名单和内容检查。

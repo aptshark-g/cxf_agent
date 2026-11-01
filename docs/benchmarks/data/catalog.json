@@ -1,0 +1,1368 @@
+{
+  "schema_version": 1,
+  "snapshot": "2026-10-31",
+  "experiments": [
+    {
+      "id": "E01",
+      "title": "Direct libllama: prefix, stream, fork, state",
+      "evidence_level": "raw",
+      "file": "docs/evidence/llama-context-direct-20261030.json",
+      "sha256": "f419cdfe7f714e9119dbf398e1649f309e04f380ff0c82c8489978f2398d0029",
+      "raw_records": 61,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "device": 3,
+        "prefix": 15,
+        "scan_only": 1,
+        "stream": 30,
+        "rollback_control": 1,
+        "branch": 5,
+        "state": 5
+      },
+      "official_run": "build/llama-context-final-20261030",
+      "scope": "direct C API; no HTTP, chat-template rendering or generation; shared warm prefix excluded",
+      "limits": [
+        "Direct C API only, no HTTP/template/full generation",
+        "Fixed verified token boundaries, not arbitrary text/SSE fragments",
+        "Simulated arrival schedule, not measured cloud speed",
+        "Resident memory is not independent VRAM",
+        "Sequence removal does not shrink the KV allocation"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E02",
+      "title": "Direct libllama: slow token arrivals",
+      "evidence_level": "raw_source_unrecorded",
+      "file": "docs/evidence/llama-context-slow-stream-20261030.json",
+      "sha256": "570b6f74b0987b3ba0c5233a5ba8f4387550b942417aa7a922c2d8961814c189",
+      "raw_records": 13,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "device": 3,
+        "stream": 9
+      },
+      "official_run": "build/llama-context-slow-stream-20261030",
+      "scope": "direct C API; no HTTP, chat-template rendering or generation; shared warm prefix excluded",
+      "limits": [
+        "Direct C API only, no HTTP/template/full generation",
+        "Fixed verified token boundaries, not arbitrary text/SSE fragments",
+        "Simulated arrival schedule, not measured cloud speed",
+        "Resident memory is not independent VRAM",
+        "Sequence removal does not shrink the KV allocation"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E03",
+      "title": "Native context correctness",
+      "evidence_level": "functional",
+      "file": "docs/evidence/llama-context-v1-20261030.json",
+      "sha256": "3e54b6be3fee64b2340142f2828ee3172a31b1219740d6b97951dda1eee97174",
+      "raw_records": 0,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {},
+      "official_run": "build/llama-native-v1-final-20261030",
+      "scope": "optional native context backend; not full agentctl chat/tool provider",
+      "limits": [],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E04",
+      "title": "Native chat, tools, CLI and model probes",
+      "evidence_level": "functional",
+      "file": "docs/evidence/llama-chat-v1-20261030.json",
+      "sha256": "57b51f2fc64f8352d8df031c1a73ccca79f5a52b0db22dc0a4a31df941fddad7",
+      "raw_records": 0,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {},
+      "official_run": "build/native-chat-final2-20261030",
+      "scope": "Qwen3 ChatML native chat/tool provider; thinking disabled",
+      "limits": [],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E05",
+      "title": "Chat checkpoint compatibility",
+      "evidence_level": "raw",
+      "file": "docs/evidence/llama-chat-compat-20261030.json",
+      "sha256": "d54b2334a87cd90b91a153f868855ecc375b7ec8b6f5c15d796e79b5b4ede727",
+      "raw_records": 20,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "timing": 20
+      },
+      "official_run": "build/native-chat-compat-final2-20261030",
+      "scope": "six-round chat input synchronization, existing KV cache vs native checkpoint; shared engine with independent sequences; not llama-server or model task capability",
+      "limits": [],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E06",
+      "title": "Template preparation cache",
+      "evidence_level": "raw",
+      "file": "docs/evidence/llama-template-cache-20261030.json",
+      "sha256": "1f510d4e1f281e9eede6b75b8dfd57121c45d354355629b12dd6ab6095e8b66e",
+      "raw_records": 40,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "timing": 40
+      },
+      "official_run": "build/native-template-cache-final-20261030",
+      "scope": "Six continuation rounds; old native checkpoint vs cached parser preparation; each has its own full-tokenization cached-KV control. Cold initial prefix, teacher-forced completion and correctness checks excluded. No model task scoring.",
+      "limits": [],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E07",
+      "title": "Temporary lifetimes and shared prefix audit",
+      "evidence_level": "raw",
+      "file": "docs/evidence/context-memory-20261030.json",
+      "sha256": "4ec5b722a991ac50ba73adc0cf2b5e9c4fdce9e5c8c0d252f860a83fa50960c3",
+      "raw_records": 99,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "memory": 54,
+        "timing": 42,
+        "branch_shared": 1,
+        "branch_suffix": 1,
+        "closed": 1
+      },
+      "official_run": "build/context-memory-final-20261030",
+      "scope": "Warm repeated prepare memory lifetimes, oversized frontend rejection, and explicit prefix forks; not total request or whole-agent peak memory",
+      "limits": [
+        "Full request/DOM/messages conversion still occurs",
+        "Unknown Jinja/tokenizer internal peaks not attributed by stack traces",
+        "Oversized rows return FULL; not evidence of large KV success",
+        "Explicit fork sharing is not automatic subagent integration",
+        "Precompiled libllama/common/Metal excluded from sanitizer instrumentation"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E08",
+      "title": "Borrowed messages versus request JSON",
+      "evidence_level": "raw",
+      "file": "docs/evidence/direct-messages-20261030.json",
+      "sha256": "0b441df7b1b5fa0967c93ccd9deb03931ec8e3184c54e34688fc2958d9babec5",
+      "raw_records": 99,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "memory": 54,
+        "timing": 42,
+        "branch_shared": 1,
+        "branch_suffix": 1,
+        "closed": 1
+      },
+      "official_run": "build/direct-messages-final2-20261030",
+      "scope": "Direct borrowed transcript visitor -> upstream messages compared with previous early-release request JSON path; full Jinja rendering remains",
+      "limits": [
+        "Visitor borrows input only synchronously; upstream owns per-call field copies",
+        "No persistent normalized-message history added",
+        "Jinja and tokenizer still allocate/copy internally",
+        "Some measured peak/time cases did not improve",
+        "FULL rows are frontend rejection tests, not large-KV successes",
+        "Native input/rendered caps remain 1MiB; obsolete encoded-request cap removed",
+        "Precompiled dependencies not sanitizer-instrumented"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E09",
+      "title": "Direct Jinja values and bounded tokenizer",
+      "evidence_level": "raw",
+      "file": "docs/evidence/jinja-values-20261030.json",
+      "sha256": "c3d14d7cf4d96ce199ccbd98f3500f25f2e7410617c2b90293b8e92c9c49106e",
+      "raw_records": 99,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "memory": 54,
+        "timing": 42,
+        "branch_shared": 1,
+        "branch_suffix": 1,
+        "closed": 1
+      },
+      "official_run": "build/jinja-values-final-20261030",
+      "scope": "Known-template warm direct Jinja values, direct result-tree collection and bounded first tokenizer buffer; no upstream core patch",
+      "limits": [
+        "No persistent extra message or rendered-text history",
+        "Raw transcript, canonical tokens and KV remain distinct representations",
+        "Full transcript scan, Jinja execution/rendering and prefix hashing remain O(N)",
+        "Jinja AST and upstream tokenizer still allocate and copy internally",
+        "C++ common/Jinja types are pinned to the accepted build, not stable C ABI",
+        "New tokenizer guess can require retry and add up to context-sized output scratch; invalid scratch is freed before retry",
+        "FULL rows are frontend rejection tests, not long-KV successes",
+        "Observed temporary-heap improvements are not universal and total warm synchronization did not reliably speed up",
+        "KV allocation, native Windows and physical KV offload were not changed"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E10",
+      "title": "Asynchronous KV restoration",
+      "evidence_level": "raw",
+      "file": "docs/evidence/kv-worker-20261030.json",
+      "sha256": "c60e70947a291cf2f8bf27d7821741f6e4e4abf43d17cc67e0cfe2bb0daed8b2",
+      "raw_records": 92,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "correctness": 1,
+        "snapshot": 6,
+        "timing": 84,
+        "closed": 1
+      },
+      "official_run": "build/kv-worker-final2-20261030",
+      "scope": "Callable C host adapter with one owner thread; early sequence-file restore overlaps host assembly or a labelled controlled wait; agentctl has not enabled automatic offloading",
+      "limits": [
+        "Not integrated into automatic agentctl tool/subagent scheduling; no eviction predictor or priority scheduler",
+        "Sequence-file snapshots are private immutable temporary products, same engine and exact live session revision only",
+        "No external/untrusted snapshot import, cryptographic full-file checksum, durable fsync or crash recovery",
+        "Cancellation stops publication/commit at native-call boundary, not the I/O operation mid-call",
+        "No shrinking/releasing of preallocated device KV buffer; explicit eviction frees logical cells for reuse",
+        "Snapshot token_count is zero; canonical token history stays in its original pool",
+        "Separate snapshot files can duplicate a shared prefix; no disk prefix deduplication or arbitrary block paging",
+        "Snapshot-save cost excluded from restoration-stage speedups; must be included for complete workload decisions",
+        "OS page-cache warm and Metal unified memory; results do not establish cold SSD or Windows/CUDA performance",
+        "Seven samples are insufficient for reliable p95/p99 or a tail-latency stability claim",
+        "Dense-history early case includes an outlier; heavy new prefill and short assembly cases did not improve overall",
+        "Restore duration itself varied between modes, so total median differences cannot all be attributed to overlap",
+        "Native Windows build acceptance remains pending"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E11",
+      "title": "Streaming prefill and complete-file tools",
+      "evidence_level": "raw",
+      "file": "docs/evidence/stream-pipeline-20261030.json",
+      "sha256": "04b841bc558f26faafe093285f05c8b5ac3129b8818e6c6180c33f858e83e6dd",
+      "raw_records": 191,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "correctness": 1,
+        "timing": 126,
+        "unit": 63,
+        "closed": 1
+      },
+      "official_run": "build/stream-final3-20261030",
+      "scope": "Callable NDJSON host pipeline: incremental complete-unit prefill on existing owner, independent complete-file callback, versioned receipts before source end, final local callback; replay CLI supports file/stdin read-only previews",
+      "limits": [
+        "Provider-neutral NDJSON only; no live cloud/SSE/tool-argument string decoder or automatic agentctl integration",
+        "Each payload is a separate immutable local user-message unit; not arbitrary BPE-safe append to one message",
+        "Comparisons hold event boundaries/final prompts equal; not a benchmark against every conventional agent framework",
+        "Source and initial context live in bounded canonical event storage; raw text, model token IDs and KV remain necessary distinct representations",
+        "Full Jinja rendering, prefix hash and temporary object copies remain; complete-file concatenation uses measured temporary scratch",
+        "Cancellation stops publication at native/callback boundaries, not by forcibly interrupting calls",
+        "Old receipts remain queryable with stale flags and are excluded from current-version final prompt",
+        "Same evaluated input token count but more decode calls and longer local prefill execution in streaming modes; no energy/FLOP measurement",
+        "File processing and some render wall times varied substantially; no lock/CPU profile or reliable p95/p99 estimate from seven samples",
+        "Model initialization/initial prefix preparation excluded; input rates are controlled replay, not measured cloud throughput",
+        "Replay CLI performs read-only file observation and at most 16 output tokens; does not establish summary/coding capability",
+        "No Windows/CUDA or multi-model device-contention acceptance; preallocated KV allocation remains unchanged"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E12",
+      "title": "Historical autonomous repair failures",
+      "evidence_level": "sanitized_summary",
+      "file": "docs/evidence/basic-agent-probes-20261030.json",
+      "sha256": "d09e0ef6a3ea539d71f3fbb7c44516d5867472f8c5bff458b953011b58fc48cb",
+      "raw_records": 0,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {},
+      "official_run": null,
+      "scope": "Historical basic-agent capability probes, before later protocol guards; separate from engine optimization acceptance",
+      "limits": [
+        "Two individual probes, not a coding benchmark",
+        "Configuration and request traces stay local because they can contain private endpoints or prompts",
+        "Protocol guards changed afterwards; these are historical failures, not current implementation acceptance results"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E13",
+      "title": "Calibrated warm-prefill time estimation",
+      "evidence_level": "raw",
+      "file": "docs/evidence/cost-estimator-20261030.json",
+      "sha256": "e40b0a33df53844e47324089f056643cf2bdff8c8aa6120e97fb4157a94c90d7",
+      "raw_records": 161,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "cost_sample": 147,
+        "calibration_model": 1,
+        "estimator_overhead": 10,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/cost-estimator-final3-20261030",
+      "scope": "Standalone calibrated warm-prefill service-time prediction; no scheduling or inference-path change",
+      "limits": [
+        "One machine/model/backend, warm shapes and no intentional contention; not hardware-only performance prediction",
+        "No cold-start, queue, KV-file restore, agent ETA or arbitrary-program complexity estimate",
+        "fit_mae is a fitting residual, not a confidence interval; range-based extrapolation is only a warning",
+        "Online consumes past evaluation observations after prediction; frozen consumes calibration only",
+        "Prediction quality improvement is not measured model-inference speedup; estimator overhead reported separately"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E14",
+      "title": "Roofline hardware proxies versus empirical estimates",
+      "evidence_level": "raw",
+      "file": "docs/evidence/roofline-estimator-20261030.json",
+      "sha256": "7ab6d159fcfe7a12761d1c46691610f5daf7799716eaf5409f4c3d50d9dcfe9b",
+      "raw_records": 195,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "roofline_spec": 1,
+        "hardware_probe": 21,
+        "hardware_profile": 1,
+        "cost_sample": 147,
+        "calibration_model": 1,
+        "roofline_calibration": 1,
+        "roofline_overhead": 10,
+        "estimator_overhead": 10,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/roofline-estimator-final-20261030",
+      "scope": "Same-job Roofline/GEMM structural model versus empirical estimator; warm prefill only, no scheduling change",
+      "limits": [
+        "One machine/model/backend; primitive effective rates are proxies, not hardware peak values or pure GPU timestamps",
+        "No cold-start, queue, KV-file restore, agent ETA or arbitrary-program complexity estimate",
+        "fit_mae is a fitting residual, not a confidence interval; range-based extrapolation is only a warning",
+        "Online consumes past evaluation observations after prediction; frozen consumes calibration only",
+        "Prediction quality improvement is not measured model-inference speedup; estimator overhead reported separately"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E15",
+      "title": "Roofline diagnosis, dependent-graph rates and operator correction",
+      "evidence_level": "raw",
+      "file": "docs/evidence/roofline-diagnosis-20261030.json",
+      "sha256": "e0d9c2d27abd615fe454eed29050d0edf10e3e7f56da5794dd495b1d0ea2fb02",
+      "raw_records": 278,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "roofline_spec": 1,
+        "hardware_probe": 42,
+        "hardware_profile": 1,
+        "graph_probe": 56,
+        "graph_rate": 4,
+        "graph_profile": 1,
+        "warm_hardware_profile": 1,
+        "cost_sample": 147,
+        "calibration_model": 1,
+        "roofline_calibration": 1,
+        "roofline_overhead": 10,
+        "estimator_overhead": 10,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/roofline-diagnose-final-20261030",
+      "scope": "Roofline diagnosis: dependent-graph slope, actual FlashAttention, final-layer FFN pruning; same-job ablations, no scheduling change",
+      "limits": [
+        "One machine/model/backend; primitive effective rates are proxies, not hardware peak values or pure GPU timestamps",
+        "No cold-start, queue, KV-file restore, agent ETA or arbitrary-program complexity estimate",
+        "fit_mae is a fitting residual, not a confidence interval; range-based extrapolation is only a warning",
+        "Online consumes past evaluation observations after prediction; frozen consumes calibration only",
+        "Prediction quality improvement is not measured model-inference speedup; estimator overhead reported separately",
+        "Probe order and graph-size effects are observed; GPU clock/temperature and pure GPU timestamps were not measured, so no frequency attribution",
+        "One synthetic shape for Q8 and attention rates; small-batch vec kernels, padding, cache traffic and omitted operators still produce error",
+        "Correct FFN count slightly worsens raw error after rate correction; compensating model errors remain",
+        "No held-out tuning or performance rerun selection; two development probe runs kept separately, including sparse-hint mistake in the first"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E16",
+      "title": "Batch/context diagnosis and shape interpolation negative result",
+      "evidence_level": "raw",
+      "file": "docs/evidence/cost-shapes-20261030.json",
+      "sha256": "9b17ccfa4c99aaae2ab7859c2b4fb9b3293430f56a1d5e4dfb3143a0f52ce7a9",
+      "raw_records": 916,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "roofline_spec": 1,
+        "hardware_probe": 42,
+        "hardware_profile": 1,
+        "graph_probe": 56,
+        "graph_rate": 4,
+        "graph_profile": 1,
+        "warm_hardware_profile": 1,
+        "shape_probe": 336,
+        "shape_rate": 24,
+        "shape_table": 1,
+        "metadata": 1,
+        "configuration": 2,
+        "cost_sample": 420,
+        "fitted_models": 2,
+        "shape_overhead": 20,
+        "correctness": 2,
+        "closed": 2
+      },
+      "official_run": "build/cost-shapes-final-20261030",
+      "scope": "Batch/context residual diagnosis; fair frozen/online comparisons and numeric shape profile",
+      "limits": [
+        "One machine/model/backend; no inference/scheduler change",
+        "Shape profile uses extra microprobe work; synthetic inputs, fixed Q8 matrix family and one KV layout",
+        "Kernel route labels inferred, GPU timing/DRAM/frequency/temperature unmeasured",
+        "Online consumes past evaluation labels; frozen comparison has different information",
+        "No held-out tuning or run selection; old evidence retained; group ranges/MAD are descriptive, not confidence bounds",
+        "Wrapper lacked re import after native success; metadata recovered from retained 916 raw records and original manifest; measurement runner hash is historical, postprocessor hash separate"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E17",
+      "title": "Time interpolation on new batch/context shapes",
+      "evidence_level": "raw",
+      "file": "docs/evidence/cost-shapes-v2-20261030.json",
+      "sha256": "af15ed5134fe4e7777d129ef3035db49e46f09b4b22cade841f624c7d5ba322e",
+      "raw_records": 916,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "roofline_spec": 1,
+        "hardware_probe": 42,
+        "hardware_profile": 1,
+        "graph_probe": 56,
+        "graph_rate": 4,
+        "graph_profile": 1,
+        "warm_hardware_profile": 1,
+        "shape_probe": 336,
+        "shape_rate": 24,
+        "shape_table": 1,
+        "metadata": 1,
+        "configuration": 2,
+        "cost_sample": 420,
+        "fitted_models": 2,
+        "shape_overhead": 20,
+        "correctness": 2,
+        "closed": 2
+      },
+      "official_run": "build/cost-shapes-v2-final-20261030",
+      "scope": "Batch/context residual diagnosis; fair frozen/online comparisons and numeric shape profile",
+      "limits": [
+        "One machine/model/backend; no inference/scheduler change",
+        "Shape profile uses extra microprobe work; synthetic inputs, fixed Q8 matrix family and one KV layout",
+        "Kernel route labels inferred, GPU timing/DRAM/frequency/temperature unmeasured",
+        "Online consumes past evaluation labels; frozen comparison has different information",
+        "No held-out tuning or run selection; old evidence retained; group ranges/MAD are descriptive, not confidence bounds"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E18",
+      "title": "Incomplete frozen-calibration run: cap64 setup rejection",
+      "evidence_level": "raw_incomplete",
+      "file": "docs/evidence/frozen-calibration-incomplete-20261030.json",
+      "sha256": "23a5d6f71287441adfd963b087ac16aef3fc36dd83533b28479e2d1584e0fb4b",
+      "raw_records": 849,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "roofline_spec": 1,
+        "graph_probe": 56,
+        "graph_rate": 4,
+        "graph_profile": 1,
+        "hardware_probe": 21,
+        "warm_hardware_profile": 1,
+        "shape_probe": 420,
+        "shape_rate": 30,
+        "shape_table": 1,
+        "metadata": 1,
+        "cost_sample": 300,
+        "fitted_models": 1,
+        "residual_overhead": 10,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/frozen-calibration-final-20261030",
+      "scope": "Incomplete first frozen-calibration run; cap256 completed, cap64 rejected before measurement",
+      "limits": [
+        "Raw incomplete evidence retained; excluded from formal E19 comparison; no rerun selection by accuracy",
+        "Only cap256 completed; model/service paths unchanged, test fixture configuration corrected"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E19",
+      "title": "Frozen calibration: coverage, objective, residual basis and new batches",
+      "evidence_level": "raw",
+      "file": "docs/evidence/frozen-calibration-20261030.json",
+      "sha256": "b39a410c1e0f85d6793f1c1690a07804371e5f1743867a64f84a721e2b9fb9f8",
+      "raw_records": 1162,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "roofline_spec": 1,
+        "graph_probe": 56,
+        "graph_rate": 4,
+        "graph_profile": 1,
+        "hardware_probe": 21,
+        "warm_hardware_profile": 1,
+        "shape_probe": 420,
+        "shape_rate": 30,
+        "shape_table": 1,
+        "metadata": 1,
+        "cost_sample": 600,
+        "fitted_models": 2,
+        "residual_overhead": 20,
+        "correctness": 2,
+        "closed": 2
+      },
+      "official_run": "build/frozen-calibration-final2-20261030",
+      "scope": "Frozen calibration: table coverage, equal-label diverse coverage, weighted objective and residual basis; new batch/context validation",
+      "limits": [
+        "Single machine/model/backend; changing objective and residual basis is an optional estimator, not faster inference",
+        "Two new batch caps and new context/token grid; no universal accuracy claim",
+        "Anchor ranges describe phase effects; GPU frequency/temperature, actual DRAM and pure GPU time unmeasured",
+        "Dividing coverage/control effects does not make them additive; all predictions share actual jobs",
+        "Residual model uses 3 coefficients like old model, but a different basis/prior/objective; beta is not physical attribution",
+        "Initial E18 run stopped before cap64 measurements due to prefill minimum128 exceeding batch64; all849 native rows archived separately; E19 fixes only benchmark parameters, no accuracy-based run selection"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E20",
+      "title": "Optional residual Kalman: fresh timings and prequential C replay",
+      "evidence_level": "raw",
+      "file": "docs/evidence/kalman-cost-20261031.json",
+      "sha256": "cd12bd0d35fac819fd2a9bb8502888482f997e2fecdc6f04b1ba64426b6826ca",
+      "raw_records": 1162,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "roofline_spec": 1,
+        "graph_probe": 56,
+        "graph_rate": 4,
+        "graph_profile": 1,
+        "hardware_probe": 21,
+        "warm_hardware_profile": 1,
+        "shape_probe": 420,
+        "shape_rate": 30,
+        "shape_table": 1,
+        "metadata": 1,
+        "cost_sample": 600,
+        "fitted_models": 2,
+        "residual_overhead": 20,
+        "correctness": 2,
+        "closed": 2
+      },
+      "official_run": "build/kalman-cost-final-20261031",
+      "scope": "Fresh native timings, optional scalar Kalman residual: prequential C replay, no scheduler or model speed change",
+      "limits": [
+        "Single M5/Metal/Qwen0.6B run; no Windows/CUDA or scheduler verification",
+        "Constant Q/R steady-state Kalman equals EWMA; not an independent accuracy gain",
+        "Changing task-dependent bias can contaminate following tasks; Gaussian and independent noise unproven",
+        "Q advances per successful observation, not wall-clock time; scaled variance can be misspecified",
+        "No evaluation tuning or best-run selection; no claim of faster model kernels"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E21",
+      "title": "Actual tool-window EWMA prefill and KV restoration",
+      "evidence_level": "raw",
+      "file": "docs/evidence/tool-prepare-20261031.json",
+      "sha256": "408e3e414e91f8cce434af67a89f0885909e2200c7afed74089d0d36bffd3138",
+      "raw_records": 931,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "correctness": 1,
+        "timing": 696,
+        "task_timing": 232,
+        "closed": 1
+      },
+      "official_run": "build/tool-prepare-final-20261031",
+      "scope": "Real fs.read / test.run / file repair with optional Native tool-window preparation; deterministic action selection",
+      "limits": [
+        "One M5/Metal/Qwen0.6B backend; no cold SSD/Windows/CUDA/PCIe claims",
+        "Explicit recompute/restore policy creates nonresident KV, not an assumption about all ordinary local-agent calls",
+        "One tool + one preparation, no foreground multi-consumer preemption, cold-engine startup or live cloud source",
+        "Prefix bookkeeping borrows canonical tokens; complete rendering/guard and suffix work still happen after the actual receipt",
+        "Small controlled sample and CPU/compiler noise; all paired signs/ranges retained, no p95/p99 or Gaussian readiness guarantee"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E22",
+      "title": "Restore attribution: process launch, timer, queue and completion",
+      "evidence_level": "raw",
+      "file": "docs/evidence/restore-timing-20261031.json",
+      "sha256": "3a2d317d41c626c8f8783912e693477e2e1e9082daf183c9056f59ff02750f69",
+      "raw_records": 547,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "correctness": 1,
+        "timing": 408,
+        "task_timing": 136,
+        "closed": 1
+      },
+      "official_run": "build/restore-timing-final-20261031",
+      "scope": "Instrumentation-only restore timing diagnosis, old scheduling retained, real tools",
+      "limits": [
+        "Single M5/Metal/model and warm OS cache; no bandwidth/frequency/cold-SSD/Windows/CUDA inference",
+        "Stage wall time locates delay but cannot prove why a thread was paused",
+        "Three measured calls plus one included real file repair in compile tasks; scripted actions, not autonomous-model success"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E23",
+      "title": "Spawn and parent-progress ETA on new real-tool fixtures",
+      "evidence_level": "raw",
+      "file": "docs/evidence/restore-balance-20261031.json",
+      "sha256": "a04e0a76dfdb7f33678471bd6f615c69998b9d33c30a23729ac8db074ac16784",
+      "raw_records": 979,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "correctness": 1,
+        "timing": 732,
+        "task_timing": 244,
+        "closed": 1
+      },
+      "official_run": "build/restore-balance-final-20261031",
+      "scope": "Spawn/parent-progress ETA ablation on new real-tool fixtures, fixed EWMA and margin",
+      "limits": [
+        "One M5/Metal/model, warm OS cache; macOS26+ spawn validated only, older macOS/Linux keep fork and Windows/CUDA pending",
+        "Scripted actions isolate real tool execution/scheduling, not autonomous0.6B repair capability",
+        "PREFIX_READY early hold is not full KV occupancy integral or physical memory release",
+        "Progress reduces one timing uncertainty but does not guarantee simultaneous wait/hold improvement; negative pairs retained"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E24",
+      "title": "Complete task audit, callback control and early snapshot release",
+      "evidence_level": "raw",
+      "file": "docs/evidence/tool-taskcost-20261031.json",
+      "sha256": "6507b731199b5f46ec80e45f75be859e66b29ed33fc09d6ac4be394c71856590",
+      "raw_records": 659,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "correctness": 1,
+        "timing": 492,
+        "task_timing": 164,
+        "closed": 1
+      },
+      "official_run": "build/tool-taskcost-final-20261031",
+      "scope": "E23 additive task audit plus new real-tool callback and early-snapshot-release ablation",
+      "limits": [
+        "One M5/Metal/model, warm OS file cache; no Windows/CUDA/cold SSD claim",
+        "Tool duration can include interference and OS/frequency/cache variation; matched repeats do not isolate all causal resource contention",
+        "Direct callback wall time is not all possible system interference; stage medians are not additive",
+        "Early file release does not shrink physical KV buffer; default snapshot cleanup and timed policy remain unchanged",
+        "Scripted real tools and fresh-KV oracle; not autonomous model ability"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E25",
+      "title": "Snapshot unlink and last-close resource isolation",
+      "evidence_level": "raw",
+      "file": "docs/evidence/tool-isolate-20261031.json",
+      "sha256": "d281cc9d4b8ce1d95e726ee3cbfd04e3ba3b2fb55681d1f0a09574b921d7cd36",
+      "raw_records": 227,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "correctness": 1,
+        "timing": 168,
+        "task_timing": 56,
+        "closed": 1
+      },
+      "official_run": "build/tool-isolate-final-20261031",
+      "scope": "Resource isolation of E24 short-task regression: compiler/run CPU, unlink and last close",
+      "limits": [
+        "Sparse diagnostic sampling and trusted tool driver add common overhead; no cross-run subtraction from E24",
+        "Cached IO counters may be zero; zero counts do not exclude filesystem CPU or memory contention",
+        "CPU may exceed wall for parallel compiler children; wall minus CPU is not an IO estimate",
+        "Global VM deltas include external system activity; no frequency, physical SSD bandwidth or per-page cache tracing",
+        "Only same live engine/session/revision; normal resident path does not require snapshots; logical eviction does not shrink physical KV",
+        "One M5/Metal/Qwen0.6B; scripted real tools, no autonomous-model or Windows/CUDA claim"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E26",
+      "title": "First executable launch and incremental-build task validation",
+      "evidence_level": "raw",
+      "file": "docs/evidence/tool-launch-20261031.json",
+      "sha256": "e462c7f8cfaa9dda7e5ceb433cc66b10cb792abe01df8e6a63890dc54dc96e12",
+      "raw_records": 167,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "correctness": 1,
+        "timing": 123,
+        "task_timing": 41,
+        "closed": 1
+      },
+      "official_run": "build/tool-launch-final-20261031",
+      "scope": "New-task main-entry executable-launch attribution and explicit incremental-build control; common repeated check cost included",
+      "limits": [
+        "First new-artifact execution delay is located by timestamps, not attributed to a specific macOS security service or kernel mechanism",
+        "Incremental compilation is an explicit benchmark/deployment recipe, not automatic Agent tool-result caching; tests are never skipped",
+        "No per-process resource probes during measured wrapper; child wait4 metrics and private numeric labels are common overhead",
+        "E24 missing child-entry boundaries cannot be retrospectively assigned to this new measurement; old negative remains",
+        "One M5/Metal/model, warm system, scripted actual tools; no physical KV shrinking, Windows/CUDA or autonomous-model claim"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E27",
+      "title": "Normal resident KV six-turn actual-tool Native flow",
+      "evidence_level": "raw",
+      "file": "docs/evidence/resident-flow-20261031.json",
+      "sha256": "db65df82f254aa1479a86a740de257db94ea3603353248f13d7a38cdff571cbf",
+      "raw_records": 199,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "timing": 168,
+        "task_timing": 28,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/resident-flow-final-20261031",
+      "scope": "Normal resident KV six-turn Native actual-tool loop",
+      "limits": [
+        "One M5/Metal/Qwen0.6B; scripted actions test actual execution and resident compatibility, not model autonomy",
+        "Initial history/model load and prebuilt helper first-execution warmup excluded and recorded; lazily compiled GPU variants may remain in first measured tasks, all repeats retained",
+        "Native stable history has no additional prefill work while tools run without new data; coordinator overhead is measured rather than invented speedup",
+        "Streaming uses complete immutable independent message units from a real local process, not arbitrary cloud token chunks or vendor SSE",
+        "Stream tools remain empty, worker exclusive; no automatic agentctl stream scheduling or combined Native/Stream owner overlay",
+        "No build-command optimization added to these timing comparisons; no physical KV shrinking or Windows/CUDA acceptance"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E28",
+      "title": "Resident streaming from an actual local process, no sleep gaps",
+      "evidence_level": "raw",
+      "file": "docs/evidence/resident-stream-20261031.json",
+      "sha256": "87709c884d27f8cc049d045cd34e8440be3d48875f2e9fae193bb3932ba1b86e",
+      "raw_records": 87,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "timing": 84,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/resident-stream-final-20261031",
+      "scope": "Normal resident KV real-process semantic-unit streaming; no sleep gaps",
+      "limits": [
+        "One M5/Metal/Qwen0.6B; scripted actions test actual execution and resident compatibility, not model autonomy",
+        "Initial history/model load and prebuilt helper first-execution warmup excluded and recorded; lazily compiled GPU variants may remain in first measured tasks, all repeats retained",
+        "Native stable history has no additional prefill work while tools run without new data; coordinator overhead is measured rather than invented speedup",
+        "Streaming uses complete immutable independent message units from a real local process, not arbitrary cloud token chunks or vendor SSE",
+        "Stream tools remain empty, worker exclusive; no automatic agentctl stream scheduling or combined Native/Stream owner overlay",
+        "No build-command optimization added to these timing comparisons; no physical KV shrinking or Windows/CUDA acceptance"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E29",
+      "title": "Actual agentctl resident tool-output prefill off/on",
+      "evidence_level": "raw",
+      "file": "docs/evidence/tool-output-cli-20261031.json",
+      "sha256": "fa0a3950421740aaf3afe6883352fb6be6cc38f511c6af9e35dbe09b0ae90951",
+      "raw_records": 515,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "step": 256,
+        "tool": 192,
+        "task_timing": 64,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/tool-output-final-20261031",
+      "scope": "Actual agentctl Native/registry/AgentStore/test.run resident output off/on; scripted model choices",
+      "limits": [
+        "One M5/Metal/Qwen0.6B; real CLI/tool execution, not autonomous model planning or full output generation",
+        "Tools bounded retained4096 bytes; test.run(empty args) and verified Qwen3 template only; full render/prefix guard remains",
+        "No snapshots, evictions, disk-KV transfer, memory capacity win, cloud SSE or Windows/CUDA acceptance",
+        "No evaluation tuning; all warmup/evaluation pairs and negative results retained; per-task reset/model-resident workload only"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E30",
+      "title": "Adaptive resident tool-output observation gate",
+      "evidence_level": "raw",
+      "file": "docs/evidence/tool-output-adaptive-20261031.json",
+      "sha256": "58ec4ccbd3bc7fbfd3e3d399fe54d2fe63e0391209be7fbeb1f7e818b2111ede",
+      "raw_records": 515,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "step": 256,
+        "tool": 192,
+        "task_timing": 64,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/tool-output-adaptive-final-20261031",
+      "scope": "Actual agentctl Native/registry/AgentStore/test.run resident output off/on; scripted model choices",
+      "limits": [
+        "One M5/Metal/Qwen0.6B; real CLI/tool execution, not autonomous model planning or full output generation",
+        "Tools bounded retained4096 bytes; test.run(empty args) and verified Qwen3 template only; full render/prefix guard remains",
+        "No snapshots, evictions, disk-KV transfer, memory capacity win, cloud SSE or Windows/CUDA acceptance",
+        "No evaluation tuning; all warmup/evaluation pairs and negative results retained; per-task reset/model-resident workload only"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E31",
+      "title": "Matched output strategies and thread/token controls",
+      "evidence_level": "raw",
+      "file": "docs/evidence/tool-output-isolation-20261031.json",
+      "sha256": "6b844107209193effae630d0eaa3c1e6238b2c93d0888443f53ced2b90342055",
+      "raw_records": 1283,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "step": 640,
+        "tool": 480,
+        "task_timing": 160,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/tool-output-isolation-final-20261031",
+      "scope": "Actual agentctl Native/registry/AgentStore/test.run resident output off/on; scripted model choices",
+      "limits": [
+        "One M5/Metal/Qwen0.6B; real CLI/tool execution, not autonomous model planning or full output generation",
+        "Tools bounded retained4096 bytes; test.run(empty args) and verified Qwen3 template only; full render/prefix guard remains",
+        "No snapshots, evictions, disk-KV transfer, memory capacity win, cloud SSE or Windows/CUDA acceptance",
+        "No evaluation tuning; all warmup/evaluation pairs and negative results retained; per-task reset/model-resident workload only"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E32",
+      "title": "Output-growth gate on new matched tasks",
+      "evidence_level": "raw",
+      "file": "docs/evidence/tool-output-progress-20261031.json",
+      "sha256": "95cacf95d190c2d503c015bd4040f7b5ba1be42957bdf050c14e68520b2728d0",
+      "raw_records": 771,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "step": 384,
+        "tool": 288,
+        "task_timing": 96,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/tool-output-progress-final-20261031",
+      "scope": "Actual agentctl Native/registry/AgentStore/test.run resident output off/on; scripted model choices",
+      "limits": [
+        "One M5/Metal/Qwen0.6B; real CLI/tool execution, not autonomous model planning or full output generation",
+        "Tools bounded retained4096 bytes; test.run(empty args) and verified Qwen3 template only; full render/prefix guard remains",
+        "No snapshots, evictions, disk-KV transfer, memory capacity win, cloud SSE or Windows/CUDA acceptance",
+        "No evaluation tuning; all warmup/evaluation pairs and negative results retained; per-task reset/model-resident workload only"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E33",
+      "title": "Producer CPU, EOF reaping and worker attribution",
+      "evidence_level": "raw",
+      "file": "docs/evidence/tool-output-reap-20261031.json",
+      "sha256": "a16ab7464f9d1565df0054038f5d51d35b320fc7a052c007c1f9da0a6f12f25e",
+      "raw_records": 1027,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "step": 512,
+        "tool": 384,
+        "task_timing": 128,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/tool-output-reap-final2-20261031",
+      "scope": "Actual resident agentctl: matched process-stage attribution",
+      "limits": [
+        "One M5/Metal/Qwen0.6B; real CLI/tool execution, not autonomous model planning or full output generation",
+        "Tools bounded retained4096 bytes; test.run(empty args) and verified Qwen3 template only; full render/prefix guard remains",
+        "No snapshots, evictions, disk-KV transfer, memory capacity win, cloud SSE or Windows/CUDA acceptance",
+        "No evaluation tuning; all warmup/evaluation pairs and negative results retained; per-task reset/model-resident workload only",
+        "Clock and scheduling observations cannot identify DVFS, memory-bandwidth or OS scheduler causes without counters; seven pairs do not establish p95/p99 or stable tails.",
+        "E32 lacks producer/reaping telemetry; new experiments diagnose repeatable mechanisms, not retrospectively prove the exact old 30/32ms causes."
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E34",
+      "title": "Exit-event wait on fresh matched tasks",
+      "evidence_level": "raw",
+      "file": "docs/evidence/tool-output-event-20261031.json",
+      "sha256": "579608334876f99ea1557769cce4bb3913a8c32d97c6e2cb687ebf897545fe5c",
+      "raw_records": 1539,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "step": 768,
+        "tool": 576,
+        "task_timing": 192,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/tool-output-event-final-20261031",
+      "scope": "Actual resident agentctl: optional macOS exit-event wait on unseen workloads",
+      "limits": [
+        "One M5/Metal/Qwen0.6B; real CLI/tool execution, not autonomous model planning or full output generation",
+        "Tools bounded retained4096 bytes; test.run(empty args) and verified Qwen3 template only; full render/prefix guard remains",
+        "No snapshots, evictions, disk-KV transfer, memory capacity win, cloud SSE or Windows/CUDA acceptance",
+        "No evaluation tuning; all warmup/evaluation pairs and negative results retained; per-task reset/model-resident workload only",
+        "Clock and scheduling observations cannot identify DVFS, memory-bandwidth or OS scheduler causes without counters; seven pairs do not establish p95/p99 or stable tails.",
+        "E32 lacks producer/reaping telemetry; new experiments diagnose repeatable mechanisms, not retrospectively prove the exact old 30/32ms causes."
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E35",
+      "title": "Exit-in-progress bounded retry on fresh tasks",
+      "evidence_level": "raw",
+      "file": "docs/evidence/tool-output-race-20261031.json",
+      "sha256": "18f7431d59b1f5f46852519632c8af8aeed0bf06c8757ca96064e2f441088154",
+      "raw_records": 1283,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "step": 640,
+        "tool": 480,
+        "task_timing": 160,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/tool-output-race-final-20261031",
+      "scope": "Actual resident agentctl: exit-in-progress bounded retry on unseen workloads",
+      "limits": [
+        "One M5/Metal/Qwen0.6B; real CLI/tool execution, not autonomous model planning or full output generation",
+        "Tools bounded retained4096 bytes; test.run(empty args) and verified Qwen3 template only; full render/prefix guard remains",
+        "No snapshots, evictions, disk-KV transfer, memory capacity win, cloud SSE or Windows/CUDA acceptance",
+        "No evaluation tuning; all warmup/evaluation pairs and negative results retained; per-task reset/model-resident workload only",
+        "Clock and scheduling observations cannot identify DVFS, memory-bandwidth or OS scheduler causes without counters; seven pairs do not establish p95/p99 or stable tails.",
+        "E32 lacks producer/reaping telemetry; new experiments diagnose repeatable mechanisms, not retrospectively prove the exact old 30/32ms causes."
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E36",
+      "title": "Same-load dormant/thread/token/prefill and CPU isolation",
+      "evidence_level": "raw",
+      "file": "docs/evidence/tool-output-contention-20261031.json",
+      "sha256": "7d6f257ad6519448676436367b960c4d327efc63b81b99ce3db59fff54293c56",
+      "raw_records": 1283,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "step": 640,
+        "tool": 480,
+        "task_timing": 160,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/tool-output-contention-final-20261031",
+      "scope": "Actual resident agentctl: same-load dormant/thread/token/prefill isolation",
+      "limits": [
+        "One M5/Metal/Qwen0.6B; real CLI/tool execution, not autonomous model planning or full output generation",
+        "Tools bounded retained4096 bytes; test.run(empty args) and verified Qwen3 template only; full render/prefix guard remains",
+        "No snapshots, evictions, disk-KV transfer, memory capacity win, cloud SSE or Windows/CUDA acceptance",
+        "No evaluation tuning; all warmup/evaluation pairs and negative results retained; per-task reset/model-resident workload only",
+        "No GPU counters, CPU frequency or bandwidth observations; unchanged work with longer wall localizes phase but does not prove a GPU or scheduler cause.",
+        "No deletion of outliers. Whole-task mode differences are not additive pure-component costs or proof of indirect contention. Seven pairs do not establish stable tails."
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E37",
+      "title": "Lazy output-consumer launch on fresh tasks",
+      "evidence_level": "raw",
+      "file": "docs/evidence/tool-output-lazy-20261031.json",
+      "sha256": "a7de0e16c8423d7962b0779f1fa1b84546a240d6b67062ea538807f930c2c2ec",
+      "raw_records": 771,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "step": 384,
+        "tool": 288,
+        "task_timing": 96,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/tool-output-lazy-final2-20261031",
+      "scope": "Actual resident agentctl: lazy consumer launch on fresh tasks",
+      "limits": [
+        "One M5/Metal/Qwen0.6B; real CLI/tool execution, not autonomous model planning or full output generation",
+        "Tools bounded retained4096 bytes; test.run(empty args) and verified Qwen3 template only; full render/prefix guard remains",
+        "No snapshots, evictions, disk-KV transfer, memory capacity win, cloud SSE or Windows/CUDA acceptance",
+        "No evaluation tuning; all warmup/evaluation pairs and negative results retained; per-task reset/model-resident workload only",
+        "No GPU counters, CPU frequency or bandwidth observations; unchanged work with longer wall localizes phase but does not prove a GPU or scheduler cause.",
+        "No deletion of outliers. Whole-task mode differences are not additive pure-component costs or proof of indirect contention. Seven pairs do not establish stable tails."
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E38",
+      "title": "Decode/sync spans and runnable scheduler isolation",
+      "evidence_level": "raw",
+      "file": "docs/evidence/tool-output-decode-20261031.json",
+      "sha256": "3da08dc55c31515a1cd39ded55ee670b378576cb7ffe0c226cc61b72ab282c54",
+      "raw_records": 1123,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "producer_control": 96,
+        "step": 512,
+        "tool": 384,
+        "task_timing": 128,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/tool-output-decode-final2-20261031",
+      "scope": "Actual resident agentctl: decode/synchronize spans and scheduler isolation",
+      "limits": [
+        "One M5/Metal/Qwen0.6B; real CLI/tool execution, not autonomous model planning or full output generation",
+        "Tools bounded retained4096 bytes; test.run(empty args) and verified Qwen3 template only; full render/prefix guard remains",
+        "No snapshots, evictions, disk-KV transfer, memory capacity win, cloud SSE or Windows/CUDA acceptance",
+        "No evaluation tuning; all warmup/evaluation pairs and negative results retained; per-task reset/model-resident workload only",
+        "Synchronization wall is waiting for outstanding work plus host scheduling; no Metal kernel start/end timestamps. Decode may internally wait, so a decrease in explicit synchronization may just move time.",
+        "Runnable accounting has update lag; do not force negative proxies to zero or equate every non-CPU millisecond with runqueue wait. Producer-alone proves a background scheduling mechanism exists, not the cause of every historical outlier.",
+        "No outlier deletion or evaluation tuning. Seven pairs do not establish p95/p99. No physical KV reduction or Windows/CUDA acceptance."
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E39",
+      "title": "Deferred internal sync on fresh tasks",
+      "evidence_level": "raw",
+      "file": "docs/evidence/tool-output-drain-20261031.json",
+      "sha256": "6f6d95d869e1c27626e3c4f8ad6a6dab4ccafd30e9ba58672308dfcb82ed9f9b",
+      "raw_records": 1123,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "producer_control": 96,
+        "step": 512,
+        "tool": 384,
+        "task_timing": 128,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/tool-output-drain-final-20261031",
+      "scope": "Actual resident agentctl: optional intra-prefill deferred synchronization",
+      "limits": [
+        "One M5/Metal/Qwen0.6B; real CLI/tool execution, not autonomous model planning or full output generation",
+        "Tools bounded retained4096 bytes; test.run(empty args) and verified Qwen3 template only; full render/prefix guard remains",
+        "No snapshots, evictions, disk-KV transfer, memory capacity win, cloud SSE or Windows/CUDA acceptance",
+        "No evaluation tuning; all warmup/evaluation pairs and negative results retained; per-task reset/model-resident workload only",
+        "Synchronization wall is waiting for outstanding work plus host scheduling; no Metal kernel start/end timestamps. Decode may internally wait, so a decrease in explicit synchronization may just move time.",
+        "Runnable accounting has update lag; do not force negative proxies to zero or equate every non-CPU millisecond with runqueue wait. Producer-alone proves a background scheduling mechanism exists, not the cause of every historical outlier.",
+        "No outlier deletion or evaluation tuning. Seven pairs do not establish p95/p99. No physical KV reduction or Windows/CUDA acceptance."
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E40",
+      "title": "Producer CPU supply with model absent or idle",
+      "evidence_level": "raw",
+      "file": "docs/evidence/model-idle-20261031.json",
+      "sha256": "548b7481e3222c194e818d24c944dae76d090d3b2f1adf4f0aba20feadcd0f84",
+      "raw_records": 211,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "idle_control": 192,
+        "model_fixture": 16,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/model-idle-final-20261031",
+      "scope": "Same producer with model absent / resident idle / exited; diagnostic only",
+      "limits": [],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E41",
+      "title": "CPU supply after streaming model tasks",
+      "evidence_level": "raw",
+      "file": "docs/evidence/model-idle-stream-20261031.json",
+      "sha256": "1fda888da4a4281596e5395c4bacb5b553224793216dea55c6ecf1399410a40c",
+      "raw_records": 211,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "metadata": 1,
+        "idle_control": 192,
+        "model_fixture": 16,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/model-idle-stream-final-20261031",
+      "scope": "Same producer with model absent / resident idle / exited; diagnostic only",
+      "limits": [],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E42",
+      "title": "Metal command execution, queue overlap and host return",
+      "evidence_level": "raw",
+      "file": "docs/evidence/tool-output-metal-20261031.json",
+      "sha256": "3eeb4cd7832235f8b92a3944d3e94ac9fbb2a67f8b6c2aa17bb45da6dc91a17e",
+      "raw_records": 1539,
+      "metal_auxiliary_records": 4017,
+      "record_kinds": {
+        "metadata": 1,
+        "step": 768,
+        "tool": 576,
+        "task_timing": 192,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/tool-output-metal-final5-20261031",
+      "scope": "Actual agentctl Native/registry/AgentStore/test.run resident output off/on; scripted model choices",
+      "limits": [
+        "One M5/Metal/Qwen0.6B; real CLI/tool execution, not autonomous model planning or full output generation",
+        "Tools bounded retained4096 bytes; test.run(empty args) and verified Qwen3 template only; full render/prefix guard remains",
+        "No snapshots, evictions, disk-KV transfer, memory capacity win, cloud SSE or Windows/CUDA acceptance",
+        "No evaluation tuning; all warmup/evaluation pairs and negative results retained; per-task reset/model-resident workload only",
+        "Metal GPUStart/End is buffer execution span, not pure shader busy time. commit-to-start overlaps preceding own GPU execution; uncovered delay cannot exclusively identify another device queue or competing PID.",
+        "GPU end to wait return includes driver notification, pre-existing handlers, CPU scheduling and return overhead. Completion markers perturb this path and are diagnostic only. Bare still has method forwarding and common CPU timers.",
+        "E39 original44.039ms pair had no device timestamps; these new observations do not retrospectively assign that exact pair to GPU versus wakeup.",
+        "All outliers, probe overhead and negative paired results retained; background system load is uncontrolled; no tail-latency guarantee or physical KV reduction."
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E43",
+      "title": "Completion marker and observer overhead controls",
+      "evidence_level": "raw",
+      "file": "docs/evidence/tool-output-notify-20261031.json",
+      "sha256": "28578fdd26a517bb5adf278d93ac137c02673c018beef96ef9132ea7fe66f74a",
+      "raw_records": 1539,
+      "metal_auxiliary_records": 4021,
+      "record_kinds": {
+        "metadata": 1,
+        "step": 768,
+        "tool": 576,
+        "task_timing": 192,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/tool-output-notify-final2-20261031",
+      "scope": "Actual agentctl Native/registry/AgentStore/test.run resident output off/on; scripted model choices",
+      "limits": [
+        "One M5/Metal/Qwen0.6B; real CLI/tool execution, not autonomous model planning or full output generation",
+        "Tools bounded retained4096 bytes; test.run(empty args) and verified Qwen3 template only; full render/prefix guard remains",
+        "No snapshots, evictions, disk-KV transfer, memory capacity win, cloud SSE or Windows/CUDA acceptance",
+        "No evaluation tuning; all warmup/evaluation pairs and negative results retained; per-task reset/model-resident workload only",
+        "Metal GPUStart/End is buffer execution span, not pure shader busy time. commit-to-start overlaps preceding own GPU execution; uncovered delay cannot exclusively identify another device queue or competing PID.",
+        "GPU end to wait return includes driver notification, pre-existing handlers, CPU scheduling and return overhead. Completion markers perturb this path and are diagnostic only. Bare still has method forwarding and common CPU timers.",
+        "E39 original44.039ms pair had no device timestamps; these new observations do not retrospectively assign that exact pair to GPU versus wakeup.",
+        "All outliers, probe overhead and negative paired results retained; background system load is uncontrolled; no tail-latency guarantee or physical KV reduction."
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E44",
+      "title": "Bounded tail-batch coalescing on new tasks",
+      "evidence_level": "raw",
+      "file": "docs/evidence/tool-output-coalesce-20261031.json",
+      "sha256": "ee4cc047b3a42e95de6317427def0353b569c8da140fd4993142bc146c62e84a",
+      "raw_records": 1539,
+      "metal_auxiliary_records": 1537,
+      "record_kinds": {
+        "metadata": 1,
+        "step": 768,
+        "tool": 576,
+        "task_timing": 192,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/tool-output-coalesce-final-20261031",
+      "scope": "Actual agentctl Native/registry/AgentStore/test.run resident output off/on; scripted model choices",
+      "limits": [
+        "One M5/Metal/Qwen0.6B; real CLI/tool execution, not autonomous model planning or full output generation",
+        "Tools bounded retained4096 bytes; test.run(empty args) and verified Qwen3 template only; full render/prefix guard remains",
+        "No snapshots, evictions, disk-KV transfer, memory capacity win, cloud SSE or Windows/CUDA acceptance",
+        "No evaluation tuning; all warmup/evaluation pairs and negative results retained; per-task reset/model-resident workload only",
+        "Metal GPUStart/End is buffer execution span, not pure shader busy time. commit-to-start overlaps preceding own GPU execution; uncovered delay cannot exclusively identify another device queue or competing PID.",
+        "GPU end to wait return includes driver notification, pre-existing handlers, CPU scheduling and return overhead. Completion markers perturb this path and are diagnostic only. Bare still has method forwarding and common CPU timers.",
+        "E39 original44.039ms pair had no device timestamps; these new observations do not retrospectively assign that exact pair to GPU versus wakeup.",
+        "All outliers, probe overhead and negative paired results retained; background system load is uncontrolled; no tail-latency guarantee or physical KV reduction.",
+        "E44 split and coalesced controls both allocate batch1024; not an exact512-capacity old baseline. No memory savings claimed; buffer allocation cost recorded in method."
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E45",
+      "title": "Matched sustained tail: GPU, completion and host return",
+      "evidence_level": "raw",
+      "file": "docs/evidence/tool-output-tailwait-20261031.json",
+      "sha256": "5f6ef31a918f7015228548b44c5d10483cc5a39c7577e681f4b76a80bb742300",
+      "raw_records": 1539,
+      "metal_auxiliary_records": 3073,
+      "record_kinds": {
+        "metadata": 1,
+        "step": 768,
+        "tool": 576,
+        "task_timing": 192,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/tool-output-tailwait-final-20261031",
+      "scope": "Actual agentctl Native/registry/AgentStore/test.run resident output off/on; scripted model choices",
+      "limits": [
+        "One M5/Metal/Qwen0.6B; real CLI/tool execution, not autonomous model planning or full output generation",
+        "Tools bounded retained4096 bytes; test.run(empty args) and verified Qwen3 template only; full render/prefix guard remains",
+        "No snapshots, evictions, disk-KV transfer, memory capacity win, cloud SSE or Windows/CUDA acceptance",
+        "No evaluation tuning; all warmup/evaluation pairs and negative results retained; per-task reset/model-resident workload only",
+        "Old86.283ms bare has no Metal trace. New matched task tails do not identify its exact GPU/notification/CPU split.",
+        "Submission queue residual mixes driver, unobserved work, other GPU activity and scheduling; no global device or kernel CPU-wakeup trace. Marker can perturb delivery; use bare for end-to-end claims."
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E46",
+      "title": "Rotating capacity512/640/1024 controls on fresh tasks",
+      "evidence_level": "raw",
+      "file": "docs/evidence/tool-output-capacity-20261031.json",
+      "sha256": "d5aa12446dc515bfc23fe1582cf0a78a31238cbb49905be28e1aad883faf0827",
+      "raw_records": 4095,
+      "metal_auxiliary_records": 3829,
+      "record_kinds": {
+        "metadata": 21,
+        "step": 2016,
+        "tool": 1512,
+        "task_timing": 504,
+        "correctness": 21,
+        "closed": 21
+      },
+      "official_run": "build/tool-output-capacity-final-20261031",
+      "scope": "Fresh capacity512/split vs640/coalesce vs1024/coalesce; model reload per block/capacity, KV resident within each task; fixed choices, real CLI/tools",
+      "limits": [
+        "One M5/Metal/Qwen0.6B; scripted model actions, no autonomous-quality score",
+        "GPU spans are buffer intervals, notification delivery and post-marker return are upper bounds including driver/handlers/scheduling, not pure CPU wakeup",
+        "Bare has no Metal timestamps; marker may perturb waits; compare bare task results separately",
+        "Capacity comparison reloads models; not a claim about switching capacity for free during live tasks; fixed case order and temporal drift remain",
+        "No snapshots/eviction or physical KV reduction, no Windows/CUDA; all negative pairs retained; seven repeats do not support tail guarantees"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E47",
+      "title": "Same-capacity thread/token/GPU tool isolation",
+      "evidence_level": "raw",
+      "file": "docs/evidence/tool-output-contention640-20261031.json",
+      "sha256": "7bbe8b8b89d5e402829e6eea4787cf20f83532f18d160688f39b90761b700024",
+      "raw_records": 1539,
+      "metal_auxiliary_records": 1946,
+      "record_kinds": {
+        "metadata": 1,
+        "step": 768,
+        "tool": 576,
+        "task_timing": 192,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/tool-output-contention640-final-20261031",
+      "scope": "Actual agentctl Native/registry/AgentStore/test.run resident output off/on; scripted model choices",
+      "limits": [
+        "One M5/Metal/Qwen0.6B; real CLI/tool execution, not autonomous model planning or full output generation",
+        "Tools bounded retained4096 bytes; test.run(empty args) and verified Qwen3 template only; full render/prefix guard remains",
+        "No snapshots, evictions, disk-KV transfer, memory capacity win, cloud SSE or Windows/CUDA acceptance",
+        "No evaluation tuning; all warmup/evaluation pairs and negative results retained; per-task reset/model-resident workload only",
+        "Old217ms bare has no per-kernel/GPU trace; new controls cannot retrospectively assign its cause.",
+        "M5 public counters only stage timestamps, no dispatch boundary or bandwidth counters; no full-device/preemption/frequency attribution.",
+        "All large outliers, thread/token controls and regressions retained; controlled pressure is separate E48, not injected into CLI performance."
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E48",
+      "title": "Fixed-shape native CPU versus memory pressure",
+      "evidence_level": "raw",
+      "file": "docs/evidence/device-isolation-20261031.json",
+      "sha256": "b77a4174f589a92b474d85e3d0b58cba1bed2e66ede7caa004d1441a29db98a7",
+      "raw_records": 387,
+      "metal_auxiliary_records": 2161,
+      "record_kinds": {
+        "metadata": 1,
+        "isolation": 384,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/device-isolation-final-20261031",
+      "scope": "Isolated native fixed-prefix increment under controlled CPU/memory pressure; not agent latency",
+      "limits": [
+        "M5 lacks public dispatch-boundary sampling; GPU spans include execution/stalls/preemption; not exclusive kernel busy",
+        "Arithmetic/memory threads differ in instructions as well as memory traffic; compare sensitivities, not exact bandwidth attribution",
+        "Synthetic pressure is not proof of the old217ms cause; no measured GPU frequency/full-device queue trace",
+        "One fixed model/backend; no KV eviction or physical KV reduction; all negative samples retained",
+        "Instruments template listing initially failed sandbox cache initialization; elevated read succeeded. No Instruments system trace or external process data was collected."
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E49",
+      "title": "Larger publication quantum on fresh actual tasks",
+      "evidence_level": "raw",
+      "file": "docs/evidence/tool-output-coarse640-20261031.json",
+      "sha256": "5fa93f1aec78d14f2cc8743bd183c52c373c843f4741e671eae43cebe22ef637",
+      "raw_records": 1539,
+      "metal_auxiliary_records": 2881,
+      "record_kinds": {
+        "metadata": 1,
+        "step": 768,
+        "tool": 576,
+        "task_timing": 192,
+        "correctness": 1,
+        "closed": 1
+      },
+      "official_run": "build/tool-output-coarse640-final-20261031",
+      "scope": "Actual agentctl Native/registry/AgentStore/test.run resident output off/on; scripted model choices",
+      "limits": [
+        "One M5/Metal/Qwen0.6B; real CLI/tool execution, not autonomous model planning or full output generation",
+        "Tools bounded retained4096 bytes; test.run(empty args) and verified Qwen3 template only; full render/prefix guard remains",
+        "No snapshots, evictions, disk-KV transfer, memory capacity win, cloud SSE or Windows/CUDA acceptance",
+        "No evaluation tuning; all warmup/evaluation pairs and negative results retained; per-task reset/model-resident workload only",
+        "Old217ms bare has no per-kernel/GPU trace; new controls cannot retrospectively assign its cause.",
+        "M5 public counters only stage timestamps, no dispatch boundary or bandwidth counters; no full-device/preemption/frequency attribution.",
+        "All large outliers, thread/token controls and regressions retained; controlled pressure is separate E48, not injected into CLI performance."
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "L01",
+      "title": "Earlier service, budget and copy observations",
+      "evidence_level": "reported_only",
+      "file": "docs/evidence/legacy-observations-20261020.json",
+      "sha256": "013ec376c5630226026a580912c0eafa7dae1e2f8735634530275797fa019a03",
+      "raw_records": 0,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {},
+      "official_run": null,
+      "scope": "Historical values transcribed in project notes; original per-request CSV is unavailable",
+      "limits": [
+        "Reported quantiles are not recalculated or statistically endorsed; some groups had only two requests",
+        "Remote service capacity is not cxf local-engine speedup",
+        "Retrieval budget results measure marker presence, not model answer accuracy",
+        "No public endpoint, key or private request body is included",
+        "Legacy notes are not included in the publication bundle"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    }
+  ]
+}

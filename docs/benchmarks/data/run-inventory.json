@@ -1,0 +1,1958 @@
+{
+  "scope": "Local benchmark/probe directories present at consolidation; metadata only, not an exhaustive execution log",
+  "private_artifacts_excluded": [
+    "config.json",
+    "request/response traces",
+    "compiler argv",
+    "model paths",
+    "engine logs"
+  ],
+  "runs": [
+    {
+      "directory": "build/basic-agent-live-j7kvvv9q",
+      "classification": "historical_capability_probe",
+      "reason": "Failure summarized in E12; private raw logs/config excluded",
+      "artifact_names": [
+        "report.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/context-memory-cli-20261030",
+      "classification": "validation_or_probe",
+      "reason": "Correctness/CLI evidence; not extra independent performance samples",
+      "artifact_names": [
+        "results.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/context-memory-dev1-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/context-memory-dev2-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "manifest.json",
+        "memory-summary.json",
+        "memory.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "memory.jsonl": 75
+      }
+    },
+    {
+      "directory": "build/context-memory-final-20261030",
+      "classification": "official",
+      "reason": "Preserved in public evidence E07",
+      "artifact_names": [
+        "manifest.json",
+        "memory-summary.json",
+        "memory.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "memory.jsonl": 99
+      }
+    },
+    {
+      "directory": "build/context-memory-sanitized-20261030",
+      "classification": "validation_or_probe",
+      "reason": "Correctness/CLI evidence; not extra independent performance samples",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/context-memory-sanitized2-20261030",
+      "classification": "validation_or_probe",
+      "reason": "Correctness/CLI evidence; not extra independent performance samples",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/cost-estimator-final-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Sandbox prevented Metal initialization; no successful timing samples",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 0
+      }
+    },
+    {
+      "directory": "build/cost-estimator-final2-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Superseded: wrapper postprocessing failed and a default regression overlapped; not included in E13",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 161
+      }
+    },
+    {
+      "directory": "build/cost-estimator-final3-20261030",
+      "classification": "official",
+      "reason": "Preserved in public evidence E13",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 161
+      }
+    },
+    {
+      "directory": "build/cost-shapes-final-20261030",
+      "classification": "official",
+      "reason": "Official E16; wrapper missing re import after native success; metadata recovered from unchanged raw, no inference rerun; interpolation negative result retained",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 916
+      }
+    },
+    {
+      "directory": "build/cost-shapes-v2-final-20261030",
+      "classification": "official",
+      "reason": "Preserved in public evidence E17",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 916
+      }
+    },
+    {
+      "directory": "build/device-isolation-final-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E48",
+      "artifact_names": [
+        "manifest.json",
+        "metal-raw.jsonl",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "metal-raw.jsonl": 2161,
+        "raw.jsonl": 387
+      }
+    },
+    {
+      "directory": "build/direct-messages-cli-20261030",
+      "classification": "validation_or_probe",
+      "reason": "Correctness/CLI evidence; not extra independent performance samples",
+      "artifact_names": [
+        "results.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/direct-messages-dev1-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/direct-messages-final-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "manifest.json",
+        "memory-summary.json",
+        "memory.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "memory.jsonl": 99
+      }
+    },
+    {
+      "directory": "build/direct-messages-final2-20261030",
+      "classification": "official",
+      "reason": "Preserved in public evidence E08",
+      "artifact_names": [
+        "manifest.json",
+        "memory-summary.json",
+        "memory.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "memory.jsonl": 99
+      }
+    },
+    {
+      "directory": "build/direct-messages-sanitized-20261030",
+      "classification": "validation_or_probe",
+      "reason": "Correctness/CLI evidence; not extra independent performance samples",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/frozen-calibration-final-20261030",
+      "classification": "official",
+      "reason": "Incomplete E18: cap256 completed; cap64 rejected before measurement because default prefill minimum exceeded batch limit. Full raw retained; not formal E19 results",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 849
+      }
+    },
+    {
+      "directory": "build/frozen-calibration-final2-20261030",
+      "classification": "official",
+      "reason": "Preserved in public evidence E19",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 1162
+      }
+    },
+    {
+      "directory": "build/jinja-values-cli-20261030",
+      "classification": "validation_or_probe",
+      "reason": "Correctness/CLI evidence; not extra independent performance samples",
+      "artifact_names": [
+        "results.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/jinja-values-dev1-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/jinja-values-final-20261030",
+      "classification": "official",
+      "reason": "Preserved in public evidence E09",
+      "artifact_names": [
+        "manifest.json",
+        "memory-summary.json",
+        "memory.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "memory.jsonl": 99
+      }
+    },
+    {
+      "directory": "build/jinja-values-sanitized-20261030",
+      "classification": "validation_or_probe",
+      "reason": "Correctness/CLI evidence; not extra independent performance samples",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/kalman-cost-final-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E20",
+      "artifact_names": [
+        "filter-raw.jsonl",
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "filter-raw.jsonl": 893,
+        "raw.jsonl": 1162
+      }
+    },
+    {
+      "directory": "build/kv-worker-cli-20261030",
+      "classification": "validation_or_probe",
+      "reason": "Correctness/CLI evidence; not extra independent performance samples",
+      "artifact_names": [
+        "results.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/kv-worker-core-sanitized-20261030",
+      "classification": "validation_or_probe",
+      "reason": "Correctness/CLI evidence; not extra independent performance samples",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/kv-worker-core-sanitized2-20261030",
+      "classification": "validation_or_probe",
+      "reason": "Correctness/CLI evidence; not extra independent performance samples",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/kv-worker-dev1-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "kv-worker.jsonl",
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {
+        "kv-worker.jsonl": 0
+      }
+    },
+    {
+      "directory": "build/kv-worker-dev2-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "kv-worker-summary.json",
+        "kv-worker.jsonl",
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {
+        "kv-worker.jsonl": 2
+      }
+    },
+    {
+      "directory": "build/kv-worker-final-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "kv-worker-summary.json",
+        "kv-worker.jsonl",
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {
+        "kv-worker.jsonl": 77
+      }
+    },
+    {
+      "directory": "build/kv-worker-final2-20261030",
+      "classification": "official",
+      "reason": "Preserved in public evidence E10",
+      "artifact_names": [
+        "kv-worker-summary.json",
+        "kv-worker.jsonl",
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {
+        "kv-worker.jsonl": 92
+      }
+    },
+    {
+      "directory": "build/kv-worker-sanitized-20261030",
+      "classification": "validation_or_probe",
+      "reason": "Correctness/CLI evidence; not extra independent performance samples",
+      "artifact_names": [
+        "kv-worker-summary.json",
+        "kv-worker.jsonl",
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {
+        "kv-worker.jsonl": 2
+      }
+    },
+    {
+      "directory": "build/llama-context-baseline-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 61
+      }
+    },
+    {
+      "directory": "build/llama-context-final-20261030",
+      "classification": "official",
+      "reason": "Preserved in public evidence E01",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 61
+      }
+    },
+    {
+      "directory": "build/llama-context-slow-stream-20261030",
+      "classification": "official",
+      "reason": "Preserved in public evidence E02",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 13
+      }
+    },
+    {
+      "directory": "build/llama-native-v1-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/llama-native-v1-check2-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/llama-native-v1-final-20261030",
+      "classification": "official",
+      "reason": "Preserved in public evidence E03",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/llama-native-v1-sanitized-20261030",
+      "classification": "validation_or_probe",
+      "reason": "Correctness/CLI evidence; not extra independent performance samples",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/model-idle-final-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E40",
+      "artifact_names": [
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 211
+      }
+    },
+    {
+      "directory": "build/model-idle-stream-final-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E41",
+      "artifact_names": [
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 211
+      }
+    },
+    {
+      "directory": "build/native-chat-cli-final-20261030",
+      "classification": "validation_or_probe",
+      "reason": "Correctness/CLI evidence; not extra independent performance samples",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/native-chat-cli-final2-20261030",
+      "classification": "validation_or_probe",
+      "reason": "Correctness/CLI evidence; not extra independent performance samples",
+      "artifact_names": [
+        "results.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/native-chat-cli-probes-20261030",
+      "classification": "validation_or_probe",
+      "reason": "Correctness/CLI evidence; not extra independent performance samples",
+      "artifact_names": [
+        "results.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/native-chat-cli-tools-20261030",
+      "classification": "validation_or_probe",
+      "reason": "Correctness/CLI evidence; not extra independent performance samples",
+      "artifact_names": [
+        "results.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/native-chat-compat-bench-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "bench-summary.json",
+        "bench.jsonl",
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {
+        "bench.jsonl": 20
+      }
+    },
+    {
+      "directory": "build/native-chat-compat-final-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "bench-summary.json",
+        "bench.jsonl",
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {
+        "bench.jsonl": 20
+      }
+    },
+    {
+      "directory": "build/native-chat-compat-final2-20261030",
+      "classification": "official",
+      "reason": "Preserved in public evidence E05",
+      "artifact_names": [
+        "bench-summary.json",
+        "bench.jsonl",
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {
+        "bench.jsonl": 20
+      }
+    },
+    {
+      "directory": "build/native-chat-dev1-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/native-chat-dev2-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/native-chat-dev3-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/native-chat-dev4-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/native-chat-dev5-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/native-chat-dev6-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/native-chat-dev7-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/native-chat-dev8-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/native-chat-final-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/native-chat-final2-20261030",
+      "classification": "official",
+      "reason": "Preserved in public evidence E04",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/native-chat-instrumented-sanitized-20261030",
+      "classification": "validation_or_probe",
+      "reason": "Correctness/CLI evidence; not extra independent performance samples",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/native-chat-sanitized-20261030",
+      "classification": "validation_or_probe",
+      "reason": "Correctness/CLI evidence; not extra independent performance samples",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/native-chat-sanitized2-20261030",
+      "classification": "validation_or_probe",
+      "reason": "Correctness/CLI evidence; not extra independent performance samples",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/native-template-cache-cli-20261030",
+      "classification": "validation_or_probe",
+      "reason": "Correctness/CLI evidence; not extra independent performance samples",
+      "artifact_names": [
+        "results.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/native-template-cache-dev1-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/native-template-cache-final-20261030",
+      "classification": "official",
+      "reason": "Preserved in public evidence E06",
+      "artifact_names": [
+        "bench-summary.json",
+        "bench.jsonl",
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {
+        "bench.jsonl": 40
+      }
+    },
+    {
+      "directory": "build/native-template-cache-sanitized-20261030",
+      "classification": "validation_or_probe",
+      "reason": "Correctness/CLI evidence; not extra independent performance samples",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/output-adaptive-qualified-20261031",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl",
+        "tool-output-test.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 131,
+        "tool-output-test.jsonl": 1
+      }
+    },
+    {
+      "directory": "build/output-capacity-long-20261031",
+      "classification": "validation_or_probe",
+      "reason": "E45/E46 sanitizer or actual capacity/long/Stream acceptance, excluded from performance",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/output-capacity-qualified-20261031",
+      "classification": "validation_or_probe",
+      "reason": "E45/E46 sanitizer or actual capacity/long/Stream acceptance, excluded from performance",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/output-capacity-stream-20261031",
+      "classification": "validation_or_probe",
+      "reason": "E45/E46 sanitizer or actual capacity/long/Stream acceptance, excluded from performance",
+      "artifact_names": [
+        "manifest.json",
+        "stream-summary.json",
+        "stream.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "stream.jsonl": 2
+      }
+    },
+    {
+      "directory": "build/output-coalesce-long-20261031",
+      "classification": "validation_or_probe",
+      "reason": "Final E44 long-context coalescing or strict Stream sanitizer acceptance, not performance samples",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/output-coalesce-qualified-20261031",
+      "classification": "validation_or_probe",
+      "reason": "ASan/UBSan unit and48 actual CLI tasks, excluded from performance; source/archive hashes recorded separately",
+      "artifact_names": [
+        "manifest.json",
+        "metal-raw.jsonl",
+        "raw.jsonl",
+        "tool-output-test.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "metal-raw.jsonl": 385,
+        "raw.jsonl": 387,
+        "tool-output-test.jsonl": 1
+      }
+    },
+    {
+      "directory": "build/output-coalesce-stream-20261031",
+      "classification": "validation_or_probe",
+      "reason": "Final E44 long-context coalescing or strict Stream sanitizer acceptance, not performance samples",
+      "artifact_names": [
+        "manifest.json",
+        "stream-summary.json",
+        "stream.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "stream.jsonl": 2
+      }
+    },
+    {
+      "directory": "build/output-coarse640-long-20261031",
+      "classification": "validation_or_probe",
+      "reason": "E47-E49 SAN/fresh-greedy/CLI/long/Stream acceptance, not performance samples",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/output-coarse640-qualified-20261031",
+      "classification": "validation_or_probe",
+      "reason": "E47-E49 SAN/fresh-greedy/CLI/long/Stream acceptance, not performance samples",
+      "artifact_names": [
+        "manifest.json",
+        "metal-raw.jsonl",
+        "raw.jsonl",
+        "tool-output-test.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "metal-raw.jsonl": 766,
+        "raw.jsonl": 387,
+        "tool-output-test.jsonl": 1
+      }
+    },
+    {
+      "directory": "build/output-coarse640-stream-20261031",
+      "classification": "validation_or_probe",
+      "reason": "E47-E49 SAN/fresh-greedy/CLI/long/Stream acceptance, not performance samples",
+      "artifact_names": [
+        "manifest.json",
+        "stream-summary.json",
+        "stream.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "stream.jsonl": 2
+      }
+    },
+    {
+      "directory": "build/output-compile-20261031",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/output-contention-offline-20261031",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/output-contention-qualified-20261031",
+      "classification": "validation_or_probe",
+      "reason": "ASan/UBSan unit and actual CLI policy checks; excluded from performance",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl",
+        "tool-output-test.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 323,
+        "tool-output-test.jsonl": 1
+      }
+    },
+    {
+      "directory": "build/output-contention640-qualified-20261031",
+      "classification": "validation_or_probe",
+      "reason": "E47-E49 SAN/fresh-greedy/CLI/long/Stream acceptance, not performance samples",
+      "artifact_names": [
+        "manifest.json",
+        "metal-raw.jsonl",
+        "raw.jsonl",
+        "tool-output-test.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "metal-raw.jsonl": 521,
+        "raw.jsonl": 387,
+        "tool-output-test.jsonl": 1
+      }
+    },
+    {
+      "directory": "build/output-decode-qualified-20261031",
+      "classification": "validation_failed",
+      "reason": "Private header include path missing; compilation failed; no measurements; corrected in qualified2/final2",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/output-decode-qualified2-20261031",
+      "classification": "validation_or_probe",
+      "reason": "ASan/UBSan unit and actual CLI policy checks; excluded from performance",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl",
+        "tool-output-test.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 283,
+        "tool-output-test.jsonl": 1
+      }
+    },
+    {
+      "directory": "build/output-device-isolation-qualified-20261031",
+      "classification": "validation_or_probe",
+      "reason": "E47-E49 SAN/fresh-greedy/CLI/long/Stream acceptance, not performance samples",
+      "artifact_names": [
+        "manifest.json",
+        "metal-raw.jsonl",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "metal-raw.jsonl": 541,
+        "raw.jsonl": 99
+      }
+    },
+    {
+      "directory": "build/output-drain-long-20261031",
+      "classification": "validation_or_probe",
+      "reason": "ASan/UBSan unit and actual CLI policy checks; excluded from performance",
+      "artifact_names": [
+        "manifest.json",
+        "stream-summary.json",
+        "stream.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "stream.jsonl": 2
+      }
+    },
+    {
+      "directory": "build/output-drain-qualified-20261031",
+      "classification": "validation_or_probe",
+      "reason": "ASan/UBSan unit and actual CLI policy checks; excluded from performance",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl",
+        "tool-output-test.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 283,
+        "tool-output-test.jsonl": 1
+      }
+    },
+    {
+      "directory": "build/output-event-qualified-20261031",
+      "classification": "validation_or_probe",
+      "reason": "ASan/UBSan unit and actual CLI policy checks; excluded from performance",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl",
+        "tool-output-test.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 387,
+        "tool-output-test.jsonl": 1
+      }
+    },
+    {
+      "directory": "build/output-growth-qualified-20261031",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl",
+        "tool-output-test.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 195,
+        "tool-output-test.jsonl": 1
+      }
+    },
+    {
+      "directory": "build/output-isolation-offline-20261031",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/output-isolation-qualified-20261031",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl",
+        "tool-output-test.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 323,
+        "tool-output-test.jsonl": 1
+      }
+    },
+    {
+      "directory": "build/output-lazy-qualified-20261031",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "manifest.json",
+        "tool-output-test.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "tool-output-test.jsonl": 1
+      }
+    },
+    {
+      "directory": "build/output-lazy-qualified2-20261031",
+      "classification": "validation_or_probe",
+      "reason": "ASan/UBSan unit and actual CLI policy checks; excluded from performance",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl",
+        "tool-output-test.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 195,
+        "tool-output-test.jsonl": 1
+      }
+    },
+    {
+      "directory": "build/output-metal-qualified-20261031",
+      "classification": "validation_failed",
+      "reason": "ObjC runtime Method typedef collided with local alias; compilation failed",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/output-metal-qualified2-20261031",
+      "classification": "validation_failed",
+      "reason": "Alias rename also changed ObjC method lookup names; compilation failed",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/output-metal-qualified3-20261031",
+      "classification": "development_or_superseded",
+      "reason": "Metal observer development or qualification; not extra performance samples; build failures and successful qualification described in CHANGELOG",
+      "artifact_names": [
+        "manifest.json",
+        "metal-raw.jsonl",
+        "raw.jsonl",
+        "tool-output-test.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "metal-raw.jsonl": 1029,
+        "raw.jsonl": 387,
+        "tool-output-test.jsonl": 1
+      }
+    },
+    {
+      "directory": "build/output-metal-qualified4-20261031",
+      "classification": "development_or_superseded",
+      "reason": "Metal observer development or qualification; not extra performance samples; build failures and successful qualification described in CHANGELOG",
+      "artifact_names": [
+        "manifest.json",
+        "tool-output-test.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "tool-output-test.jsonl": 1
+      }
+    },
+    {
+      "directory": "build/output-metal-qualified5-20261031",
+      "classification": "validation_failed",
+      "reason": "Weak observer linkage failed in ordinary native CLI; replaced by explicit per-engine callback",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/output-metal-qualified6-20261031",
+      "classification": "validation_or_probe",
+      "reason": "ASan/UBSan unit and48 actual CLI tasks, excluded from performance; source/archive hashes recorded separately",
+      "artifact_names": [
+        "manifest.json",
+        "metal-raw.jsonl",
+        "raw.jsonl",
+        "tool-output-test.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "metal-raw.jsonl": 1017,
+        "raw.jsonl": 387,
+        "tool-output-test.jsonl": 1
+      }
+    },
+    {
+      "directory": "build/output-model-cli-20261031",
+      "classification": "model_capability_probe",
+      "reason": "Production0.6B Native format error rc7; zero actual tools; retained separately from fixed-choice CLI execution/timing",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/output-notify-qualified-20261031",
+      "classification": "validation_failed",
+      "reason": "Metadata JSON string escaping compile error; no measurements",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/output-notify-qualified2-20261031",
+      "classification": "validation_or_probe",
+      "reason": "ASan/UBSan unit and48 actual CLI tasks, excluded from performance; source/archive hashes recorded separately",
+      "artifact_names": [
+        "manifest.json",
+        "metal-raw.jsonl",
+        "raw.jsonl",
+        "tool-output-test.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "metal-raw.jsonl": 1029,
+        "raw.jsonl": 387,
+        "tool-output-test.jsonl": 1
+      }
+    },
+    {
+      "directory": "build/output-qualified-20261031",
+      "classification": "validation_failed",
+      "reason": "Sandbox Metal unavailable; local13 unit cases passed; initial actual CLI collector count assertion failed and first-user newline invalidated prefix; retained outside timing",
+      "artifact_names": [
+        "manifest.json",
+        "tool-output-local.jsonl",
+        "tool-output-test.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "tool-output-local.jsonl": 1,
+        "tool-output-test.jsonl": 0
+      }
+    },
+    {
+      "directory": "build/output-qualified2-20261031",
+      "classification": "validation_or_probe",
+      "reason": "Output correctness/ASan, actual CLI, Native14K and Stream acceptance; excluded from performance",
+      "artifact_names": [
+        "manifest.json",
+        "stream-summary.json",
+        "stream.jsonl",
+        "tool-output-test.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "stream.jsonl": 2,
+        "tool-output-test.jsonl": 1
+      }
+    },
+    {
+      "directory": "build/output-qualified3-20261031",
+      "classification": "validation_or_probe",
+      "reason": "Output correctness/ASan, actual CLI, Native14K and Stream acceptance; excluded from performance",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl",
+        "tool-output-test.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 131,
+        "tool-output-test.jsonl": 1
+      }
+    },
+    {
+      "directory": "build/output-race-offline-20261031",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/output-race-offline-final-20261031",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/output-race-qualified-20261031",
+      "classification": "validation_or_probe",
+      "reason": "ASan/UBSan unit and actual CLI policy checks; excluded from performance",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl",
+        "tool-output-test.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 323,
+        "tool-output-test.jsonl": 1
+      }
+    },
+    {
+      "directory": "build/output-reap-qualified-20261031",
+      "classification": "validation_failed",
+      "reason": "Darwin CLOCK_MONOTONIC_RAW hidden by POSIX feature macro; compile failed; no measurements; corrected with _DARWIN_C_SOURCE",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/output-reap-qualified2-20261031",
+      "classification": "validation_or_probe",
+      "reason": "ASan/UBSan unit and actual CLI policy checks; excluded from performance",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl",
+        "tool-output-test.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 259,
+        "tool-output-test.jsonl": 1
+      }
+    },
+    {
+      "directory": "build/output-tailwait-qualified-20261031",
+      "classification": "validation_or_probe",
+      "reason": "E45/E46 sanitizer or actual capacity/long/Stream acceptance, excluded from performance",
+      "artifact_names": [
+        "manifest.json",
+        "metal-raw.jsonl",
+        "raw.jsonl",
+        "tool-output-test.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "metal-raw.jsonl": 769,
+        "raw.jsonl": 387,
+        "tool-output-test.jsonl": 1
+      }
+    },
+    {
+      "directory": "build/qwen-basic-p9yiig_z",
+      "classification": "historical_capability_probe",
+      "reason": "Failure summarized in E12; private raw logs/config excluded",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/resident-flow-final-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E27",
+      "artifact_names": [
+        "manifest.json",
+        "resident-flow.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "resident-flow.jsonl": 199
+      }
+    },
+    {
+      "directory": "build/resident-qualified-20261031",
+      "classification": "validation_failed",
+      "reason": "First streaming fresh-KV oracle exceeded shared8192 slot capacity;9 sanitizer task rows completed, excluded from performance; final oracle follows normal stream close",
+      "artifact_names": [
+        "manifest.json",
+        "resident-flow.jsonl",
+        "resident-stream.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "resident-flow.jsonl": 31,
+        "resident-stream.jsonl": 10
+      }
+    },
+    {
+      "directory": "build/resident-qualified2-20261031",
+      "classification": "validation_or_probe",
+      "reason": "Stage/progress/spawn sanitizer or deterministic CLI acceptance, not performance samples",
+      "artifact_names": [
+        "manifest.json",
+        "resident-flow.jsonl",
+        "resident-stream.jsonl",
+        "stream-summary.json",
+        "stream.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "resident-flow.jsonl": 31,
+        "resident-stream.jsonl": 15,
+        "stream.jsonl": 2
+      }
+    },
+    {
+      "directory": "build/resident-qualified3-20261031",
+      "classification": "validation_or_probe",
+      "reason": "Stage/progress/spawn sanitizer or deterministic CLI acceptance, not performance samples",
+      "artifact_names": [
+        "manifest.json",
+        "resident-stream.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "resident-stream.jsonl": 15
+      }
+    },
+    {
+      "directory": "build/resident-stream-final-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E28",
+      "artifact_names": [
+        "manifest.json",
+        "resident-stream.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "resident-stream.jsonl": 87
+      }
+    },
+    {
+      "directory": "build/restore-balance-cli-20261031",
+      "classification": "validation_or_probe",
+      "reason": "Stage/progress/spawn sanitizer or deterministic CLI acceptance, not performance samples",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/restore-balance-final-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E23",
+      "artifact_names": [
+        "manifest.json",
+        "tool-prepare.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "tool-prepare.jsonl": 979
+      }
+    },
+    {
+      "directory": "build/restore-balance-qualified-20261031",
+      "classification": "validation_or_probe",
+      "reason": "Stage/progress/spawn sanitizer or deterministic CLI acceptance, not performance samples",
+      "artifact_names": [
+        "kv-worker-summary.json",
+        "kv-worker.jsonl",
+        "manifest.json",
+        "stream-summary.json",
+        "stream.jsonl",
+        "tool-prepare.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "kv-worker.jsonl": 2,
+        "stream.jsonl": 2,
+        "tool-prepare.jsonl": 307
+      }
+    },
+    {
+      "directory": "build/restore-timing-final-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E22",
+      "artifact_names": [
+        "manifest.json",
+        "tool-prepare.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "tool-prepare.jsonl": 547
+      }
+    },
+    {
+      "directory": "build/roofline-diagnose-final-20261030",
+      "classification": "official",
+      "reason": "Preserved in public evidence E15",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 278
+      }
+    },
+    {
+      "directory": "build/roofline-diagnose-probe-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Development only: nonzero n_kv_max selected sparse attention; wrong kernel for dense llama, excluded from E15",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 85
+      }
+    },
+    {
+      "directory": "build/roofline-diagnose-probe2-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Development dense-layout/primitive check; no inference evaluation; excluded from formal E15 statistics",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 107
+      }
+    },
+    {
+      "directory": "build/roofline-estimator-final-20261030",
+      "classification": "official",
+      "reason": "Preserved in public evidence E14",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 195
+      }
+    },
+    {
+      "directory": "build/stream-dev1-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "manifest.json",
+        "stream-summary.json",
+        "stream.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "stream.jsonl": 2
+      }
+    },
+    {
+      "directory": "build/stream-dev2-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "manifest.json",
+        "stream-summary.json",
+        "stream.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "stream.jsonl": 2
+      }
+    },
+    {
+      "directory": "build/stream-final-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Superseded: an extra EOF interval distorted the input window; corrected in E11",
+      "artifact_names": [
+        "manifest.json",
+        "stream-summary.json",
+        "stream.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "stream.jsonl": 191
+      }
+    },
+    {
+      "directory": "build/stream-final2-20261030",
+      "classification": "development_or_superseded",
+      "reason": "Incomplete compilation attempt; no formal performance samples",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/stream-final3-20261030",
+      "classification": "official",
+      "reason": "Preserved in public evidence E11",
+      "artifact_names": [
+        "manifest.json",
+        "stream-summary.json",
+        "stream.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "stream.jsonl": 191
+      }
+    },
+    {
+      "directory": "build/stream-native-cli-20261030",
+      "classification": "validation_or_probe",
+      "reason": "Correctness/CLI evidence; not extra independent performance samples",
+      "artifact_names": [
+        "results.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/stream-replay-cli-20261030",
+      "classification": "validation_or_probe",
+      "reason": "Correctness/CLI evidence; not extra independent performance samples",
+      "artifact_names": [
+        "results.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/stream-sanitized-20261030",
+      "classification": "validation_or_probe",
+      "reason": "Correctness/CLI evidence; not extra independent performance samples",
+      "artifact_names": [
+        "kv-worker-summary.json",
+        "kv-worker.jsonl",
+        "manifest.json",
+        "stream-summary.json",
+        "stream.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "kv-worker.jsonl": 2,
+        "stream.jsonl": 2
+      }
+    },
+    {
+      "directory": "build/tool-isolate-cli-20261031",
+      "classification": "validation_or_probe",
+      "reason": "Stage/progress/spawn sanitizer or deterministic CLI acceptance, not performance samples",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/tool-isolate-final-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E25",
+      "artifact_names": [
+        "manifest.json",
+        "tool-prepare.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "tool-prepare.jsonl": 227
+      }
+    },
+    {
+      "directory": "build/tool-isolate-qualified-20261031",
+      "classification": "validation_or_probe",
+      "reason": "Stage/progress/spawn sanitizer or deterministic CLI acceptance, not performance samples",
+      "artifact_names": [
+        "kv-worker-summary.json",
+        "kv-worker.jsonl",
+        "manifest.json",
+        "stream-summary.json",
+        "stream.jsonl",
+        "tool-prepare.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "kv-worker.jsonl": 2,
+        "stream.jsonl": 2,
+        "tool-prepare.jsonl": 47
+      }
+    },
+    {
+      "directory": "build/tool-launch-final-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E26",
+      "artifact_names": [
+        "manifest.json",
+        "tool-prepare.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "tool-prepare.jsonl": 167
+      }
+    },
+    {
+      "directory": "build/tool-launch-qualified-20261031",
+      "classification": "validation_or_probe",
+      "reason": "Stage/progress/spawn sanitizer or deterministic CLI acceptance, not performance samples",
+      "artifact_names": [
+        "manifest.json",
+        "tool-prepare.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "tool-prepare.jsonl": 47
+      }
+    },
+    {
+      "directory": "build/tool-output-adaptive-final-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E30",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 515
+      }
+    },
+    {
+      "directory": "build/tool-output-capacity-final-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E46",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/tool-output-coalesce-final-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E44",
+      "artifact_names": [
+        "manifest.json",
+        "metal-raw.jsonl",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "metal-raw.jsonl": 1537,
+        "raw.jsonl": 1539
+      }
+    },
+    {
+      "directory": "build/tool-output-coarse640-final-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E49",
+      "artifact_names": [
+        "manifest.json",
+        "metal-raw.jsonl",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "metal-raw.jsonl": 2881,
+        "raw.jsonl": 1539
+      }
+    },
+    {
+      "directory": "build/tool-output-contention-final-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E36",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 1283
+      }
+    },
+    {
+      "directory": "build/tool-output-contention640-final-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E47",
+      "artifact_names": [
+        "manifest.json",
+        "metal-raw.jsonl",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "metal-raw.jsonl": 1946,
+        "raw.jsonl": 1539
+      }
+    },
+    {
+      "directory": "build/tool-output-decode-final-20261031",
+      "classification": "validation_failed",
+      "reason": "Private header include path missing; compilation failed; no measurements; corrected in qualified2/final2",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/tool-output-decode-final2-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E38",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 1123
+      }
+    },
+    {
+      "directory": "build/tool-output-drain-final-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E39",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 1123
+      }
+    },
+    {
+      "directory": "build/tool-output-event-final-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E34",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 1539
+      }
+    },
+    {
+      "directory": "build/tool-output-final-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E29",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 515
+      }
+    },
+    {
+      "directory": "build/tool-output-isolation-final-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E31",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 1283
+      }
+    },
+    {
+      "directory": "build/tool-output-lazy-final-20261031",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/tool-output-lazy-final2-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E37",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 771
+      }
+    },
+    {
+      "directory": "build/tool-output-metal-final-20261031",
+      "classification": "validation_failed",
+      "reason": "Alias rename also changed ObjC method lookup names; compilation failed",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/tool-output-metal-final2-20261031",
+      "classification": "development_or_superseded",
+      "reason": "Metal observer development or qualification; not extra performance samples; build failures and successful qualification described in CHANGELOG",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/tool-output-metal-final3-20261031",
+      "classification": "development_or_superseded",
+      "reason": "Metal observer development or qualification; not extra performance samples; build failures and successful qualification described in CHANGELOG",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/tool-output-metal-final4-20261031",
+      "classification": "validation_failed",
+      "reason": "Weak observer linkage failed in ordinary native CLI; no performance",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/tool-output-metal-final5-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E42",
+      "artifact_names": [
+        "manifest.json",
+        "metal-raw.jsonl",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "metal-raw.jsonl": 4017,
+        "raw.jsonl": 1539
+      }
+    },
+    {
+      "directory": "build/tool-output-notify-final-20261031",
+      "classification": "validation_failed",
+      "reason": "Metadata JSON string escaping compile error; no measurements",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/tool-output-notify-final2-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E43",
+      "artifact_names": [
+        "manifest.json",
+        "metal-raw.jsonl",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "metal-raw.jsonl": 4021,
+        "raw.jsonl": 1539
+      }
+    },
+    {
+      "directory": "build/tool-output-offline-20261031",
+      "classification": "development_or_superseded",
+      "reason": "Kept out of final aggregates; metadata inventory only",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/tool-output-progress-final-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E32",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 771
+      }
+    },
+    {
+      "directory": "build/tool-output-race-final-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E35",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 1283
+      }
+    },
+    {
+      "directory": "build/tool-output-reap-final-20261031",
+      "classification": "validation_failed",
+      "reason": "Darwin CLOCK_MONOTONIC_RAW hidden by POSIX feature macro; compile failed; no measurements; corrected with _DARWIN_C_SOURCE",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/tool-output-reap-final2-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E33",
+      "artifact_names": [
+        "manifest.json",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "raw.jsonl": 1027
+      }
+    },
+    {
+      "directory": "build/tool-output-tailwait-final-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E45",
+      "artifact_names": [
+        "manifest.json",
+        "metal-raw.jsonl",
+        "raw.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "metal-raw.jsonl": 3073,
+        "raw.jsonl": 1539
+      }
+    },
+    {
+      "directory": "build/tool-prepare-cli-20261031",
+      "classification": "model_capability_probe",
+      "reason": "0.6B emitted bare JSON as prose; zero actual tool calls, preserved in E21 validation",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/tool-prepare-cli-qualified-20261031",
+      "classification": "validation_or_probe",
+      "reason": "ASan/UBSan qualification; full Native/14K/KV/Stream and final tool/CLI checks are separate, not performance",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/tool-prepare-cli-scripted-20261031",
+      "classification": "validation_or_probe",
+      "reason": "Deterministic Native-parser CLI/registry/AgentStore test: actual test command executed exactly once",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/tool-prepare-dev-20261031",
+      "classification": "build_failed",
+      "reason": "Initial collector C/C++ linkage failure before native run; compile artifacts retained, no performance samples",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/tool-prepare-dev2-20261031",
+      "classification": "development_or_superseded",
+      "reason": "First real-tool acceptance; final cancellation cutoff and collector validation are in later qualification",
+      "artifact_names": [
+        "manifest.json",
+        "tool-prepare.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "tool-prepare.jsonl": 259
+      }
+    },
+    {
+      "directory": "build/tool-prepare-final-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E21",
+      "artifact_names": [
+        "manifest.json",
+        "tool-prepare.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "tool-prepare.jsonl": 931
+      }
+    },
+    {
+      "directory": "build/tool-prepare-qualified-20261031",
+      "classification": "validation_or_probe",
+      "reason": "ASan/UBSan qualification; full Native/14K/KV/Stream and final tool/CLI checks are separate, not performance",
+      "artifact_names": [
+        "kv-worker-summary.json",
+        "kv-worker.jsonl",
+        "manifest.json",
+        "stream-summary.json",
+        "stream.jsonl",
+        "tool-prepare.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "kv-worker.jsonl": 2,
+        "stream.jsonl": 2,
+        "tool-prepare.jsonl": 259
+      }
+    },
+    {
+      "directory": "build/tool-prepare-qualified2-20261031",
+      "classification": "validation_or_probe",
+      "reason": "ASan/UBSan qualification; full Native/14K/KV/Stream and final tool/CLI checks are separate, not performance",
+      "artifact_names": [
+        "manifest.json",
+        "tool-prepare.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "tool-prepare.jsonl": 259
+      }
+    },
+    {
+      "directory": "build/tool-taskcost-cli-20261031",
+      "classification": "validation_or_probe",
+      "reason": "Stage/progress/spawn sanitizer or deterministic CLI acceptance, not performance samples",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/tool-taskcost-final-20261031",
+      "classification": "official",
+      "reason": "Preserved in public evidence E24",
+      "artifact_names": [
+        "manifest.json",
+        "tool-prepare.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "tool-prepare.jsonl": 659
+      }
+    },
+    {
+      "directory": "build/tool-taskcost-qualified-20261031",
+      "classification": "validation_or_probe",
+      "reason": "Stage/progress/spawn sanitizer or deterministic CLI acceptance, not performance samples",
+      "artifact_names": [
+        "kv-worker-summary.json",
+        "kv-worker.jsonl",
+        "manifest.json",
+        "stream-summary.json",
+        "stream.jsonl",
+        "tool-prepare.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "kv-worker.jsonl": 2,
+        "stream.jsonl": 2,
+        "tool-prepare.jsonl": 179
+      }
+    },
+    {
+      "directory": "build/tool-timing-qualified-20261031",
+      "classification": "build_failed",
+      "reason": "Collector used an unavailable common_json method; no native timing; kept private compile evidence",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/tool-timing-qualified2-20261031",
+      "classification": "validation_or_probe",
+      "reason": "Stage/progress/spawn sanitizer or deterministic CLI acceptance, not performance samples",
+      "artifact_names": [
+        "kv-worker-summary.json",
+        "kv-worker.jsonl",
+        "manifest.json",
+        "tool-prepare.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "kv-worker.jsonl": 2,
+        "tool-prepare.jsonl": 259
+      }
+    }
+  ]
+}

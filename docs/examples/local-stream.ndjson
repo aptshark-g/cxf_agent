@@ -1,0 +1,5 @@
+{"seq":1,"kind":"file_chunk","id":"demo.c","version":1,"text":"int main(void) {\n"}
+{"seq":2,"kind":"file_chunk","id":"demo.c","version":1,"text":"    return 0;\n}\n"}
+{"seq":3,"kind":"file_end","id":"demo.c","version":1}
+{"seq":4,"kind":"text","text":"A complete file arrived. Report only the observed information."}
+{"seq":5,"kind":"end"}

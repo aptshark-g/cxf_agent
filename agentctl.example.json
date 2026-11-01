@@ -1,0 +1,14 @@
+{
+  "api": {
+    "url": "http://127.0.0.1:8000/v1/chat/completions",
+    "model": "local-model",
+    "key": "",
+    "timeout_ms": 30000
+  },
+  "agent": {
+    "budget": 0,
+    "rounds": 8,
+    "conc": 0,
+    "rpm": 0
+  }
+}
