@@ -164,7 +164,7 @@ def validate(files):
 
 
 def manifest(files):
-    return {"schema_version": 1, "prepared": "2026-11-01",
+    return {"schema_version": 1, "prepared": "2026-11-02",
             "scope": "Allowlisted public source and evidence working tree; excludes Git objects and local data; not a new inference benchmark",
             "license": "selected" if (ROOT / "LICENSE").exists() else "not_selected",
             "files": [{"path": p.relative_to(ROOT).as_posix(), "bytes": p.stat().st_size, "sha256": digest(p)} for p in files]}
@@ -193,7 +193,7 @@ def main():
         args.export.parent.mkdir(parents=True, exist_ok=True)
         with zipfile.ZipFile(args.export, "x", zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
             for p in sorted(files + [MANIFEST]):
-                info = zipfile.ZipInfo(p.relative_to(ROOT).as_posix(), (2026, 11, 1, 0, 0, 0))
+                info = zipfile.ZipInfo(p.relative_to(ROOT).as_posix(), (2026, 11, 2, 0, 0, 0))
                 info.create_system = 3
                 mode = 0o755 if p.name in {"cxf.sh", "cxf.command"} else 0o644
                 info.external_attr = (0o100000 | mode) << 16

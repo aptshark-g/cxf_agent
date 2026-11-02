@@ -83,7 +83,7 @@ static cxf_result compile_unit(const AgentStreamUnit *unit,void *ctx,char *out,u
     auto dir=std::filesystem::path(tools.root)/(std::string(unit->id)+"-"+std::to_string(unit->version)+"-"+std::to_string(unit->end_seq));
     std::filesystem::create_directory(dir);
     {std::ofstream file(dir/"unit.c",std::ios::binary);file.write(unit->text,unit->bytes);if(!file)return CXF_ERR_IO;}
-    auto path=dir.string();TestRunCfg cfg={path.c_str(),"cc unit.c -o unit && ./unit",10000};char receipt[BASIC_OUT_HINT];uint32_t n=0;
+    auto path=dir.string();TestSandbox sandbox={};sandbox.writes=1;sandbox.write[0]=path.c_str();TestRunCfg cfg={path.c_str(),"DEVELOPER_DIR=/Library/Developer/CommandLineTools cc unit.c -o unit && ./unit",10000,0, &sandbox};char receipt[BASIC_OUT_HINT];uint32_t n=0;
     auto rc=test_run_exec(&cfg,"",0,receipt,sizeof receipt,&n);
     if(n>cap)return CXF_ERR_RANGE;std::memcpy(out,receipt,n);*written=n;return rc;
 }
@@ -232,6 +232,8 @@ static void benchmark(AgentKvWorker *w,const char *root,int repeats){
     }
 }
 int main(int argc,char **argv){
+    OK(agent_sandbox_host_protect());
+
     if(argc!=6 || (std::strcmp(argv[4],"test") && std::strcmp(argv[4],"bench") && std::strcmp(argv[4],"replay"))){std::fprintf(stderr,"usage: agent-stream-replay MODEL RUNTIME SCRATCH test|bench|replay REPEATS|NDJSON|-\n");return 2;}
     auto params=cxf_llama_default_params();params.model_path=argv[1];params.backend_path=argv[2];params.context_tokens=8192;params.max_sessions=4;
     AgentKvWorker *w;auto open_rc=agent_kv_worker_open(&params,argv[3],1024ull*1024*1024,&w);if(open_rc!=CXF_OK){std::fprintf(stderr,"stream worker open rc=%d\n",open_rc);return 2;}

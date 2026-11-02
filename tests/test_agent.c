@@ -1416,6 +1416,7 @@ static bool wire_run(uint32_t out_hint, uint32_t nreq, WireOut *o) {
     }
 
     memset(&cfg, 0, sizeof(cfg));
+    cfg.scope = AGENT_SCOPE_LOCAL;
     strcpy(cfg.host, "127.0.0.1");
     cfg.port = srv.port;
     strcpy(cfg.path, "/v1/chat/completions");
@@ -1654,6 +1655,7 @@ static void wire_loop(void) {
     CHECK(lb_start(&srv, res, res_len, 1u));
 
     memset(&cfg, 0, sizeof(cfg));
+    cfg.scope = AGENT_SCOPE_LOCAL;
     strcpy(cfg.host, "127.0.0.1");
     cfg.port = srv.port;
     strcpy(cfg.path, "/v1/chat/completions");
@@ -1905,9 +1907,9 @@ static void fs_put_longline(const char *root, const char *rel, const char *pat,
 static void fs_unit(const char *root) {
     char out[FS_GREP_OUT_HINT];
     char again[FS_GREP_OUT_HINT];
-    FsCfg cfg = { root, 0u, 0u };
-    FsCfg two = { root, 2u, 0u };
-    FsCfg gone = { "/nonexistent-cxf-fs-root", 0u, 0u };
+    FsCfg cfg = { root, 0u, 0u, NULL };
+    FsCfg two = { root, 2u, 0u, NULL };
+    FsCfg gone = { "/nonexistent-cxf-fs-root", 0u, 0u, NULL };
     uint32_t n = 0, n2 = 0;
 
     /* 1. 唯一命中：路径 + 行号 + 内容，逐字节等 —— 锚点必须精确到行号 */
@@ -1987,7 +1989,7 @@ static void fs_run(const char *root, uint32_t out_hint, FsRun *o) {
 
     memset(o, 0, sizeof *o);
 
-    cfg  = (FsCfg){ root, 0u, 0u };
+    cfg  = (FsCfg){ root, 0u, 0u, NULL };
     impl = fs_capimpl_grep;      /* 模板：契约已定，ctx 由部署填 */
     impl.ctx = &cfg;
     impl.out_hint = out_hint;
@@ -2126,7 +2128,7 @@ static bool fs_file_eq(const char *path, const char *want, uint32_t wlen) {
 static void fs_write_atomicity(const char *root) {
     char out[FS_WRITE_OUT_HINT];
     char p[FS_WRITE_PATH_MAX];
-    FsRootCfg cfg = { root };
+    FsRootCfg cfg = { root, NULL };
     struct rlimit old, zero;
     void (*oldh)(int);
     uint32_t n = 0;
@@ -2174,7 +2176,7 @@ static void fs_write_unit(const char *root) {
     char out[FS_WRITE_OUT_HINT];
     char p[FS_WRITE_PATH_MAX], q[FS_WRITE_PATH_MAX];
     char outside[] = "/tmp/cxf_wo_XXXXXX";
-    FsRootCfg cfg = { root };
+    FsRootCfg cfg = { root, NULL };
     uint32_t n = 0;
 
     /* 1. 新路径：收据 + 内容逐字节。末尾那个换行是内容的一部分，
@@ -2306,8 +2308,8 @@ static void fs_write_run(const char *root, uint8_t trust_max, WRun *o) {
     cxf_str fin;
 
     memset(o, 0, sizeof *o);
-    wcfg = (FsRootCfg){ root };
-    rcfg = (FsCfg){ root, 0u, 0u };
+    wcfg = (FsRootCfg){ root, NULL };
+    rcfg = (FsCfg){ root, 0u, 0u, NULL };
     wimpl = fs_capimpl_write_new;
     wimpl.ctx = &wcfg;
     rimpl = fs_capimpl_grep;
@@ -2485,7 +2487,7 @@ static void fs_diff_unit(const char *root) {
     char out[4096];
     char p[FS_WRITE_PATH_MAX];
     uint32_t n = 0, n2 = 0;
-    FsRootCfg cfg = { root };
+    FsRootCfg cfg = { root, NULL };
 
     /* 1. 逐字节相同 ⇒ same。这是最常被走到的路径，所以放在做任何对齐之前 */
     fs_put(root, "d/same.txt", "a\nb\n");
@@ -2560,15 +2562,10 @@ static void fs_diff_unit(const char *root) {
     CHECK(fs_diff_exec(&cfg, A_MOD, sizeof A_MOD - 1u, out, (uint32_t)sizeof out, &n2) == CXF_OK);
     CHECK(n == n2 && memcmp(out, out, n) == 0);
 
-    /*
-     * 13. `..` 的判据是**解析后**在不在根内，不是字符串里有没有 `..`：
-     *     `d/../d/same.txt` 解出来仍在根内 ⇒ 必须放行。
-     *     这一条防的是"用前缀判断"那类实现 —— 它会把合法的写法也拒掉，
-     *     而那种错在测试里通常被当成"安全"而放过。
-     */
+    /* D-DATA: all tools now reject noncanonical dot components uniformly. */
     CHECK(fs_diff_exec(&cfg, A_DOT, sizeof A_DOT - 1u,
-                       out, (uint32_t)sizeof out, &n) == CXF_OK);
-    CHECK(n == 5u && memcmp(out, "same\n", 5u) == 0);
+                       out, (uint32_t)sizeof out, &n) == CXF_ERR_RANGE);
+    CHECK(n == 0u);
 
     /* 14. 根外：`../` 与符号链接是越界的两种走法 */
     {
@@ -2618,7 +2615,7 @@ static void fs_diff_bounds(const char *root) {
     char out[8192];
     char p[FS_WRITE_PATH_MAX];
     uint32_t n = 0, bytes;
-    FsRootCfg cfg = { root };
+    FsRootCfg cfg = { root, NULL };
 
     /* 行数超上限：两侧都切成行过，所以计数准确、照实写 */
     snprintf(p, sizeof p, "%s/d/lines.txt", root);
@@ -2684,8 +2681,8 @@ static void diff_loop(const char *root, uint8_t trust, DRunL *o) {
     cxf_str fin;
 
     memset(o, 0, sizeof *o);
-    dcfg = (FsRootCfg){ root };
-    rcfg = (FsCfg){ root, 0u, 0u };
+    dcfg = (FsRootCfg){ root, NULL };
+    rcfg = (FsCfg){ root, 0u, 0u, NULL };
     dimpl = fs_capimpl_diff;
     dimpl.ctx = &dcfg;
     rimpl = fs_capimpl_grep;
@@ -2832,7 +2829,7 @@ static void fs_apply_unit(const char *root) {
     char out[FS_APPLY_OUT_HINT];
     char p[FS_WRITE_PATH_MAX], q[FS_WRITE_PATH_MAX];
     uint32_t n = 0;
-    FsRootCfg cfg = { root };
+    FsRootCfg cfg = { root, NULL };
     struct stat st;
     int eq;
 
@@ -2958,7 +2955,7 @@ static void fs_apply_atomicity(const char *root) {
     static const char A_HALF[] = "d/ap_half.txt\nZZZZ";
     char out[FS_APPLY_OUT_HINT];
     char p[FS_WRITE_PATH_MAX];
-    FsRootCfg cfg = { root };
+    FsRootCfg cfg = { root, NULL };
     struct rlimit old, zero;
     void (*oldh)(int);
     uint32_t n = 0u;
@@ -3015,8 +3012,8 @@ static void fs_apply_tools(const char *root, bool *at_io, bool *at_write) {
     static char       tools[4096];
     uint32_t tlen;
 
-    acfg = (FsRootCfg){ root };
-    rcfg = (FsCfg){ root, 0u, 0u };
+    acfg = (FsRootCfg){ root, NULL };
+    rcfg = (FsCfg){ root, 0u, 0u, NULL };
     aimpl = fs_capimpl_apply;
     aimpl.ctx = &acfg;
     rimpl = fs_capimpl_grep;
@@ -3111,7 +3108,7 @@ static void fs_append_unit(const char *root) {
     char out[FS_APPEND_OUT_HINT];
     char p[FS_WRITE_PATH_MAX], q[FS_WRITE_PATH_MAX];
     uint32_t n = 0;
-    FsRootCfg cfg = { root };
+    FsRootCfg cfg = { root, NULL };
     struct stat st;
     ino_t ino_before;
 
@@ -3241,8 +3238,8 @@ static void fs_append_tools(const char *root, bool *at_io, bool *at_write) {
     static char       tools[4096];
     uint32_t tlen;
 
-    acfg = (FsRootCfg){ root };
-    rcfg = (FsCfg){ root, 0u, 0u };
+    acfg = (FsRootCfg){ root, NULL };
+    rcfg = (FsCfg){ root, 0u, 0u, NULL };
     aimpl = fs_capimpl_append;
     aimpl.ctx = &acfg;
     rimpl = fs_capimpl_grep;
@@ -3336,7 +3333,7 @@ static void http_post_unit(void) {
 
     /* 1. 正常一次：收据 + 请求体逐字节 */
     CHECK(lb_start(&srv, H_RESP_OK, (uint32_t)sizeof H_RESP_OK - 1u, 1u));
-    cfg = (HttpCfg){ "127.0.0.1", srv.port, "Bearer SENTINEL-abc", 0u };
+    cfg = (HttpCfg){ "127.0.0.1", srv.port, "Bearer SENTINEL-abc", 0u, NULL, AGENT_SCOPE_LOCAL };
     memset(out, 0, sizeof out);
     CHECK(http_post_exec(&cfg, P_OK, sizeof P_OK - 1u, out, sizeof out, &n) == CXF_OK);
     CHECK(n == sizeof("200 2\nok") - 1u && memcmp(out, "200 2\nok", n) == 0);
@@ -3349,7 +3346,7 @@ static void http_post_unit(void) {
     CHECK(!fs_has(out, n, "SENTINEL"));
 
     /* 3. 路径准入：模型能给的只有这一段，所以白名单必须窄 */
-    cfg = (HttpCfg){ "127.0.0.1", 1u, NULL, 0u };   /* 被准入挡住时不会去连 */
+    cfg = (HttpCfg){ "127.0.0.1", 1u, NULL, 0u, NULL, AGENT_SCOPE_LOCAL };   /* 被准入挡住时不会去连 */
     CHECK(http_post_exec(&cfg, P_REL,    sizeof P_REL - 1u,    out, sizeof out, &n) == CXF_ERR_RANGE);
     CHECK(http_post_exec(&cfg, P_DOTDOT, sizeof P_DOTDOT - 1u, out, sizeof out, &n) == CXF_ERR_RANGE);
     CHECK(http_post_exec(&cfg, P_SLASH,  sizeof P_SLASH - 1u,  out, sizeof out, &n) == CXF_ERR_RANGE);
@@ -3374,13 +3371,13 @@ static void http_post_unit(void) {
     /* 6. 连不上 ⇒ IO（不是崩溃、不是空收据） */
     CHECK(lb_start(&srv, "", 0u, 0u));
     CHECK(lb_stop(&srv));       /* 端口绑过即释放 ⇒ 一定没人听 */
-    cfg = (HttpCfg){ "127.0.0.1", srv.port, NULL, 0u };
+    cfg = (HttpCfg){ "127.0.0.1", srv.port, NULL, 0u, NULL, AGENT_SCOPE_LOCAL };
     CHECK(http_post_exec(&cfg, P_OK, sizeof P_OK - 1u, out, sizeof out, &n) == CXF_ERR_IO);
 
     /* 7. ★ 截断：只给 39 字节缓冲 —— 头 38 字节读全，正文只剩 1 字节 ⇒ 缓冲
      *    恰好装满 ⇒ `truncated`。收据必须**说出来**，而不是当完整响应交上去。 */
     CHECK(lb_start(&srv, H_RESP_OK, (uint32_t)sizeof H_RESP_OK - 1u, 1u));
-    cfg = (HttpCfg){ "127.0.0.1", srv.port, NULL, 0u };
+    cfg = (HttpCfg){ "127.0.0.1", srv.port, NULL, 0u, NULL, AGENT_SCOPE_LOCAL };
     memset(out, 0, sizeof out);
     CHECK(http_post_exec(&cfg, P_OK, sizeof P_OK - 1u,
                          out, HTTP_OUT_MAX + 39u, &n) == CXF_OK);
@@ -3408,8 +3405,8 @@ static void http_post_tools(bool *at_io, bool *at_write) {
     static char      tools[4096];
     uint32_t tlen;
 
-    ncfg = (HttpCfg){ "127.0.0.1", 1u, NULL, 0u };
-    rcfg = (FsCfg){ "/tmp", 0u, 0u };
+    ncfg = (HttpCfg){ "127.0.0.1", 1u, NULL, 0u, NULL, AGENT_SCOPE_LOCAL };
+    rcfg = (FsCfg){ "/tmp", 0u, 0u, NULL };
     nimpl = http_capimpl_post;
     nimpl.ctx = &ncfg;
     rimpl = fs_capimpl_grep;
@@ -3596,7 +3593,7 @@ static void tool_world_up(ToolWorld *tw, const char *root,
     static FsCfg   fsc;
     static CapImpl fs_impl, step_impl;
 
-    fsc = (FsCfg){ root, max_hits, 0u };
+    fsc = (FsCfg){ root, max_hits, 0u, NULL };
 
     fs_impl = fs_capimpl_grep;      /* 模板：契约已定，ctx 由部署填 */
     fs_impl.ctx = &fsc;

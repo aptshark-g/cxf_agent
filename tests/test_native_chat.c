@@ -75,6 +75,20 @@ static void test_boundaries(AgentNative *p, AgentLlmCfg *cfg) {
     assert(agent_native_prepare(p,cfg,bad_utf8,sizeof bad_utf8-1)==CXF_ERR_FORMAT);
     OK(cxf_llama_session_view(engine,session,&now));
     assert(old.revision==now.revision && old.committed==now.committed);
+    AgentPolicy policy={0};
+    assert(agent_policy_secret(&policy,"native-synthetic-credential"));
+    cfg->policy=&policy;
+    const char secret_input[]="native-synthetic-credential";
+    assert(agent_native_prepare(p,cfg,secret_input,sizeof secret_input-1)==CXF_ERR_RANGE);
+    OK(cxf_llama_session_view(engine,session,&now));
+    assert(old.revision==now.revision && old.committed==now.committed);
+    prepare(p,cfg,special);
+    OK(agent_native_tool_output_begin(p));
+    assert(agent_native_tool_output_tokenize(p,secret_input,sizeof secret_input-1)==CXF_ERR_RANGE);
+    assert(agent_native_tool_output_update(p,secret_input,sizeof secret_input-1)==CXF_ERR_RANGE);
+    OK(agent_native_tool_output_abort(p));
+    cfg->policy=NULL;
+    OK(cxf_llama_session_view(engine,session,&old));
     char huge[100001];
     for (uint32_t i = 0; i < 20000; i++) memcpy(huge + i * 5, "word ", 5);
     huge[100000] = 0;
@@ -130,8 +144,9 @@ static void test_tools(AgentNative *p, AgentLlmCfg *cfg) {
     char file[512], executable[512];
     snprintf(file, sizeof file, "%s/a.c", root); snprintf(executable, sizeof executable, "%s/check", root);
     FILE *f = fopen(file, "w"); assert(f); fputs("int main(void) { return 1; }\n", f); fclose(f);
-    BasicFsCfg fs = { root }; FsRootCfg wfs = { root };
-    TestRunCfg test = { root, "cc a.c -o check && ./check", 30000 };
+    BasicFsCfg fs = { root, NULL }; FsRootCfg wfs = { root, NULL };
+    TestSandbox sandbox={.writes=1,.write={root}};
+    TestRunCfg test = { root, "cc a.c -o check && ./check", 30000 ,0, &sandbox};
     Script script = { p, cfg, 0 };
     CapImpl step = { CAPNAME_STEP, "native-script", CAP_TIER_LLM, 90, CAP_TRUST_IO,
                      scripted_step, &script, 8192, NULL };
@@ -177,6 +192,8 @@ static void test_tools(AgentNative *p, AgentLlmCfg *cfg) {
 }
 
 int main(int argc, char **argv) {
+    OK(agent_sandbox_host_protect());
+
     native_message_views_reference();
     puts("PASS borrowed messages: exact upstream message fields, 256 byte/escape corpora, malformed UTF-8 rejection");
     assert(argc == 3);

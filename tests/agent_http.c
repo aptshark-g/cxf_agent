@@ -51,6 +51,10 @@ static int http_connect(const char *host, uint16_t port, uint32_t timeout_ms) {
     if (getaddrinfo(host, portstr, &hints, &res) != 0) return -1;
 
     for (it = res; it != NULL; it = it->ai_next) {
+        bool loop = it->ai_family == AF_INET ?
+            (ntohl(((struct sockaddr_in *)it->ai_addr)->sin_addr.s_addr) >> 24) == 127 :
+            it->ai_family == AF_INET6 && IN6_IS_ADDR_LOOPBACK(&((struct sockaddr_in6 *)it->ai_addr)->sin6_addr);
+        if (!loop) continue;
         fd = socket(it->ai_family, it->ai_socktype, it->ai_protocol);
         if (fd < 0) continue;
         set_timeout(fd, timeout_ms);
@@ -163,6 +167,12 @@ cxf_result agent_http_post(const AgentHttpReq *req, char *buf, uint32_t cap,
     if (req->host == NULL || req->path == NULL) return CXF_ERR_RANGE;
     if (req->body_len > 0 && req->body == NULL) return CXF_ERR_RANGE;
 
+    if (!agent_policy_loopback(req->host) || !req->port ||
+        !agent_policy_egress(req->policy,req->scope,req->data_class,req->body,req->body_len) ||
+        !agent_policy_text(req->policy,req->path,(uint32_t)strlen(req->path))) return CXF_ERR_RANGE;
+    const char *fields[] = {req->host,req->path,req->auth};
+    for (unsigned f=0;f<3;f++) if(fields[f]) for(const unsigned char *p=(const unsigned char *)fields[f];*p;p++)
+        if(*p<32||*p==127) return CXF_ERR_RANGE;
     http_init_once();
 
     n = snprintf(head, sizeof(head),
@@ -201,6 +211,10 @@ cxf_result agent_http_post(const AgentHttpReq *req, char *buf, uint32_t cap,
     raw = read_until_eof(fd, buf, cap);
     (void)close(fd);
 
+    if(!agent_policy_text(req->policy,buf,raw)) {
+        memset(buf,0,raw);memset(resp,0,sizeof *resp);return CXF_ERR_RANGE;
+    }
+    if(raw<cap)buf[raw]=0;
     /* 头体分界。找不到说明连报文都不完整 —— 不猜，直接失败。 */
     for (uint32_t i = 0; i + 3 < raw; i++) {
         if (buf[i] == '\r' && buf[i + 1] == '\n' && buf[i + 2] == '\r' && buf[i + 3] == '\n') {

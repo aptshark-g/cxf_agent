@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include "agent_caps.h"
+#include "agent_policy.h"
 
 /*
  * fs.grep —— 目录里第一个**真实**能力（§4.15.1 对比台的胜者转正）。
@@ -72,6 +73,7 @@ typedef struct FsCfg {
     const char *root;
     uint32_t    max_hits;    /* 0 = FS_GREP_MAX_HITS */
     uint32_t    max_depth;   /* 0 = FS_GREP_MAX_DEPTH */
+    const AgentPolicy *policy;
 } FsCfg;
 
 /*
@@ -122,8 +124,8 @@ extern const CapImpl  fs_capimpl_grep;
  *
  * ---- 三条边界，各自对应一层 ----
  *
- *   L2 参数准入  目标必须**真的**在写根之内：`realpath(父目录) ⊆ realpath(root)`。
- *                不用字符串前缀判断 —— 那个形状会被 `../` 与符号链接绕过，
+ *   L2 参数准入  目标按D-DATA检查规范组件和敏感名称，并沿根目录fd打开。
+ *                拒绝 `.`／`..` 和符号链接组件，打开后再验证普通文件／链接数／保护inode；
  *                而绕过它的后果是"部署声明的边界"变成一句注释。
  *   L0 表达能力  payload 只有两个自由度（path / content）。建目录、改权限、
  *                删除都不在参数里 —— 想做得更多就加能力，不是加参数。
@@ -144,7 +146,7 @@ extern const CapImpl  fs_capimpl_grep;
 #define IFACENAME_WROTE  "fs.wrote"
 
 /* 路径上限。与 FS_GREP_PATH_MAX 分开写：读的上限由遍历决定，写的上限由
- * "一个路径要经过 realpath 才能判边界"决定，两者将来松绑的原因不同。 */
+ * "路径组件检查与目录fd打开共同限定边界"决定，两者将来松绑的原因不同。 */
 #define FS_WRITE_PATH_MAX  512u
 
 /* 收据长度有**确定上界**：`new ` / `exists ` + 最多 20 位十进制 + 换行。
@@ -163,7 +165,8 @@ extern const CapImpl  fs_capimpl_grep;
  * 而这里只有"边界在哪"。一个部署可以允许读整棵树、只允许写其中一片。
  */
 typedef struct FsRootCfg {
-    const char *root;   /* 每次调用对它做 realpath，边界因此是**当前**的真相 */
+    const char *root;   /* deployment-controlled root */
+    const AgentPolicy *policy;
 } FsRootCfg;
 
 /*

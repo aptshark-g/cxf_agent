@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdatomic.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
@@ -64,6 +65,8 @@ typedef struct Sink {
     uint32_t    max_depth;
     const char *pat;
     uint32_t    pat_len;
+    const char *root;
+    const AgentPolicy *policy;
 } Sink;
 
 static bool sink_put(Sink *s, const char *p, uint32_t n) {
@@ -133,7 +136,10 @@ static void grep_file(Sink *s, const char *full, const char *rel) {
     uint32_t lineno = 0u;
     bool skipping = false;
 
-    f = fopen(full, "rb");
+    (void)full;
+    int fd=agent_policy_open(s->policy,s->root,rel,(uint32_t)strlen(rel),false,O_RDONLY);
+    f = fd < 0 ? NULL : fdopen(fd,"rb");
+    if(fd>=0&&!f)close(fd);
     if (f == NULL) return;
 
     while (fgets(line, (int)sizeof line, f) != NULL) {
@@ -206,7 +212,8 @@ static void walk(Sink *s, const char *dir, const char *rel, uint32_t depth) {
            : snprintf(child, sizeof child, "%s", name);
         if (fn < 0 || (size_t)fn >= sizeof full) continue;
         if (cn < 0 || (size_t)cn >= sizeof child) continue;
-        if (lstat(full, &st) != 0) continue;
+        if (!agent_policy_path(s->policy,s->root,child,(uint32_t)cn,true)) continue;
+        if (lstat(full, &st) != 0 || !agent_policy_stat(s->policy,&st)) continue;
 
         if (S_ISDIR(st.st_mode)) {
             if (depth < s->max_depth) walk(s, full, child, depth + 1u);
@@ -235,13 +242,14 @@ cxf_result fs_grep_exec(const void *ctx, const char *args, uint32_t args_len,
     /* root 打不开是**响亮失败**，不是空结果。空结果会被上层读成
      * "工作区里没有这个东西"，那是一个假否定 —— 比报错难查得多。 */
     if (lstat(cfg->root, &st) != 0 || !S_ISDIR(st.st_mode)) return CXF_ERR_IO;
+    if (!agent_policy_path(cfg->policy,cfg->root,".",1,true)) return CXF_ERR_RANGE;
 
     s = (Sink){
         { out, out_cap, 0u, false },
         0u, 0u,
         cfg->max_hits  != 0u ? cfg->max_hits  : FS_GREP_MAX_HITS,
         cfg->max_depth != 0u ? cfg->max_depth : FS_GREP_MAX_DEPTH,
-        args, args_len
+        args, args_len, cfg->root, cfg->policy
     };
 
     walk(&s, cfg->root, "", 0u);
@@ -291,207 +299,46 @@ cxf_result fs_grep_exec(const void *ctx, const char *args, uint32_t args_len,
  * 路径去做边界判定、再按同一个更短的路径去 open —— 判的和写的虽然是同一个，
  * 但它已经不是调用方给的那一个了。宁可拒。
  */
-static bool path_shape_ok(const char *p, uint32_t n) {
-    if (n == 0u || n > FS_WRITE_PATH_MAX) return false;
-    if (p[0] == '/') return false;   /* 只收相对路径：绝对路径没有"根之内"可言 */
-    if (p[n - 1u] == '/') return false;   /* 以 '/' 结尾 = 想建目录，不是这个能力的事 */
-    for (uint32_t i = 0; i < n; i++)
-        if ((unsigned char)p[i] == 0u) return false;
-    return true;
+static bool fs_write_all(int fd,const char *body,uint32_t n){
+    uint32_t off=0;while(off<n){ssize_t w=write(fd,body+off,n-off);if(w<0&&errno==EINTR)continue;if(w<=0)return false;off+=(uint32_t)w;}return true;
 }
-
-/* `p` 是否落在 `root` 之内。判据是**组件边界**，不是字符串前缀：
- * `/tmp/work2` 的前缀是 `/tmp/work`，但它不在 `/tmp/work` 之内。 */
-static bool within(const char *p, const char *root, size_t rl) {
-    if (rl == 1u && root[0] == '/') return p[0] == '/';
-    if (strncmp(p, root, rl) != 0) return false;
-    return p[rl] == '\0' || p[rl] == '/';
+static bool fs_allowed(const AgentPolicy *p,int fd,struct stat *st){return !fstat(fd,st)&&S_ISREG(st->st_mode)&&agent_policy_stat(p,st);}
+static int fs_equal(int fd,const char *body,uint32_t n,off_t offset,bool eof){
+    char buf[4096];uint32_t done=0;while(done<n){uint32_t want=n-done;if(want>sizeof buf)want=sizeof buf;
+        ssize_t got=pread(fd,buf,want,offset+done);if(got<0&&errno==EINTR)continue;if(got<0)return -1;if(!got||memcmp(buf,body+done,(size_t)got))return 0;done+=(uint32_t)got;}
+    if(!eof)return 1;char extra;ssize_t got;do{got=pread(fd,&extra,1,offset+n);}while(got<0&&errno==EINTR);return got<0?-1:got==0;
 }
-
-/*
- * 把 payload 里的相对路径解析成"根之内的绝对路径"。**L2 参数准入只有这一份实现。**
- *
- * 为什么必须抽出共用：`fs.diff` 与 `fs.write_new` / `fs.write_apply` 判的是
- * 同一条边界。两份实现对"符号链接 + `..` + 大小写不敏感文件系统"的处理迟早
- * 不同步，而不同步的表现是**边界只存在于其中一份里** —— 另一半成了越权通道，
- * 且代码看起来完全正常。
- *
- * 返回：
- *   RANGE  路径形状不合契约 / 父目录解出来在根外 / 末段是 '.' '..'
- *   IO     根打不开 / 父目录不存在（**这个族不建目录**，那是另一个自由度）
- *
- * 只做解析，不碰目标本身：目标存不存在、是不是普通文件，由调用方按自己的
- * 语义决定（`write_new` 要 EEXIST⇒DONE，`diff` 要 absent⇒可新建）。
- */
-static cxf_result resolve_in_root(const char *root, const char *path, uint32_t plen,
-                                  char *full, size_t full_cap) {
-    char root_real[PATH_MAX];
-    char dir_real[PATH_MAX];
-    char cand[PATH_MAX + FS_WRITE_PATH_MAX];
-    char parent[FS_WRITE_PATH_MAX + 1u];
-    char leaf[FS_WRITE_PATH_MAX + 1u];
-    uint32_t sepp, leaf_len;
-    int tn;
-
-    if (root == NULL) return CXF_ERR_RANGE;
-    if (!path_shape_ok(path, plen)) return CXF_ERR_RANGE;
-
-    /*
-     * 父目录 / 末段：只在**最后一个** '/' 处切。
-     * 逐段自己解 '..' 会让 realpath 有第二份实现 —— 而 realpath 是 `../` 与
-     * 符号链接这两种越界走法的**共同终点**，绕过它就等于绕过边界。
-     */
-    sepp = plen;
-    for (uint32_t i = plen; i-- > 0;)
-        if (path[i] == '/') { sepp = i; break; }
-
-    leaf_len = plen - (sepp < plen ? sepp + 1u : 0u);
-    if (leaf_len == 0u || leaf_len > FS_WRITE_PATH_MAX) return CXF_ERR_RANGE;
-    memcpy(leaf, path + (sepp < plen ? sepp + 1u : 0u), leaf_len);
-    leaf[leaf_len] = '\0';
-
-    /* 末段是 '.' / '..' 时 open 会打到父目录或更上层 —— 那不是"这个路径" */
-    if ((leaf_len == 1u && leaf[0] == '.') ||
-        (leaf_len == 2u && leaf[0] == '.' && leaf[1] == '.'))
-        return CXF_ERR_RANGE;
-
-    /* 没有 '/' 时 `sepp == plen`：路径只有一段，父目录就是根本身。
-     * （这一格最初写成 `sepp > 0` 就拷贝，于是 "a.txt" 被当成父目录
-     *   ⇒ realpath 失败 ⇒ 一切都变成 IO。边界条件与"有没有斜杠"是同一件事。） */
-    if (sepp > 0u && sepp < plen) {
-        if (sepp > FS_WRITE_PATH_MAX) return CXF_ERR_RANGE;
-        memcpy(parent, path, sepp);
-        parent[sepp] = '\0';
-    } else {
-        parent[0] = '\0';
-    }
-
-    /* 根打不开 = 部署事实坏了：响亮失败，不是"少看/少写一点" */
-    if (realpath(root, root_real) == NULL) return CXF_ERR_IO;
-
-    tn = parent[0] == '\0'
-       ? snprintf(cand, sizeof cand, "%s", root_real)
-       : snprintf(cand, sizeof cand, "%s/%s", root_real, parent);
-    if (tn < 0 || (size_t)tn >= sizeof cand) return CXF_ERR_RANGE;
-
-    /* 父目录必须**存在**：这一族能力不建目录（那是另一个自由度，另一刀） */
-    if (realpath(cand, dir_real) == NULL) return CXF_ERR_IO;
-
-    /* ★ L2 参数准入的唯一一行谓词 */
-    if (!within(dir_real, root_real, strlen(root_real))) return CXF_ERR_RANGE;
-
-    tn = snprintf(full, full_cap, "%s/%s", dir_real, leaf);
-    if (tn < 0 || (size_t)tn >= full_cap) return CXF_ERR_RANGE;
-    return CXF_OK;
+static cxf_result fs_atomic_replace(const AgentPolicy *policy,AgentPolicyPath *at,const char *body,uint32_t n,mode_t mode,const struct stat *expected){
+    static _Atomic unsigned serial;char temp[80];int fd=-1;bool made=false;cxf_result rc=CXF_ERR_IO;
+    for(unsigned i=0;i<32;i++){snprintf(temp,sizeof temp,".cxf-policy-%ld-%u",(long)getpid(),atomic_fetch_add(&serial,1));
+        fd=openat(at->parent,temp,O_WRONLY|O_CREAT|O_EXCL|O_NOFOLLOW|O_CLOEXEC,0600);if(fd>=0){made=true;break;}if(errno!=EEXIST)break;}
+    if(fd<0)return rc;
+    if(fchmod(fd,mode&0777)||!fs_write_all(fd,body,n))goto done;
+    int closed=close(fd);fd=-1;if(closed)goto done;
+    struct stat now;int found=fstatat(at->parent,at->leaf,&now,AT_SYMLINK_NOFOLLOW);
+    if((expected&&(found||!S_ISREG(now.st_mode)||!agent_policy_stat(policy,&now)||now.st_dev!=expected->st_dev||now.st_ino!=expected->st_ino))||
+       (!expected&&(!found||errno!=ENOENT))){rc=CXF_ERR_RANGE;goto done;}
+    if(renameat(at->parent,temp,at->parent,at->leaf))goto done;
+    made=false;rc=CXF_OK;
+ done:
+    if(fd>=0)close(fd);if(made)unlinkat(at->parent,temp,0);return rc;
 }
-
-cxf_result fs_write_new_exec(const void *ctx, const char *args, uint32_t args_len,
-                             char *out, uint32_t out_cap, uint32_t *out_len) {
-    const FsRootCfg *cfg = (const FsRootCfg *)ctx;
-    char full[PATH_MAX + FS_WRITE_PATH_MAX];
-    const char *path, *body;
-    uint32_t plen = 0u, blen = 0u, nl;
-    cxf_result rc;
-    struct stat st;
-    int fd = -1, tn;
-
-    if (out_len != NULL) *out_len = 0u;
-    if (out == NULL || out_cap == 0u) return CXF_ERR_FULL;
-    if (cfg == NULL || cfg->root == NULL) return CXF_ERR_RANGE;
-    if (args == NULL || args_len == 0u) return CXF_ERR_FORMAT;
-
-    split_args(args, args_len, &path, &plen, &body, &blen);
-    if (plen == 0u || plen == args_len) return CXF_ERR_FORMAT;
-
-    /*
-     * ★ **先判容量，再动世界。**
-     *
-     * 收据长度有确定上界（`FS_WRITE_OUT_MAX`），所以"报得出吗"这件事在碰文件
-     * 系统之前就有答案。反过来的顺序（先写盘、再发现装不下）会让一次**成功**
-     * 被一次容量不足撤销：要么 unlink 掉刚写的文件（把成功变成没发生），
-     * 要么返回 FULL 但文件已经在那儿（重跑时会看到 `exists`，于是"新建"这个
-     * 事实永远说不出口）。
-     *
-     * 这是写能力与读能力最本质的一处不同：读能力的 FULL 只是"再多给我点地方"，
-     * 写能力的 FULL 若在副作用之后才判，就变成了"要么白做、要么说谎"。
-     */
-    if (out_cap < FS_WRITE_OUT_MAX) return CXF_ERR_FULL;
-
-    /* 边界与解析只有一份实现（resolve_in_root）；这里只关心"目标本身怎么了" */
-    rc = resolve_in_root(cfg->root, path, plen, full, sizeof full);
-    if (rc != CXF_OK) return rc;
-
-    /*
-     * ★ 这一段是"可逆"和"幂等"的实施本体。
-     *
-     * `O_EXCL` 有两重作用：让"这路径是本次创建的"成为**原子事实**（不需要
-     * 先 stat 再 open，那之间有窗口），以及在目标是符号链接时**拒绝跟随**
-     * （POSIX 保证，包括悬空链接）—— 于是"写到我以为的文件里"这件事在
-     * 这一层不可能发生。
-     */
-    fd = open(full, O_WRONLY | O_CREAT | O_EXCL, 0644);
-    if (fd < 0) {
-        if (errno != EEXIST) return CXF_ERR_IO;
-
-        /*
-         * 已经有人在这儿放了东西。**这不是失败** —— 它是"这一步之前已经
-         * 做完了"。这正是 A1 要表达的那条语义（`EEXIST ⇒ DONE`），而它
-         * 在这里不需要框架任何配合：返回 CXF_OK 就够了（§4.18.6）。
-         *
-         * 但只有**普通文件**才算"做完了"。目录 / 符号链接 / 设备节点都不是
-         * 这个能力会创建的东西，报成功会让模型以为文件在那儿 —— 而"以为
-         * 在那儿"比"没写"更贵：它会把后续步骤全部建立在一个不存在的前提上。
-         *
-         * 不比较内容：判"内容是否相同"要读盘，而读进来之后要回答的问题是
-         * "该不该覆盖" —— 那是 `fs.write` + dry-run 的事，不塞进这里。
-         */
-        if (lstat(full, &st) != 0) return CXF_ERR_IO;
-        if (!S_ISREG(st.st_mode)) return CXF_ERR_RANGE;
-
-        tn = snprintf(out, out_cap, "exists %lld\n", (long long)st.st_size);
-        if (tn < 0 || (uint32_t)tn >= out_cap) return CXF_ERR_FULL;
-        if (out_len != NULL) *out_len = (uint32_t)tn;
-        return CXF_OK;
-    }
-
-    for (uint32_t off = 0u; off < blen;) {
-        ssize_t wr = write(fd, body + off, (size_t)(blen - off));
-
-        if (wr < 0) {
-            if (errno == EINTR) continue;
-            goto fail;
-        }
-        if (wr == 0) goto fail;     /* write 返回 0 不是"写完"，是"没写进去" */
-        off += (uint32_t)wr;
-    }
-
-    /* close 也会失败（配额 / NFS）—— 它不报，就等于把一次半写当成功 */
-    if (close(fd) != 0) { fd = -1; goto fail; }
-    fd = -1;
-
-    tn = snprintf(out, out_cap, "new %u\n", blen);
-    /* 不可达：上面已经判过 out_cap >= FS_WRITE_OUT_MAX。留着是因为 snprintf
-     * 的返回值必须被读一次 —— 而这里**不能** goto fail：文件已经写完，
-     * unlink 等于把一次成功撤销掉。 */
-    if (tn < 0 || (uint32_t)tn >= out_cap) return CXF_ERR_FULL;
-    nl = (uint32_t)tn;
-    if (out_len != NULL) *out_len = nl;
-    return CXF_OK;
-
-fail:
-    /*
-     * 写不全就把刚建的文件删掉：**路径存在 ⟺ 内容完整**。
-     *
-     * 这是"可逆"真正的实施 —— 不是"允许重跑"，而是"失败不留痕迹"。留下的
-     * 半截文件是不可逆的：逆操作（unlink）虽然还在，但没有任何信息说明它是
-     * 半截，于是重跑会看到 `exists` 并把它当成"已经做完了"。
-     *
-     * unlink 也可能失败（目录被并发删掉 / 权限变了），那时会残留一个半截
-     * 文件。这仍然**响亮**（返回 IO），只是那一层不归这部分代码管（L5）。
-     */
-    if (fd >= 0) close(fd);
-    unlink(full);
-    return CXF_ERR_IO;
+cxf_result fs_write_new_exec(const void *ctx,const char *args,uint32_t len,char *out,uint32_t cap,uint32_t *written){
+    const FsRootCfg *cfg=ctx;const char *path,*body;uint32_t pn,bn,ignored;if(!written)written=&ignored;*written=0;
+    if(!out||cap<FS_WRITE_OUT_MAX)return CXF_ERR_FULL;
+    if(!cfg||!cfg->root)return CXF_ERR_RANGE;if(!args||!len)return CXF_ERR_FORMAT;
+    split_args(args,len,&path,&pn,&body,&bn);if(!pn||pn==len)return CXF_ERR_FORMAT;
+    AgentPolicyPath at;cxf_result rc=agent_policy_parent(cfg->policy,cfg->root,path,pn,&at);if(rc!=CXF_OK)return rc;
+    int fd=openat(at.parent,at.leaf,O_WRONLY|O_CREAT|O_EXCL|O_CLOEXEC|O_NOFOLLOW,0644);
+    struct stat st={0};
+    if(fd<0){if(errno!=EEXIST)rc=CXF_ERR_IO;
+        else if(fstatat(at.parent,at.leaf,&st,AT_SYMLINK_NOFOLLOW)||!S_ISREG(st.st_mode)||!agent_policy_stat(cfg->policy,&st))rc=CXF_ERR_RANGE;
+        else{*written=(uint32_t)snprintf(out,cap,"exists %lld\n",(long long)st.st_size);rc=CXF_OK;}
+    }else{
+        bool good=fs_allowed(cfg->policy,fd,&st)&&fs_write_all(fd,body,bn);int closed=close(fd);
+        if(!good||closed){struct stat current;if(!fstatat(at.parent,at.leaf,&current,AT_SYMLINK_NOFOLLOW)&&current.st_ino==st.st_ino&&current.st_dev==st.st_dev)unlinkat(at.parent,at.leaf,0);rc=CXF_ERR_IO;}
+        else{*written=(uint32_t)snprintf(out,cap,"new %u\n",bn);rc=CXF_OK;}
+    }close(at.parent);return rc;
 }
 
 /* ==== fs.diff ==== */
@@ -724,7 +571,6 @@ static void diff_emit(OutBuf *b, const DDiff *d, uint32_t *nhunks) {
 cxf_result fs_diff_exec(const void *ctx, const char *args, uint32_t args_len,
                         char *out, uint32_t out_cap, uint32_t *out_len) {
     const FsRootCfg *cfg = (const FsRootCfg *)ctx;
-    char        full[PATH_MAX + FS_WRITE_PATH_MAX];
     char        head[64];
     DLine       oldl[FS_DIFF_MAX_LINES], newl[FS_DIFF_MAX_LINES];
     DOp         ops[DIFF_OPS_MAX];
@@ -748,28 +594,21 @@ cxf_result fs_diff_exec(const void *ctx, const char *args, uint32_t args_len,
     split_args(args, args_len, &path, &plen, &body, &blen);
     if (plen == 0u) return CXF_ERR_FORMAT;
 
-    rc = resolve_in_root(cfg->root, path, plen, full, sizeof full);
+    AgentPolicyPath at;
+    rc = agent_policy_parent(cfg->policy,cfg->root,path,plen,&at);
     if (rc != CXF_OK) return rc;
-
     b = (OutBuf){ out, out_cap, 0u, false };
     nln = split_lines(body, blen, newl, FS_DIFF_MAX_LINES);
-
-    if (lstat(full, &st) != 0) {
-        if (errno != ENOENT) return CXF_ERR_IO;
-
-        /* 不存在不是错误，是 dry-run 的答案："应用会新建这么多"。
-         * 与 `absent` 分开命名而不是报 `diff 0 <n>`，因为这两种结局对
-         * 调用方的意思完全不同：一个要新建、一个要覆盖。 */
-        tn = snprintf(head, sizeof head, "absent %u %u\n", blen, nln);
-        if (tn < 0 || (size_t)tn >= sizeof head) return CXF_ERR_RANGE;
-        if (!buf_put(&b, head, (uint32_t)tn)) return CXF_ERR_FULL;
-        if (out_len != NULL) *out_len = b.len;
+    fd = openat(at.parent,at.leaf,O_RDONLY|O_CLOEXEC|O_NONBLOCK|O_NOFOLLOW);
+    int open_error=errno;close(at.parent);
+    if (fd<0) {
+        if (open_error!=ENOENT) return open_error==ELOOP||open_error==ENOTDIR?CXF_ERR_RANGE:CXF_ERR_IO;
+        tn=snprintf(head,sizeof head,"absent %u %u\n",blen,nln);
+        if (!buf_put(&b,head,(uint32_t)tn)) return CXF_ERR_FULL;
+        if (out_len) *out_len=b.len;
         return CXF_OK;
     }
-    if (!S_ISREG(st.st_mode)) return CXF_ERR_RANGE;   /* 目录 / 链接 / 设备 */
-
-    fd = open(full, O_RDONLY);
-    if (fd < 0) return CXF_ERR_IO;
+    if (!fs_allowed(cfg->policy,fd,&st)) { close(fd); return CXF_ERR_RANGE; }
 
     /* 多读一个字节就能区分"恰好到上限"与"比上限大"，而不必信 st.st_size
      * （读之前它可能已经变了）。 */
@@ -880,287 +719,38 @@ cxf_result fs_diff_exec(const void *ctx, const char *args, uint32_t args_len,
  * 这里再读一个字节确认文件**真的到此为止** —— 否则 lstat 与 read 之间长出来的
  * 那截会被漏看，而我们报的 `same` 就成了假的。
  */
-static int content_eq(const char *full, const char *body, uint32_t blen) {
-    char buf[4096];
-    uint32_t off = 0u;
-    int fd = open(full, O_RDONLY);
-
-    if (fd < 0) return -1;
-
-    while (off < blen) {
-        uint32_t want = blen - off;
-        ssize_t r;
-
-        if (want > (uint32_t)sizeof buf) want = (uint32_t)sizeof buf;
-        r = read(fd, buf, (size_t)want);
-        if (r < 0) { if (errno == EINTR) continue; close(fd); return -1; }
-        if (r == 0) { close(fd); return 0; }        /* 短读 ⇒ 不同 */
-        if (memcmp(buf, body + off, (size_t)r) != 0) { close(fd); return 0; }
-        off += (uint32_t)r;
+cxf_result fs_write_apply_exec(const void *ctx,const char *args,uint32_t len,char *out,uint32_t cap,uint32_t *written){
+    const FsRootCfg *cfg=ctx;const char *path,*body;uint32_t pn,bn,ignored;if(!written)written=&ignored;*written=0;
+    if(!out||cap<FS_APPLY_OUT_MAX)return CXF_ERR_FULL;
+    if(!cfg||!cfg->root)return CXF_ERR_RANGE;if(!args||!len)return CXF_ERR_FORMAT;
+    split_args(args,len,&path,&pn,&body,&bn);if(!pn||pn==len)return CXF_ERR_FORMAT;
+    AgentPolicyPath at;cxf_result rc=agent_policy_parent(cfg->policy,cfg->root,path,pn,&at);if(rc!=CXF_OK)return rc;
+    int fd=openat(at.parent,at.leaf,O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_NOFOLLOW);struct stat st;bool exists=fd>=0;
+    if(fd<0&&errno!=ENOENT){int e=errno;close(at.parent);return e==ELOOP||e==ENOTDIR?CXF_ERR_RANGE:CXF_ERR_IO;}
+    if(exists){if(!fs_allowed(cfg->policy,fd,&st)){close(fd);close(at.parent);return CXF_ERR_RANGE;}
+        int eq=st.st_size==(off_t)bn?fs_equal(fd,body,bn,0,true):0;close(fd);
+        if(eq<0){close(at.parent);return CXF_ERR_IO;}
+        if(eq){*written=(uint32_t)snprintf(out,cap,"same %u\n",bn);close(at.parent);return CXF_OK;}
     }
-
-    {
-        char extra;
-        ssize_t r;
-
-        do { r = read(fd, &extra, 1u); } while (r < 0 && errno == EINTR);
-        close(fd);
-        if (r < 0) return -1;
-        return r == 0 ? 1 : 0;      /* 还有余料 ⇒ 不同 */
-    }
+    rc=fs_atomic_replace(cfg->policy,&at,body,bn,exists?st.st_mode:0644,exists?&st:NULL);close(at.parent);
+    if(rc==CXF_OK)*written=(uint32_t)snprintf(out,cap,"wrote %u\n",bn);return rc;
 }
-
-/*
- * 用"同目录临时文件 + rename"替换目标。`mode` 是替换后应有的权限位。
- *
- * ★ 为什么不是 `open(O_TRUNC)`：`O_TRUNC` 在写之前就毁了旧内容，于是
- *   `write` 失败会留下**半截新文件 + 旧内容已不存在**。而 `write_new`
- *   在同样的情况下可以 `unlink` —— 这里不行，unlink 只会让文件消失，
- *   不会把旧内容变回来。所以失败必须停在**旧文件完好**那一侧，而这只有
- *   在"新内容写进另一个名字、最后一步才换名"时成立。
- *
- * ★ 不做 fsync。rename 的原子性保证"看到旧的"或"看到新的"，不保证崩溃后
- *   新的还在（那是持久化语义，另一个议题）。所以边界要写清：**崩溃后可能
- *   退回旧内容，但不会得到半截内容。**
- *
- * 临时文件名以 '.' 开头，于是 `fs.grep` 的"跳过点文件"顺带让中间态
- * 不会出现在检索结果里。`mkstemp` 负责唯一性 —— 这比"自己拼 pid + 计数器"
- * 少一个可变全局，而可变全局在这个项目里是明确禁止的。
- */
-static cxf_result write_replace(const char *full, const char *body, uint32_t blen,
-                                mode_t mode) {
-    char   tmpl[PATH_MAX + FS_WRITE_PATH_MAX + 16u];
-    const char *slash = strrchr(full, '/');
-    size_t dl;
-    int    fd, bad = 0;
-    uint32_t off;
-
-    if (slash == NULL) return CXF_ERR_RANGE;      /* resolve_in_root 永远给绝对路径 */
-    dl = (size_t)(slash - full);
-    if (dl + sizeof "/.cxf.XXXXXX" > sizeof tmpl) return CXF_ERR_RANGE;
-    memcpy(tmpl, full, dl);
-    memcpy(tmpl + dl, "/.cxf.XXXXXX", sizeof "/.cxf.XXXXXX");
-
-    fd = mkstemp(tmpl);
-    if (fd < 0) return CXF_ERR_IO;
-
-    /* mkstemp 给 0600。覆盖时要保留旧文件的权限位 —— 否则一次覆盖会把
-     * 0755 的脚本悄悄变成不可执行，而这件事不会出现在任何收据里。 */
-    if (fchmod(fd, mode) != 0) { close(fd); unlink(tmpl); return CXF_ERR_IO; }
-
-    for (off = 0u; off < blen;) {
-        ssize_t wr = write(fd, body + off, (size_t)(blen - off));
-
-        if (wr < 0) { if (errno == EINTR) continue; bad = 1; break; }
-        if (wr == 0) { bad = 1; break; }
-        off += (uint32_t)wr;
-    }
-
-    /* close 也会失败（配额 / NFS）。它不报就等于把一次半写当成成功 */
-    if (!bad && close(fd) != 0) { fd = -1; bad = 2; }
-    if (bad == 1) close(fd);
-
-    if (!bad && rename(tmpl, full) != 0) bad = 3;
-
-    if (bad) {
-        unlink(tmpl);           /* 半截的新内容必须删掉，旧文件一格没动 */
-        return CXF_ERR_IO;
-    }
-    return CXF_OK;
-}
-
-cxf_result fs_write_apply_exec(const void *ctx, const char *args, uint32_t args_len,
-                               char *out, uint32_t out_cap, uint32_t *out_len) {
-    const FsRootCfg *cfg = (const FsRootCfg *)ctx;
-    char        full[PATH_MAX + FS_WRITE_PATH_MAX];
-    const char *path, *body;
-    uint32_t    plen = 0u, blen = 0u;
-    cxf_result  rc;
-    struct stat st;
-    mode_t      mode = 0644;
-    int         tn;
-
-    if (out_len != NULL) *out_len = 0u;
-    if (out == NULL || out_cap == 0u) return CXF_ERR_FULL;
-    if (cfg == NULL || cfg->root == NULL) return CXF_ERR_RANGE;
-    if (args == NULL || args_len == 0u) return CXF_ERR_FORMAT;
-
-    split_args(args, args_len, &path, &plen, &body, &blen);
-    /* Missing content is not consent to erase. Explicit path + newline still
-     * represents an intentionally empty file. The local 0.6B trial hit this. */
-    if (plen == 0u || plen == args_len) return CXF_ERR_FORMAT;
-
-    /* 与 write_new 同一条：**先判容量，再动世界**。这里若不判，覆盖已经发生、
-     * 旧内容已经毁掉，然后才发现报不出收据 —— 那就只剩"撤销一次成功"或
-     * "说一次谎"两个选择（§4.18.6 第 1 条）。 */
-    if (out_cap < FS_APPLY_OUT_MAX) return CXF_ERR_FULL;
-
-    rc = resolve_in_root(cfg->root, path, plen, full, sizeof full);
-    if (rc != CXF_OK) return rc;
-
-    if (lstat(full, &st) == 0) {
-        if (!S_ISREG(st.st_mode)) return CXF_ERR_RANGE;   /* 目录 / 链接 / 设备 */
-        mode = st.st_mode & 07777;
-
-        /*
-         * 内容幂等：一样就**真的不动**。
-         *
-         * 便宜否决在前（大小不等 ⇒ 不可能相同），所以这一格对大文件也只用
-         * 一次 lstat；真的可能相同才读，而读的量由 payload 决定。
-         *
-         * 收益不是省一次写：`same` 让"我改过了"这件事有据可查，也让模型
-         * 重复调用同一个动作时不会得到第二个 `wrote`（那会被读成"改了两次"）。
-         */
-        if (st.st_size >= 0 && (uint64_t)st.st_size == (uint64_t)blen) {
-            int eq = content_eq(full, body, blen);
-
-            if (eq < 0) return CXF_ERR_IO;
-            if (eq == 1) {
-                tn = snprintf(out, out_cap, "same %u\n", blen);
-                if (tn < 0 || (uint32_t)tn >= out_cap) return CXF_ERR_FULL;
-                if (out_len != NULL) *out_len = (uint32_t)tn;
-                return CXF_OK;
-            }
-        }
-    } else if (errno != ENOENT) {
-        return CXF_ERR_IO;
-    }
-
-    rc = write_replace(full, body, blen, mode);
-    if (rc != CXF_OK) return rc;
-
-    /* 收据里不区分"新建"与"覆盖"：这个能力说的是"使它等于这些字节"，
-     * 之前是什么由 `fs.diff` 回答（它已经答过）。 */
-    tn = snprintf(out, out_cap, "wrote %u\n", blen);
-    if (tn < 0 || (uint32_t)tn >= out_cap) return CXF_ERR_FULL;   /* 不可达：上面判过 */
-    if (out_len != NULL) *out_len = (uint32_t)tn;
-    return CXF_OK;
-}
-
-/*
- * 文件末尾的 blen 字节是否**恰好**等于 body。
- *
- * 与 `content_eq` 长得像，但比的东西不同：那个问"整个文件是否等于 body"
- * （所以读完还要再读一个字节确认文件到此为止），这个问"最后 blen 字节是否
- * 等于 body"（起点由 `size - blen` 给出，末尾自然对齐，不需要确认 EOF）。
- * 抄错的表现是：文件比 body 长时永远判"相同"，于是追加一次都不生效。
- *
- * 调用方已保证 `size >= blen`（便宜的否决在前）。
- * 返回：1 相同 / 0 不同（含"文件比 lstat 说的短"，即被并发截短）/ -1 读失败
- */
-static int tail_eq(const char *full, const char *body, uint32_t blen, off_t size) {
-    char buf[4096];
-    uint32_t off = 0u;
-    int fd = open(full, O_RDONLY);
-
-    if (fd < 0) return -1;
-    if (lseek(fd, size - (off_t)blen, SEEK_SET) == (off_t)-1) { close(fd); return -1; }
-
-    while (off < blen) {
-        uint32_t want = blen - off;
-        ssize_t r;
-
-        if (want > (uint32_t)sizeof buf) want = (uint32_t)sizeof buf;
-        r = read(fd, buf, (size_t)want);
-        if (r < 0) { if (errno == EINTR) continue; close(fd); return -1; }
-        if (r == 0) { close(fd); return 0; }        /* 短读 ⇒ 不同 */
-        if (memcmp(buf, body + off, (size_t)r) != 0) { close(fd); return 0; }
-        off += (uint32_t)r;
-    }
-
-    close(fd);
-    return 1;
-}
-
-cxf_result fs_append_exec(const void *ctx, const char *args, uint32_t args_len,
-                          char *out, uint32_t out_cap, uint32_t *out_len) {
-    const FsRootCfg *cfg = (const FsRootCfg *)ctx;
-    char        full[PATH_MAX + FS_WRITE_PATH_MAX];
-    const char *path, *body;
-    uint32_t    plen = 0u, blen = 0u, done = 0u;
-    cxf_result  rc;
-    struct stat st;
-    int         tn, fd;
-
-    if (out_len != NULL) *out_len = 0u;
-    if (out == NULL || out_cap == 0u) return CXF_ERR_FULL;
-    if (cfg == NULL || cfg->root == NULL) return CXF_ERR_RANGE;
-    if (args == NULL || args_len == 0u) return CXF_ERR_FORMAT;
-
-    split_args(args, args_len, &path, &plen, &body, &blen);
-    if (plen == 0u || plen == args_len) return CXF_ERR_FORMAT;
-
-    /* 先判容量，再动世界（与 write_new / apply 同一条）：追加完才发现收据
-     * 装不下，就只剩"说谎"或"多写一次"两个选择。 */
-    if (out_cap < FS_APPEND_OUT_MAX) return CXF_ERR_FULL;
-
-    rc = resolve_in_root(cfg->root, path, plen, full, sizeof full);
-    if (rc != CXF_OK) return rc;
-
-    if (lstat(full, &st) != 0) {
-        if (errno != ENOENT) return CXF_ERR_IO;
-
-        /* 不存在是**事实**不是失败（与 fs.diff 的 absent 同一口径）。这个能力
-         * 不带 O_CREAT，见头文件里"为什么不创建"的两条理由。 */
-        tn = snprintf(out, out_cap, "absent\n");
-        if (tn < 0 || (uint32_t)tn >= out_cap) return CXF_ERR_FULL;
-        if (out_len != NULL) *out_len = (uint32_t)tn;
-        return CXF_OK;
-    }
-    if (!S_ISREG(st.st_mode)) return CXF_ERR_RANGE;   /* 目录 / 链接 / 设备 */
-
-    /*
-     * 尾部分两步：**便宜的否决在前**。
-     *   1. 追加 0 字节 ≡ 什么都不做 ⇒ `same`。不报 `wrote 0`：那会让重跑看起来
-     *      "写了两次"，而事实是连写通道都没开。
-     *   2. 长度不够 ⇒ 不可能是尾部（一次 lstat 就够，不必读盘）。
-     *   3. 真的可能相同才读，读的量由 payload 决定上限。
-     */
-    if (blen == 0u) {
-        tn = snprintf(out, out_cap, "same %lld\n", (long long)st.st_size);
-        if (tn < 0 || (uint32_t)tn >= out_cap) return CXF_ERR_FULL;
-        if (out_len != NULL) *out_len = (uint32_t)tn;
-        return CXF_OK;
-    }
-    if ((uint64_t)blen <= (uint64_t)st.st_size) {
-        int eq = tail_eq(full, body, blen, st.st_size);
-
-        if (eq < 0) return CXF_ERR_IO;
-        if (eq == 1) {
-            /* ★ 本能力自证"我没做"的唯一凭据在此。模型重发的第二次落到这里，
-             *   于是"我追加过了"有据可查，而文件一个字节没长。 */
-            tn = snprintf(out, out_cap, "same %lld\n", (long long)st.st_size);
-            if (tn < 0 || (uint32_t)tn >= out_cap) return CXF_ERR_FULL;
-            if (out_len != NULL) *out_len = (uint32_t)tn;
-            return CXF_OK;
-        }
-    }
-
-    /*
-     * 真的要写。**不带 O_CREAT**（不存在上面已经报 absent 走了），
-     * `O_APPEND` 让"定位到文件末尾"由内核在 write 内完成 —— 并发追加不会
-     * 互相覆盖（每次 write 都落在当时的 EOF）。但"比较 + 追加"整体不是一步，
-     * 那件事要 flock，见头文件的边界 1。
-     */
-    fd = open(full, O_WRONLY | O_APPEND);
-    if (fd < 0) return CXF_ERR_IO;
-
-    while (done < blen) {
-        ssize_t w = write(fd, body + done, (size_t)(blen - done));
-
-        if (w < 0) { if (errno == EINTR) continue; close(fd); return CXF_ERR_IO; }
-        if (w == 0u) { close(fd); return CXF_ERR_IO; }
-        done += (uint32_t)w;
-    }
-    if (close(fd) != 0) return CXF_ERR_IO;
-
-    /* total 从 lstat 的 size 推：**不用再 stat 一次**。若这期间别人也追加了，
-     * 这个数会低报 —— 所以它报的是"我写完时认为的总长"，不是"权威总长"。 */
-    tn = snprintf(out, out_cap, "wrote %u @%lld\n", blen,
-                  (long long)st.st_size + (long long)blen);
-    if (tn < 0 || (uint32_t)tn >= out_cap) return CXF_ERR_FULL;   /* 不可达：上面判过 */
-    if (out_len != NULL) *out_len = (uint32_t)tn;
-    return CXF_OK;
+cxf_result fs_append_exec(const void *ctx,const char *args,uint32_t len,char *out,uint32_t cap,uint32_t *written){
+    const FsRootCfg *cfg=ctx;const char *path,*body;uint32_t pn,bn,ignored;if(!written)written=&ignored;*written=0;
+    if(!out||cap<FS_APPEND_OUT_MAX)return CXF_ERR_FULL;
+    if(!cfg||!cfg->root)return CXF_ERR_RANGE;if(!args||!len)return CXF_ERR_FORMAT;
+    split_args(args,len,&path,&pn,&body,&bn);if(!pn||pn==len)return CXF_ERR_FORMAT;
+    if(!agent_policy_path(cfg->policy,cfg->root,path,pn,false))return CXF_ERR_RANGE;
+    AgentPolicyPath at;cxf_result rc=agent_policy_parent(cfg->policy,cfg->root,path,pn,&at);if(rc!=CXF_OK)return rc;
+    int fd=openat(at.parent,at.leaf,O_RDWR|O_APPEND|O_NOFOLLOW|O_NONBLOCK|O_CLOEXEC);struct stat st;
+    int e=errno;close(at.parent);
+    if(fd<0){if(e!=ENOENT)return e==ELOOP||e==ENOTDIR||e==EISDIR?CXF_ERR_RANGE:CXF_ERR_IO;*written=(uint32_t)snprintf(out,cap,"absent\n");return CXF_OK;}
+    if(!fs_allowed(cfg->policy,fd,&st)){close(fd);return CXF_ERR_RANGE;}
+    int eq=!bn?1:(st.st_size>=(off_t)bn?fs_equal(fd,body,bn,st.st_size-bn,false):0);
+    if(eq<0){close(fd);return CXF_ERR_IO;}
+    if(eq){close(fd);*written=(uint32_t)snprintf(out,cap,"same %lld\n",(long long)st.st_size);return CXF_OK;}
+    bool good=fs_write_all(fd,body,bn);int closed=close(fd);if(!good||closed)return CXF_ERR_IO;
+    *written=(uint32_t)snprintf(out,cap,"wrote %u @%lld\n",bn,(long long)st.st_size+bn);return CXF_OK;
 }
 
 /* ---- 契约与实现描述符 ---- */

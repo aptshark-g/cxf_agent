@@ -1,4 +1,123 @@
 category,case,result,evidence,detail
+security,E58:exact_adopt,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
+security,E58:argument_mismatch,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
+security,E58:offset_mismatch,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
+security,E58:unknown_prediction,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
+security,E58:no_write_dispatch,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
+security,E58:changed_file,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
+security,E58:replaced_file,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
+security,E58:epoch_changed,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
+security,E58:cancel_drain,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
+security,E58:once_only,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
+security,E58:one_candidate_capacity,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
+security,E58:off_normal,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
+security,E58:read_error_fallback,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
+security,E58:sensitive_file,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
+security,E58:traversal,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
+security,E58:symlink,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
+security,E58:adoption_policy_recheck,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
+security,E58:sensitive_content,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
+security,E58:destructor_drain,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
+security,E58:permission_version_changed,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
+security,E58:matched_read_failure_falls_back,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
+security,E58:deleted_file,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
+security,E58:malformed_args,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
+security,E58:embedded_nul,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
+functional,E58:thinking_mode_cache_and_upstream_token_oracle,PASS,E58:validation.native_sanitizers,Real0.6B KV/template correctness only; single-owner probe; no hit-rate/speed claim
+functional,E58:fork_shares_canonical_and_evaluated_prefix,PASS,E58:validation.native_sanitizers,Real0.6B KV/template correctness only; single-owner probe; no hit-rate/speed claim
+functional,E58:probe_keeps_main_history_and_greedy,PASS,E58:validation.native_sanitizers,Real0.6B KV/template correctness only; single-owner probe; no hit-rate/speed claim
+functional,E58:child_close_parent_continues,PASS,E58:validation.native_sanitizers,Real0.6B KV/template correctness only; single-owner probe; no hit-rate/speed claim
+functional,E58:finished_single_call_parser_and_batch_rejection,PASS,E58:validation.native_sanitizers,Real0.6B KV/template correctness only; single-owner probe; no hit-rate/speed claim
+functional,E58:task_reset_reclaims_branch_tokens,PASS,E58:validation.native_sanitizers,Real0.6B KV/template correctness only; single-owner probe; no hit-rate/speed claim
+functional,E58:scripted_native_full_flow_exact_adoption,PASS,E58:validation.native_sanitizers,Real0.6B KV/template correctness only; single-owner probe; no hit-rate/speed claim
+functional,E58:scripted_native_full_flow_mismatch_fallback,PASS,E58:validation.native_sanitizers,Real0.6B KV/template correctness only; single-owner probe; no hit-rate/speed claim
+pending,E58:target_model_quality_and_performance,NOT_MEASURED,E58:limits,WSL2/CUDA and larger-model off/on tasks pending; failures/negative pairs retained by prepared runner
+negative,E58:tiny_model_budget,RETAINED,E58:validation.model_negative_smoke,One sanitized0.6B synthetic pair: both main branches exhaust256 tokens with equal output; on predicts/reads but cancels without publication. Not a hit-rate or speed estimate.
+security,E57:test_plain_and_pch_normal_cleanup,PASS,E57:validation.recipe_sanitizers,Private one-task PCH lifecycle; cold preparation included; no new permissions or skipped validation
+security,E57:test_invalid_arguments_before_compiler,PASS,E57:validation.recipe_sanitizers,Private one-task PCH lifecycle; cold preparation included; no new permissions or skipped validation
+security,E57:test_compile_failure_cleans_private_cache,PASS,E57:validation.recipe_sanitizers,Private one-task PCH lifecycle; cold preparation included; no new permissions or skipped validation
+security,E57:test_each_task_uses_current_header,PASS,E57:validation.recipe_sanitizers,Private one-task PCH lifecycle; cold preparation included; no new permissions or skipped validation
+security,E57:test_protected_header_and_config_not_cached,PASS,E57:validation.recipe_sanitizers,Private one-task PCH lifecycle; cold preparation included; no new permissions or skipped validation
+security,E57:test_compiled_program_keeps_file_network_policy,PASS,E57:validation.recipe_sanitizers,Private one-task PCH lifecycle; cold preparation included; no new permissions or skipped validation
+negative,E56:E55_implicit_target,CONFOUNDED,E56:implicit_target_identity,"Old E55 default deployment target26.0 off versus10.4 on; old evidence unchanged, new controls explicitly use26.0"
+performance,E56:compiler_header_split,MEASURED,E56:rows;pairs,270 fixed-target stage/cache controls; header opens versus preprocessed input; default PCM absent
+negative,E56:cold_caches,RETAINED,E56:rows,Module and stat-cache cold costs retained; private PCH single-use versus three-use costs separated
+security,E57:group_candidate,PASS,E57:validation.candidate_os;group_equivalence,Experimental generated6-group union passes15 OS suites and differential corpus; not a new grant
+performance,E57:new_tasks,MEASURED,E57:rows;pairs,"180 actual CLI tasks,4 new cases,5 modes,2 warmups+7 evaluation blocks; no historical benefit accumulation"
+security,E55:test_normal_read_private_tmp_and_explicit_write,PASS,E55:validation.sandbox_sanitizers,Explicit environment binding grants no files/network; original boundary and parent protection remain
+security,E55:test_sensitive_names_reads_writes_and_descendants,PASS,E55:validation.sandbox_sanitizers,Explicit environment binding grants no files/network; original boundary and parent protection remain
+security,E55:test_outside_reads_and_explicit_grants,PASS,E55:validation.sandbox_sanitizers,Explicit environment binding grants no files/network; original boundary and parent protection remain
+security,E55:test_rename_symlink_hardlink_and_config_inode,PASS,E55:validation.sandbox_sanitizers,Explicit environment binding grants no files/network; original boundary and parent protection remain
+security,E55:test_protected_parent_rename_and_new_sensitive_files,PASS,E55:validation.sandbox_sanitizers,Explicit environment binding grants no files/network; original boundary and parent protection remain
+security,E55:test_inherited_file_descriptors_closed,PASS,E55:validation.sandbox_sanitizers,Explicit environment binding grants no files/network; original boundary and parent protection remain
+security,E55:test_tcp_udp_and_unix_default_deny_and_grants,PASS,E55:validation.sandbox_sanitizers,Explicit environment binding grants no files/network; original boundary and parent protection remain
+security,E55:test_unsupported_loopback_mode_refuses_before_execution,PASS,E55:validation.sandbox_sanitizers,Explicit environment binding grants no files/network; original boundary and parent protection remain
+security,E55:test_profile_quoting_and_private_tmp_cleanup,PASS,E55:validation.sandbox_sanitizers,Explicit environment binding grants no files/network; original boundary and parent protection remain
+security,E55:test_parent_environment_denied_even_with_network_grant,PASS,E55:validation.sandbox_sanitizers,Explicit environment binding grants no files/network; original boundary and parent protection remain
+security,E55:test_off_negative_control_and_no_network_implicit_grant,PASS,E55:validation.sandbox_sanitizers,Explicit environment binding grants no files/network; original boundary and parent protection remain
+security,E55:test_capacity_invalid_grant_refuses_before_side_effect,PASS,E55:validation.sandbox_sanitizers,Explicit environment binding grants no files/network; original boundary and parent protection remain
+security,E55:test_pinned_same_xcode_compile_and_security,PASS,E55:validation.sandbox_sanitizers,Explicit environment binding grants no files/network; original boundary and parent protection remain
+security,E55:test_binding_does_not_grant_directories_or_inherit_old_path,PASS,E55:validation.sandbox_sanitizers,Explicit environment binding grants no files/network; original boundary and parent protection remain
+security,E55:test_invalid_binding_fails_before_side_effect,PASS,E55:validation.sandbox_sanitizers,Explicit environment binding grants no files/network; original boundary and parent protection remain
+sanitizer,E55:compatibility,PASS,E55:validation,"561 C,15 OS,12 policy,8 foundation,14K Native,16 Stream,72 output; upstream libraries not instrumented"
+performance,E54:cache_and_launch,MEASURED,E54:rows;pairs;ipc_rows,126 main plus70 direct-API rows; cache invalidation/reuse causal control; IPC totals not full xcodebuild waiting
+negative,E54:nolog_and_sdk_only,RETAINED,E54:rows;development_failures,No-log does not remove seconds-scale regression; SDKROOT alone insufficient; sample produced no call stacks
+performance,E55:fresh_tasks,MEASURED,E55:rows;pairs,"108 actual CLI tasks,3 new workloads,4 modes,2 warmups+7 evaluation blocks; unchanged permissions, explicit binding only"
+security,E53:test_normal_read_private_tmp_and_explicit_write,PASS,E53:validation.sandbox_sanitizers,Final OS file/network policy and cxf startup-environment protection; explicit off positive control retained
+security,E53:test_sensitive_names_reads_writes_and_descendants,PASS,E53:validation.sandbox_sanitizers,Final OS file/network policy and cxf startup-environment protection; explicit off positive control retained
+security,E53:test_outside_reads_and_explicit_grants,PASS,E53:validation.sandbox_sanitizers,Final OS file/network policy and cxf startup-environment protection; explicit off positive control retained
+security,E53:test_rename_symlink_hardlink_and_config_inode,PASS,E53:validation.sandbox_sanitizers,Final OS file/network policy and cxf startup-environment protection; explicit off positive control retained
+security,E53:test_protected_parent_rename_and_new_sensitive_files,PASS,E53:validation.sandbox_sanitizers,Final OS file/network policy and cxf startup-environment protection; explicit off positive control retained
+security,E53:test_inherited_file_descriptors_closed,PASS,E53:validation.sandbox_sanitizers,Final OS file/network policy and cxf startup-environment protection; explicit off positive control retained
+security,E53:test_tcp_udp_and_unix_default_deny_and_grants,PASS,E53:validation.sandbox_sanitizers,Final OS file/network policy and cxf startup-environment protection; explicit off positive control retained
+security,E53:test_unsupported_loopback_mode_refuses_before_execution,PASS,E53:validation.sandbox_sanitizers,Final OS file/network policy and cxf startup-environment protection; explicit off positive control retained
+security,E53:test_profile_quoting_and_private_tmp_cleanup,PASS,E53:validation.sandbox_sanitizers,Final OS file/network policy and cxf startup-environment protection; explicit off positive control retained
+security,E53:test_parent_environment_denied_even_with_network_grant,PASS,E53:validation.sandbox_sanitizers,Final OS file/network policy and cxf startup-environment protection; explicit off positive control retained
+security,E53:test_off_negative_control_and_no_network_implicit_grant,PASS,E53:validation.sandbox_sanitizers,Final OS file/network policy and cxf startup-environment protection; explicit off positive control retained
+security,E53:test_capacity_invalid_grant_refuses_before_side_effect,PASS,E53:validation.sandbox_sanitizers,Final OS file/network policy and cxf startup-environment protection; explicit off positive control retained
+sanitizer,E53:native_and_process,PASS,E53:validation,"542 C checks, prior12/8 suites,14K Native,16 Stream and72 output checks; fixed upstream libraries not instrumented"
+negative,E52:parent_environment_gap,SUPERSEDED,E53:host_environment_control,E52/narrow-sysctl-only still exposed synthetic parent environment. E53 verifies host redaction before enabling restricted commands; other same-UID hosts remain outside the boundary.
+performance,E53:final_matched_overhead,MEASURED,E53:rows;pairs,"Current runtime230 rows /93 pairs, cost-positive; E52 not relabeled as final performance"
+security,E52:test_normal_read_private_tmp_and_explicit_write,PASS,E52:validation.sandbox_sanitizers,"OS file/network restriction, explicit grants, links/fd/descendant/rename protection; synthetic files and local receivers"
+security,E52:test_sensitive_names_reads_writes_and_descendants,PASS,E52:validation.sandbox_sanitizers,"OS file/network restriction, explicit grants, links/fd/descendant/rename protection; synthetic files and local receivers"
+security,E52:test_outside_reads_and_explicit_grants,PASS,E52:validation.sandbox_sanitizers,"OS file/network restriction, explicit grants, links/fd/descendant/rename protection; synthetic files and local receivers"
+security,E52:test_rename_symlink_hardlink_and_config_inode,PASS,E52:validation.sandbox_sanitizers,"OS file/network restriction, explicit grants, links/fd/descendant/rename protection; synthetic files and local receivers"
+security,E52:test_protected_parent_rename_and_new_sensitive_files,PASS,E52:validation.sandbox_sanitizers,"OS file/network restriction, explicit grants, links/fd/descendant/rename protection; synthetic files and local receivers"
+security,E52:test_inherited_file_descriptors_closed,PASS,E52:validation.sandbox_sanitizers,"OS file/network restriction, explicit grants, links/fd/descendant/rename protection; synthetic files and local receivers"
+security,E52:test_tcp_udp_and_unix_default_deny_and_grants,PASS,E52:validation.sandbox_sanitizers,"OS file/network restriction, explicit grants, links/fd/descendant/rename protection; synthetic files and local receivers"
+security,E52:test_unsupported_loopback_mode_refuses_before_execution,PASS,E52:validation.sandbox_sanitizers,"OS file/network restriction, explicit grants, links/fd/descendant/rename protection; synthetic files and local receivers"
+security,E52:test_profile_quoting_and_private_tmp_cleanup,PASS,E52:validation.sandbox_sanitizers,"OS file/network restriction, explicit grants, links/fd/descendant/rename protection; synthetic files and local receivers"
+security,E52:test_off_negative_control_and_no_network_implicit_grant,PASS,E52:validation.sandbox_sanitizers,"OS file/network restriction, explicit grants, links/fd/descendant/rename protection; synthetic files and local receivers"
+security,E52:test_capacity_invalid_grant_refuses_before_side_effect,PASS,E52:validation.sandbox_sanitizers,"OS file/network restriction, explicit grants, links/fd/descendant/rename protection; synthetic files and local receivers"
+sanitizer,E52:policy_and_process,PASS,E52:validation.c_sanitizers,542 rule/fd/lifecycle checks; existing445 policy checks and prior suites retained
+sanitizer,E52:native_regression,PASS,E52:validation.native_sanitizers,"14K,16 Stream and72 output cases; deterministic CLT Stream fixture, actual timeout receipts independently checked"
+negative,E52:loopback_candidate,REJECTED,E52:loopback_negative_control,"localhost SBPL candidate also admitted a local non-loopback interface; removed, not shipped"
+performance,E52:matched_overhead,MEASURED,E52:rows;pairs,"230 rows including44 warmups;93 evaluation pairs; cost-positive on-minus-off, all negative values retained"
+security,E51:test_default_cloud_zero_requests,PASS,E51:validation.http_sanitizers,"Synthetic secrets, real loopback HTTP/files/processes; expected refusals and normal tool loop; no universal DLP/sandbox claim"
+security,E51:test_task_scope_plain_text_and_reject_call,PASS,E51:validation.http_sanitizers,"Synthetic secrets, real loopback HTTP/files/processes; expected refusals and normal tool loop; no universal DLP/sandbox claim"
+security,E51:test_workspace_read_edit_test_roundtrip,PASS,E51:validation.http_sanitizers,"Synthetic secrets, real loopback HTTP/files/processes; expected refusals and normal tool loop; no universal DLP/sandbox claim"
+security,E51:test_sensitive_tools_and_config_aliases,PASS,E51:validation.http_sanitizers,"Synthetic secrets, real loopback HTTP/files/processes; expected refusals and normal tool loop; no universal DLP/sandbox claim"
+security,E51:test_tool_credentials_do_not_enter_context_or_cloud,PASS,E51:validation.http_sanitizers,"Synthetic secrets, real loopback HTTP/files/processes; expected refusals and normal tool loop; no universal DLP/sandbox claim"
+security,E51:test_input_and_response_leaks_withheld,PASS,E51:validation.http_sanitizers,"Synthetic secrets, real loopback HTTP/files/processes; expected refusals and normal tool loop; no universal DLP/sandbox claim"
+security,E51:test_auxiliary_isolated_and_response_filtered,PASS,E51:validation.http_sanitizers,"Synthetic secrets, real loopback HTTP/files/processes; expected refusals and normal tool loop; no universal DLP/sandbox claim"
+security,E51:test_http_independent_scope_and_body_guard,PASS,E51:validation.http_sanitizers,"Synthetic secrets, real loopback HTTP/files/processes; expected refusals and normal tool loop; no universal DLP/sandbox claim"
+security,E51:test_create_and_auxiliary_config_are_protected,PASS,E51:validation.http_sanitizers,"Synthetic secrets, real loopback HTTP/files/processes; expected refusals and normal tool loop; no universal DLP/sandbox claim"
+security,E51:test_config_cannot_elevate_cloud_permission,PASS,E51:validation.http_sanitizers,"Synthetic secrets, real loopback HTTP/files/processes; expected refusals and normal tool loop; no universal DLP/sandbox claim"
+security,E51:test_trace_refusal_preserves_files_and_capacity,PASS,E51:validation.http_sanitizers,"Synthetic secrets, real loopback HTTP/files/processes; expected refusals and normal tool loop; no universal DLP/sandbox claim"
+security,E51:test_nonloopback_never_connect,PASS,E51:validation.http_sanitizers,"Synthetic secrets, real loopback HTTP/files/processes; expected refusals and normal tool loop; no universal DLP/sandbox claim"
+sanitizer,E51:protected_files_and_egress,PASS,E51:validation.policy_sanitizers,445 file/path/secret/scope/capacity checks under ASan/UBSan
+sanitizer,E51:foundation_regression,PASS,E51:validation.foundation_sanitizers,Eight prior foundation suites revalidated with explicit local scope and credential-safe inheritance marker
+sanitizer,E51:native_regression,PASS,E51:validation.native_sanitizers,"14K, Stream and output compatibility including Native input/prefill secret rejection; fixed upstream libraries not instrumented"
+functional,E50:test_read_edit_test_loop,PASS,E50:validation.http_sanitizers,Scripted primary/local HTTP providers; real files/processes; no model quality or speed claim
+functional,E50:test_edit_guard_refusals,PASS,E50:validation.http_sanitizers,Scripted primary/local HTTP providers; real files/processes; no model quality or speed claim
+functional,E50:test_inherited_environment_is_explicit,PASS,E50:validation.http_sanitizers,Scripted primary/local HTTP providers; real files/processes; no model quality or speed claim
+functional,E50:test_local_roundtrip_and_no_control,PASS,E50:validation.http_sanitizers,Scripted primary/local HTTP providers; real files/processes; no model quality or speed claim
+functional,E50:test_local_budget_and_task_reset,PASS,E50:validation.http_sanitizers,Scripted primary/local HTTP providers; real files/processes; no model quality or speed claim
+functional,E50:test_local_response_failures_once,PASS,E50:validation.http_sanitizers,Scripted primary/local HTTP providers; real files/processes; no model quality or speed claim
+functional,E50:test_permissions_without_mounts,PASS,E50:validation.http_sanitizers,Scripted primary/local HTTP providers; real files/processes; no model quality or speed claim
+functional,E50:test_invalid_local_deployment_before_network,PASS,E50:validation.http_sanitizers,Scripted primary/local HTTP providers; real files/processes; no model quality or speed claim
+sanitizer,E50:guarded_edit_and_environment,PASS,E50:validation.basic_sanitizers,ASan/UBSan file editing and clean/inherit fork/spawn process checks
+sanitizer,E50:native_regression,PASS,E50:validation.native_sanitizers,"14,357-token Native, 16 Stream cases and72 output cases; prebuilt upstream libraries not instrumented"
 implementation,native_context,PASS,E03:runs,"Shared tokens, revisions, rollback, OOM, lifetime, independent libllama reference, capacity retry"
 implementation,chat_tokens_and_actions,PASS,E04:runs; E09:validation,Upstream token oracle and parser; 256 byte/escape corpora; Chinese tokenizer retry
 implementation,long_context_14357_tokens,PASS,E11:validation.native_chat_sanitized_output,Independent full upstream tokenization and cached greedy result

@@ -1,4 +1,5 @@
 CC      ?= cc
+CXX     ?= c++
 CFLAGS  ?= -std=c11 -O2 -Wall -Wextra -Wpedantic -MMD -MP -Iinclude
 LDFLAGS ?=
 LDLIBS  ?= -lm
@@ -28,7 +29,7 @@ AGENT_OBJ := tests/agent_types.gen.o tests/agent_caps.o tests/agent_caps.gen.o \
 
 # 协议层：传输 + 协议（test_llm 与 test_agent 共用；test_agent 里有一节把
 # 它接进能力层跑完整 tick）
-LLM_OBJ := tests/agent_http.o tests/agent_llm.o
+LLM_OBJ := tests/agent_http.o tests/agent_llm.o tests/agent_policy.o tests/agent_sandbox.o
 
 all: build/test_ds build/test_world build/test_soa build/test_registry \
      build/test_service build/test_agent build/test_stress build/test_llm build/bench_ds
@@ -100,9 +101,25 @@ build/agentctl: $(OBJ) $(AGENT_OBJ) $(LLM_OBJ) tests/agent_basic.o tests/agentct
 	@mkdir -p build
 	$(CC) $(CFLAGS) -o $@ $(OBJ) $(AGENT_OBJ) $(LLM_OBJ) tests/agent_basic.o tests/agentctl.c tests/agentctl_config.c $(LDFLAGS) $(LDLIBS)
 
-build/test_agent_basic: tests/agent_basic.o tests/test_agent_basic.c
+build/bench_test_sandbox: tests/agent_basic.o tests/agent_policy.o tests/agent_sandbox.o tests/bench_test_sandbox.c
 	@mkdir -p build
-	$(CC) $(CFLAGS) -o $@ tests/agent_basic.o tests/test_agent_basic.c $(LDFLAGS) $(LDLIBS)
+	$(CC) $(CFLAGS) -o $@ tests/agent_basic.o tests/agent_policy.o tests/agent_sandbox.o tests/bench_test_sandbox.c $(LDFLAGS) $(LDLIBS)
+
+build/test_agent_sandbox: tests/agent_basic.o tests/agent_policy.o tests/agent_sandbox.o tests/test_agent_sandbox.c
+	@mkdir -p build
+	$(CC) $(CFLAGS) -o $@ tests/agent_basic.o tests/agent_policy.o tests/agent_sandbox.o tests/test_agent_sandbox.c $(LDFLAGS) $(LDLIBS)
+
+build/sandbox_probe: tests/sandbox_probe.c
+	@mkdir -p build
+	$(CC) $(CFLAGS) -o $@ tests/sandbox_probe.c $(LDFLAGS) $(LDLIBS)
+
+build/test_agent_policy: tests/agent_basic.o tests/agent_fs.o tests/agent_policy.o tests/agent_sandbox.o tests/test_agent_policy.c
+	@mkdir -p build
+	$(CC) $(CFLAGS) -o $@ tests/agent_basic.o tests/agent_fs.o tests/agent_policy.o tests/agent_sandbox.o tests/test_agent_policy.c $(LDFLAGS) $(LDLIBS)
+
+build/test_agent_basic: tests/agent_basic.o tests/agent_policy.o tests/agent_sandbox.o tests/test_agent_basic.c
+	@mkdir -p build
+	$(CC) $(CFLAGS) -o $@ tests/agent_basic.o tests/agent_policy.o tests/agent_sandbox.o tests/test_agent_basic.c $(LDFLAGS) $(LDLIBS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
@@ -110,8 +127,12 @@ build/test_agent_basic: tests/agent_basic.o tests/test_agent_basic.c
 # 头文件改动必须触发重编，否则改了结构体布局而 .o 没跟上会静默错位。
 -include $(OBJ:.o=.d) tests/agent_basic.d
 
-test: build/test_ds build/test_world build/test_soa build/test_registry \
-      build/test_service build/test_agent build/test_stress build/test_llm build/agentctl build/test_agent_basic build/test_cost build/test_roofline build/test_cost_residual build/test_cost_kalman
+build/test_self_speculate: tests/agent_basic.o tests/agent_policy.o tests/agent_sandbox.o tests/agent_speculate.cpp tests/agent_speculate.h tests/test_self_speculate.cpp
+	@mkdir -p build
+	$(CXX) -std=c++17 -O2 -Wall -Wextra -Wpedantic -Iinclude -Itests -o $@ tests/agent_basic.o tests/agent_policy.o tests/agent_sandbox.o tests/agent_speculate.cpp tests/test_self_speculate.cpp $(LDFLAGS) -pthread $(LDLIBS)
+
+test: build/test_self_speculate build/test_ds build/test_world build/test_soa build/test_registry \
+      build/test_service build/test_agent build/test_stress build/test_llm build/agentctl build/test_agent_basic build/test_agent_policy build/test_agent_sandbox build/sandbox_probe build/test_cost build/test_roofline build/test_cost_residual build/test_cost_kalman
 	./build/test_roofline
 	./build/test_cost_residual
 	./build/test_cost_kalman
@@ -125,7 +146,15 @@ test: build/test_ds build/test_world build/test_soa build/test_registry \
 	./build/test_stress
 	./build/test_llm
 	./build/test_agent_basic
+	./build/test_agent_policy
+	./build/test_agent_sandbox
+	./build/test_self_speculate
+	PYTHONDONTWRITEBYTECODE=1 python3 tests/test_self_speculate_report.py
 	python3 tests/test_agentctl_repl.py
+	python3 tests/test_agent_foundation.py
+	python3 tests/test_agent_data_policy.py
+	python3 tests/test_agent_sandbox.py
+	python3 tests/test_cpp_batch.py
 
 test-repl: build/agentctl
 	python3 tests/test_agentctl_repl.py

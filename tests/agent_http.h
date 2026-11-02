@@ -1,5 +1,6 @@
 #ifndef AGENT_HTTP_H
 #define AGENT_HTTP_H
+#include "agent_policy.h"
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -38,6 +39,8 @@ typedef struct AgentHttpReq {
     const char *body;
     uint32_t    body_len;
     uint32_t    timeout_ms;/* 0 = 用默认值 */
+    const AgentPolicy *policy;
+    uint32_t scope, data_class; /* UNKNOWN is denied unless cloud egress is enabled */
 } AgentHttpReq;
 
 typedef struct AgentHttpResp {

@@ -1,5 +1,6 @@
 #ifndef AGENT_LLM_H
 #define AGENT_LLM_H
+#include "agent_policy.h"
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -134,6 +135,8 @@ typedef struct AgentLlmCfg {
      */
     uint16_t last_status;
     int16_t  last_rc;
+    const AgentPolicy *policy;
+    uint32_t scope;
 } AgentLlmCfg;
 
 /*
@@ -197,6 +200,14 @@ cxf_result agent_llm_visit_conversation(const char *log, uint32_t len, AgentConv
 uint32_t agent_llm_build_request(const AgentLlmCfg *c,
                                  const char *prompt, uint32_t prompt_len,
                                  char *out, uint32_t out_cap);
+
+uint32_t agent_llm_data_class(const char *,uint32_t);
+
+/* Stateless, tool-free auxiliary data channel; user bytes are not transcript.
+ * Fixed max_tokens=256; rejects tool calls and non-stop completion reasons. */
+uint32_t agent_llm_build_text_request(const AgentLlmCfg *, const char *, uint32_t, char *, uint32_t);
+cxf_result agent_llm_chat_text(AgentLlmCfg *, const char *, uint32_t,
+                              char *, uint32_t, char *, uint32_t, uint32_t *);
 
 /* ---- tools 清单（清单走协议、动作走文本）---- */
 

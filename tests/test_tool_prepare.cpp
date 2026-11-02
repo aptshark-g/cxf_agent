@@ -32,7 +32,7 @@ static common_json resources(const AgentResourceSample &s){return {{"valid",s.va
 struct Reference {std::vector<int32_t> ids;int32_t next=0;};
 struct Fixture {
     std::string root,tools,command,initial,log;AgentLlmCfg cfg={};bool taskcost=false,phases=false,launch_profile=false;
-    BasicFsCfg read={};TestRunCfg test={};FsRootCfg write={};
+    BasicFsCfg read={};TestRunCfg test={};TestSandbox sandbox={};FsRootCfg write={};
     std::array<Reference,3> reference;
     explicit Fixture(const std::string &base,int words,bool compile,int loops=30000000,bool new_task=false,bool phase_driver=false,bool launch=false):root(base),taskcost(new_task),phases(phase_driver),launch_profile(launch){
         std::filesystem::create_directory(root);
@@ -41,7 +41,7 @@ struct Fixture {
         if(launch_profile)std::ofstream(root+"/verify.c")<<"#include <stdio.h>\n#include <stdint.h>\n#include <time.h>\nint calc(int);\nstatic uint64_t stamp(void){struct timespec t;clock_gettime(CLOCK_MONOTONIC_RAW,&t);return (uint64_t)t.tv_sec*1000000000ull+t.tv_nsec;}\nint main(void){uint64_t entry=stamp();unsigned x=17;for(unsigned i=0;i<"<<loops<<";i++){x=(x<<7)|(x>>25);x^=i*2654435761u;}uint64_t done=stamp();int ok=calc(3)==7&&calc(9)==25;printf(\"arithmetic=%s digest=%u\\n\",ok?\"PASS\":\"FAIL\",x);FILE *f=fopen(\"entry-metrics\",\"w\");if(!f)return 126;fprintf(f,\"%llu %llu\\n\",(unsigned long long)entry,(unsigned long long)done);if(fclose(f))return 126;return ok?0:1;}\n";
         command="cc -O2 calc.c verify.c -o check && ./check";
         if(phases){std::filesystem::copy_file(std::filesystem::path(base).parent_path()/"tool-phase-driver",root+"/phase-driver",std::filesystem::copy_options::overwrite_existing);command="./phase-driver";}
-        read={root.c_str()};write={root.c_str()};test={root.c_str(),command.c_str(),10000};
+        read={root.c_str()};write={root.c_str()};sandbox.writes=1;sandbox.write[0]=root.c_str();test={root.c_str(),command.c_str(),10000,0,&sandbox};
         std::strcpy(cfg.model,"native-qwen3");std::strcpy(cfg.system,"Use workspace tools. Report actual test receipts.");
         AgentToolSpec specs[]={{"fs.read","Read file","path","file"},{"test.run","Run tests","empty","receipt"},{"fs.write_apply","Replace file","path and content","receipt"}};
         char data[8192];auto n=agent_llm_render_tools(specs,3,data,sizeof data);assert(n&&n<sizeof data);tools.assign(data,n);cfg.tools=tools.c_str();cfg.tools_len=n;

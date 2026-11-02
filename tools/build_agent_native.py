@@ -39,6 +39,7 @@ def main():
     ap.add_argument("--test-tool-prepare", action="store_true")
     ap.add_argument("--bench-tool-prepare", action="store_true")
     ap.add_argument("--test", action="store_true")
+    ap.add_argument("--build-self-speculate",action="store_true",help="experimental read-only same-model fork probe host; no model run")
     ap.add_argument("--test-long-context", action="store_true", help="extend native acceptance to a real 14K-token sequence")
     ap.add_argument("--sanitize", action="store_true")
     ap.add_argument("--bench-chat", action="store_true")
@@ -112,7 +113,7 @@ def main():
 
     cfiles = sorted((ROOT / "src").glob("*.c"))
     cfiles += [ROOT / "tests" / n for n in ["agent_types.gen.c", "agent_caps.c", "agent_caps.gen.c",
-               "agent_fs.c", "agent_fs.gen.c", "agent_net.c", "agent.c", "agent_http.c", "agent_llm.c", "agent_basic.c"]]
+               "agent_fs.c", "agent_fs.gen.c", "agent_net.c", "agent.c", "agent_http.c", "agent_llm.c", "agent_policy.c", "agent_sandbox.c", "agent_basic.c"]]
     for i, src in enumerate(cfiles):
         objects.append(compile_file(src, "base" + str(i)))
     objects.append(compile_file(args.sdk / "vendor/hash/sha256/sha256.c", "sha256"))
@@ -125,6 +126,10 @@ def main():
     ctl = compile_file(ROOT / "tests/agentctl.c", "ctl", native=True)
     config = compile_file(ROOT / "tests/agentctl_config.c", "config")
     run(["c++"] + objects + [worker, tool_prepare, ctl, config] + link + ["-pthread"] + ["-o", str(out / "agentctl-native")])
+    if args.build_self_speculate:
+        speculate=compile_file(ROOT/"tests/agent_speculate.cpp","speculate",cpp=True)
+        host=compile_file(ROOT/"tests/self_speculate_native.cpp","speculate_host",cpp=True)
+        run(["c++"]+objects+[speculate,host]+link+["-pthread","-o",str(out/"self-speculate-native")])
     if args.test:
         test = compile_file(ROOT / "tests/test_native_chat.c", "test")
         ref = compile_file(ROOT / "tests/native_chat_reference.cpp", "reference", cpp=True)

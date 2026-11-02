@@ -41,6 +41,9 @@ void agent_native_template_cache(AgentNative *, bool enabled);
  * prepare performs real KV prefill; actions parses a finished completion.
  * Production uses chat_action, which requires a real generation stop. */
 cxf_result agent_native_prepare(AgentNative *, const AgentLlmCfg *, const char *, uint32_t);
+/* Experimental D-SPEC host only; default prepare/chat_action remain non-thinking.
+ * Same verified Qwen3 template, explicit mode included in parser-cache identity. */
+cxf_result agent_native_prepare_thinking(AgentNative *,const AgentLlmCfg *,const char *,uint32_t,bool);
 cxf_result agent_native_actions(AgentNative *, const char *, uint32_t,
                                 char *, uint32_t, uint32_t *);
 cxf_result agent_native_chat_action(AgentNative *, AgentLlmCfg *, const char *, uint32_t,

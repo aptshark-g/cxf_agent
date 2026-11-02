@@ -12,7 +12,7 @@ cxf_result agent_native_collect_values(const AgentLlmCfg *, const char *, uint32
     jinja::value_array *, uint64_t *content_bytes = nullptr);
 std::string agent_native_flatten_values(const jinja::value &, size_t byte_limit);
 /* Internal shared entry: production cache-hit rendering and host overlap tests. */
-std::string agent_native_render_values(const common_chat_template &, jinja::value_array, common_json tools);
+std::string agent_native_render_values(const common_chat_template &, jinja::value_array, common_json tools, bool thinking=false);
 bool agent_native_verified_template(const char *source);
 bool agent_native_input_utf8(const char *,uint32_t);
 #endif

@@ -1,5 +1,53 @@
 # Measurement and reproduction
 
+E58为功能准备：24项无模型状态／安全、8项Native（6项KV／模板及2项注入完整流程）、原14K兼容回归与真实0.6B预算耗尽冒烟分开记录。没有新正式性能样本。异机runner按case/block轮换off/on，不丢失败或负对，区分全部任务与完整且输出一致配对，率值保留计数／分母，probe成本及加载时间单列。短fs.read可能没有足够重叠窗口，不能用人为sleep制造收益。见[交接](../self-speculation-handoff.md)。
+
+E56/E57当前：270条固定目标API阶段记录＋180条新CLI主记录，均2预热／7评价block，58份证据／36,664主记录／41图；中止预热独立CSV，不混入性能。E55绑定off26.0／on10.4为已发现混杂，旧数不改；新轮次显式同target。PCH冷准备／全部TUs／链接／运行／清理全计，临时逻辑文件bytes不等于RSS／KV。最终基准父进程仅在存活期阻止空闲休眠，双时钟差异阈值100ms，超限中止整轮，实际最大0.029ms；之前约274s／0.8s差异原因未定。
+
+E54/E55当前测量补充：E54 126条API主记录（2预热＋5评价），另70条直接系统API探针，各1000调用；目标拒绝日志／空栈采样只作诊断，不能混成精确IPC等待。E55 108条真实CLI主记录（3新任务×4模式×9block，2预热＋7评价），序列旋转／倒序，无SAN、无并行验证负载。所有任务全新私有HOME／TMPDIR，off的创建／清理也在计时CLI内，与E53已热宿主基线不同。源归档、实际同Xcode／SDK哈希、程序结果和全部配对保留；绑定是显式命令环境优化，默认权限／日志未改，无推理性能结果。
+
+## E53最终宿主保护与重复开销（2026-11-01）
+
+E52文件／网络／fd验收后，额外纯合成检查发现kern.procargs2仍能读取父环境，收窄Seatbelt sysctl规则也未解决。E53只标记cxf自身CS_RESTRICT、检查SIP及可信跨进程环境省略；不操作系统设置或其他程序，不声称限制其他同UID进程、可见argv或VM隔离。off正对照必须看到标记，on及显式network allow看不到；查询可能仍返回argv而非被拒绝。542项C、12组OS、原12组数据策略／8组基础SAN和Native14,357-token／16项Stream／72项输出通过，原6条编译警告保留。
+
+用同一runner独立重测230条、44预热、93组评价配对，raw配对／算法与E52相同。API进程在预热中初始化粘性宿主保护，后续off/on共享该状态，冷预热记录保留；CLI每个任务都是新进程，包含初始化成本。当前CLI中位多15.724ms（空工具，5/7更慢）、3.565ms（显式CLT，4/7）、2467.548ms（标准cc，7/7，最差2534.841ms）。负对和范围完整保留，不将E52→E53差值当作修复带来的加速；各阶段中位也不可相加。
+
+原73,880B任务结构仍共用；有效性探针另最多256KiB短期堆／一次可信fork，初始化读回poll最多1000ms，不含fork／调度／回收硬保证。CLI在模型前初始化；直接API晚于大型引擎加载的冷开销未独立测量。计时后仅改启动器帮助文字，当前运行时／Native／计时源码与实测一致，差异哈希另记。[E53](../evidence/test-sandbox-host-20261101.json)与E52及旧数据不覆盖，当前54份证据／35,980主记录／39组图。新图独立由tools/render_sandbox_final.py产生，基底renderer和全部旧38组图保持原字节。
+
+
+## E52 OS隔离与开销（2026-11-01）
+
+功能以合成文件和真实OS调用验收：542项C检查、11组OS安全、原12组策略和8组基础套件在SAN下通过；Native14,357-token／16项Stream／72项输出通过。保留localhost规则放行同机非回环接口、单条超长regex解析失败、系统启动缺根目录读取及Xcode诊断导致Stream不确定的负结果；最终仅deny/allow，确定性Stream显式CLT而不改变生产命令。OS限制契约为[D-EXEC](../design/test-sandbox-v1.md)。
+
+独占、未插桩的[runner](../../tools/bench_test_sandbox.py)产生230条记录：API四负载×8/256个额外文件×(2预热+9评价)×off/on=176；完整CLI三负载×(2预热+7评价)×off/on=54。44条预热不进评价，93组配对全部保留；off/on顺序按rep/case交替。文件数组先8后256，未随机化，不单凭跨组差异推导扫描规模因果。实际扫描entries、profile实填字节另记；显式写同根会重复扫描。
+
+C probe在实际子shell命令前后取monotonic，外层C API从进入到返回计时，CLI另包含进程启动、两次本地HTTP脚本选择、真实工具回执与收敛。命令外差值包含规则应用、spawn/exec、轮询与清理，不是纯Seatbelt编译。先逐对计算开启−关闭，再求中位／最小／最大；各阶段中位不可相加。标准cc CLI中位多2591.134ms、最差5524.787ms，命令内部逐对中位多2561.604ms，外层差值中位17.541ms；缓存/IPC影响尚无独立因果对照。CLT与标准cc是不同负载，保持各自off/on同命令，不包装为自动编译优化。
+
+73,880字节是当前off/on共同的C任务栈结构容量，不是新增RSS、子进程峰值或KV。模型仅用于独立兼容验收，计时不做真实LLM推理或云端调用。实测源码私有归档及哈希在[E52](../evidence/test-sandbox-20261101.json)；随后只有Stream测试命令改为CLT，最终验收哈希另列，运行时和计时程序相同。旧52份证据与37组图不改写，新增1组图，53份证据／35,750主记录／38图。
+
+复现：`make build/agentctl build/bench_test_sandbox build/sandbox_probe`；`python3 tools/bench_test_sandbox.py --out build/NEW-DIR`。OS套件：`python3 tests/test_agent_sandbox.py --binary PATH --probe PATH --report build/report.json`。新图单独用ReportLab4.4.9运行`tools/render_sandbox_benchmark.py`，不重画旧37组图。模型SDK／runtime／GGUF仍须显式提供，不写入发布包。
+
+
+## E51 数据策略功能验收（2026-11-01）
+
+D-DATA实施前冻结，验证仅用临时目录、合成秘密和独立回环桩。C矩阵445项检查覆盖26类默认敏感名称、全部文件工具、普通文件、非规范路径、符号链接／硬链接、动态配置inode、列表／grep跳过、编码秘密、策略表容量与范围矩阵。12组CLI安全套件覆盖默认零请求、cloud task只文本且拒绝CALL、显式workspace读—改—测、活动trace／任意配置名、工具stdout与主／辅助模型响应泄露、独立HTTP准入及JSON提权拒绝。
+
+同样12组在ASan/UBSan CLI上通过；原8组基础套件在新策略下复验，不再把继承环境中的认证值回传模型，而用存在性标记验证继承行为。单独的泄露套件验证这些值确实被阻断。完整默认回归、真实14,357-token Native全文／fresh-greedy oracle、16项Stream与72项工具输出检查通过；固定上游库未插桩，6条已有编译警告保留。初次新增Native测试改变检查点后引用旧view，失败日志哈希单列；修正测试基准并保留原状态不变断言后全量通过。
+
+[E51证据](../evidence/agent-data-policy-20261101.json)登记当前代码、二进制、最终测试报告和日志哈希；原始配置／引擎日志留本地。52份证据仍是35,520条历史主记录和37图；E51为0性能记录的functional数据集。未测策略扫描时延／内存增量，不把功能拒绝当安全完备、模型能力或性能收益。明确保留OS沙箱、任意未知秘密／编码、直接HTTPS、真实端云路由质量和Windows/CUDA等未验证边界。
+
+复现：`make test`；`python3 tests/test_agent_data_policy.py --binary PATH --report build/policy-report.json`；Native按显式SDK／runtime／model路径运行`tools/build_agent_native.py --test --test-long-context --test-stream --test-tool-output --sanitize`到全新目录。全程无真实云端请求。
+
+## E50 基础能力功能验收（2026-11-01）
+
+本轮不跑性能试验。`make test` 包含新 `tests/test_agent_foundation.py`，以两个独立回环 HTTP 桩控制模型选择，真实执行文件读写、C 编译及进程。8组覆盖唯一编辑／拒绝、最小和继承环境、本地文本回流／注入标记无执行权限、认证分离、每任务两次预算／重置、11种响应错误／截断／超时、未挂载权限拒绝和8种启动配置拒绝。桩的文本不是模型质量结果，也不将预期拒绝计作运行时通过率或性能样本。
+
+`tests/agent_basic.c + tests/test_agent_basic.c` 另以ASan/UBSan运行编辑及fork／可用spawn环境检查；固定b10938的sanitizer CLI再运行同样8组HTTP套件。最终默认完整回归通过。Native使用既有Qwen3-0.6B-Q8_0／Metal，运行14,357-token全文／greedy oracle、16项Stream和72项工具输出检查；预编译上游库未插桩。保留Native harness的6条已有编译警告；没有新的sanitizer诊断。
+
+公开[E50证据](../evidence/agent-foundation-20261101.json)仅保存通过项、限制、源／二进制／日志／私有源码归档哈希。配置、请求体、端点、模型路径和原始引擎日志不公开。旧50份证据逐字节不变；新工具／CLI源码不继承旧性能成绩。51份证据仍只有35,520条历史主记录与37图，E50是0条性能记录的functional数据集，无新图。
+
+复现：`make test`；`python3 tests/test_agent_foundation.py --binary PATH --report build/report.json` 可选指定已构建CLI。Native依赖与模型传显式路径，使用 `tools/build_agent_native.py --test --test-long-context --test-stream --test-tool-output --sanitize` 到新输出目录，然后将该目录的 `agentctl-native` 传给上述8组测试。`llm.local` 是独立HTTP文本调用，不是共享KV的云SSE或自动模型路由。
+
 This release records experiments from 2026-10-20/30/31, including separately measured E13–E20 cost estimation and E21–E41 tool/resident scheduling. Report generation reads archived JSON and does not rerun inference or replace old trials. [catalog.json](data/catalog.json) identifies 42 evidence files and SHA-256 hashes; [run-inventory.json](data/run-inventory.json) separates local official, development and superseded runs.
 
 ## Evidence classes

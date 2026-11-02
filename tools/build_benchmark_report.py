@@ -69,6 +69,15 @@ SPECS = [
     ('E47', 'tool-output-contention640', 'Same-capacity thread/token/GPU tool isolation', 'raw', 1539, 'tool-output-contention640-final-20261031'),
     ('E48', 'device-isolation', 'Fixed-shape native CPU versus memory pressure', 'raw', 387, 'device-isolation-final-20261031'),
     ('E49', 'tool-output-coarse640', 'Larger publication quantum on fresh actual tasks', 'raw', 1539, 'tool-output-coarse640-final-20261031'),
+    ('E50', 'agent-foundation', 'Guarded editing, clean test environment and local text helper', 'functional', 0, 'agent-foundation-20261101'),
+    ('E51', 'agent-data-policy', 'Unified protected files and default-deny cloud data egress', 'functional', 0, 'agent-data-policy-20261101'),
+    ('E52', 'test-sandbox', 'OS test.run file/network isolation and matched overhead', 'raw', 230, 'test-sandbox-overhead-final-20261101'),
+    ('E53', 'test-sandbox-host', 'Protected host environment, narrowed system information and final overhead', 'raw', 230, 'test-sandbox-host-overhead-final-20261101'),
+    ('E54', 'sandbox-cc-diagnostic', 'Xcode lookup-cache, launch and denied-IPC controls', 'raw', 126, 'sandbox-cc-diagnostic-final-20261101'),
+    ('E55', 'sandbox-cc-tasks', 'Explicit same-Xcode/SDK binding on fresh actual CLI tasks', 'raw', 108, 'sandbox-cc-tasks-final-20261101'),
+    ('E56', 'sandbox-cpp-diagnostic', 'Fixed-target C++ compiler/header/cache and host coordination controls', 'raw', 270, 'sandbox-cpp-diagnostic-final-20261102'),
+    ('E57', 'sandbox-cpp-tasks', 'Fresh C++ tasks: cold private PCH and bounded-regex candidate', 'raw', 180, 'sandbox-cpp-tasks-final3-20261102'),
+    ('E58', 'self-speculation', 'Read-only same-model fork probe: functional preparation and target-machine handoff', 'functional', 0, 'self-spec-handoff-check-20261102'),
     ('L01', 'legacy-observations', 'Earlier service, budget and copy observations', 'reported_only', 0, ''),
 ]
 DIMS = ('kind', 'scenario', 'shape', 'size', 'prefix_lines', 'words', 'records',
@@ -92,6 +101,8 @@ def csv_text(fields, rows):
 
 
 def evidence_date(eid):
+    if eid in ('E56','E57','E58'): return '20261102'
+    if eid in ('E50','E51','E52','E53','E54','E55'): return '20261101'
     return '20261031' if eid in ('E20','E21','E22','E23','E24','E25','E26','E27','E28','E29','E30','E31','E32','E33','E34','E35','E36','E37','E38','E39','E40','E41','E42','E43','E44','E45','E46','E47','E48','E49') else '20261020' if eid=='L01' else '20261030'
 
 
@@ -201,6 +212,7 @@ def table(headers, rows):
 def check_summaries(evidence):
     comparisons = 0
     for eid, data in evidence.items():
+        if eid in ('E52','E53','E54','E55','E56','E57'):continue  # Paired overhead has its own independent replay below.
         for summary in data.get('summary', []):
             filters = {k: summary[k] for k in DIMS if k in summary and isinstance(summary[k],(str,int,float,bool)) and summary[k] != ''}
             # Direct-API fork/state rows have no mode; memory summaries are memory-only.
@@ -542,7 +554,223 @@ def check_summaries(evidence):
     assert all(r['eof_wait_ms']==0 for r in probes[-1]['rows'])
     comparisons+=56*18
     comparisons+=(408+732+492+168+123+168+84)*18
+    foundation = evidence['E50']
+    spec=evidence['E58']
+    assert spec['evidence_level']=='functional' and spec['performance_rerun'] is False and not spec['rows']
+    assert len(spec['validation']['controller_sanitizers']['cases'])==24
+    assert len(spec['validation']['native_sanitizers']['cases'])==8
+    assert all(v['passed'] for v in spec['validation'].values())
+    assert len(spec['previous_evidence_sha256'])==58 and len(spec['previous_figures_sha256'])==82
+    for group in ('previous_evidence_sha256','previous_figures_sha256'):
+        for name,digest in spec[group].items():assert sha(ROOT/name)==digest,('historical evidence changed',name)
+    assert foundation['evidence_level'] == 'functional' and foundation['performance_rerun'] is False
+    assert all(v['passed'] for v in foundation['validation'].values())
+    assert len(foundation['validation']['http_sanitizers']['suites']) == 8
+    assert foundation['validation']['native_sanitizers']['long_context_tokens'] == 14357
+    assert foundation['validation']['native_sanitizers']['tool_output_cases'] == 72
+    assert len(foundation['previous_evidence_sha256']) == 50
+    for name, digest in foundation['previous_evidence_sha256'].items():
+        assert sha(ROOT/name) == digest, ('historical evidence changed', name)
+    policy = evidence['E51']
+    assert policy['evidence_level']=='functional' and policy['performance_rerun'] is False and not policy['rows']
+    assert all(v['passed'] for v in policy['validation'].values())
+    assert policy['validation']['policy_sanitizers']['checks']==445
+    assert len(policy['validation']['http_sanitizers']['suites'])==12
+    assert len(policy['validation']['foundation_sanitizers']['suites'])==8
+    assert policy['validation']['native_sanitizers']['long_context_tokens']==14357
+    assert policy['validation']['native_sanitizers']['tool_output_cases']==72
+    assert len(policy['previous_evidence_sha256'])==51
+    assert len(policy['previous_figures_sha256'])==74
+    for group in ('previous_evidence_sha256','previous_figures_sha256'):
+        for name,digest in policy[group].items():
+            assert sha(ROOT/name)==digest,('historical artifact changed',name)
+    sandbox=evidence['E52']
+    assert len(sandbox['rows'])==230 and all(r['passed'] for r in sandbox['rows'])
+    assert len(sandbox_pair_rows(sandbox['rows']))==93
+    assert sandbox_pair_rows(sandbox['rows'])==sandbox['pairs']
+    assert sandbox_summary(sandbox['rows'])==sandbox['summary']
+    assert all(v['passed'] for v in sandbox['validation'].values())
+    assert sandbox['validation']['c_sanitizers']['checks']==542
+    assert len(sandbox['validation']['sandbox_sanitizers']['suites'])==11
+    assert len(sandbox['validation']['data_policy_sanitizers']['suites'])==12
+    assert len(sandbox['validation']['foundation_sanitizers']['suites'])==8
+    assert sandbox['validation']['native_sanitizers']['long_context_tokens']==14357
+    assert sandbox['loopback_negative_control']['synthetic_payload_received'] is True
+    assert sandbox['loopback_negative_control']['decision'].startswith('Reject candidate')
+    assert len(sandbox['previous_evidence_sha256'])==52 and len(sandbox['previous_figures_sha256'])==74
+    for group in ['previous_evidence_sha256','previous_figures_sha256']:
+        for name,digest in sandbox[group].items():assert sha(ROOT/name)==digest,('historical artifact changed',name)
+    comparisons+=93*3
+    final=evidence['E53']
+    assert len(final['rows'])==230 and all(r['passed'] for r in final['rows'])
+    assert final['pairs']==sandbox_pair_rows(final['rows']) and len(final['pairs'])==93
+    assert final['summary']==sandbox_summary(final['rows'])
+    assert all(v['passed'] for v in final['validation'].values())
+    assert final['validation']['c_sanitizers']['checks']==542
+    assert len(final['validation']['sandbox_sanitizers']['suites'])==12
+    assert len(final['validation']['data_policy_sanitizers']['suites'])==12
+    assert len(final['validation']['foundation_sanitizers']['suites'])==8
+    assert final['validation']['native_sanitizers']['long_context_tokens']==14357
+    assert final['host_environment_control']['before_marker_visible'] and not final['host_environment_control']['after_marker_visible']
+    assert len(final['previous_evidence_sha256'])==53 and len(final['previous_figures_sha256'])==76
+    for group in ['previous_evidence_sha256','previous_figures_sha256']:
+        for name,digest in final[group].items():assert sha(ROOT/name)==digest,('historical artifact changed',name)
+    comparisons+=93*3
+    for eid,count in [('E54',126),('E55',108)]:
+        d=evidence[eid]
+        assert len(d['rows'])==count and all(r['passed'] for r in d['rows'])
+        assert cc_mode_summary(d['rows'])==d['summary']
+        assert cc_pair_rows(d['rows'])==d['pairs']
+        assert cc_pair_summary(d['pairs'])==d['paired_summary']
+        for group in ['previous_evidence_sha256','previous_figures_sha256']:
+            for name,digest in d[group].items():assert sha(ROOT/name)==digest,('historical artifact changed',name)
+        comparisons+=len(d['pairs'])*3
+    assert len(evidence['E54']['ipc_rows'])==70
+    assert all(r['success']==0 for r in evidence['E54']['ipc_rows'] if r['mode']=='on')
+    v=evidence['E55']['validation']
+    assert all(r['passed'] for r in v.values())
+    assert v['c_sanitizers']['checks']==561 and len(v['sandbox_sanitizers']['suites'])==15
+    assert len(v['data_policy_sanitizers']['suites'])==12 and len(v['foundation_sanitizers']['suites'])==8
+    assert v['native_sanitizers']['long_context_tokens']==14357
+    for eid,count in [('E56',270),('E57',180)]:
+        d=evidence[eid];assert len(d['rows'])==count and all(r['passed'] for r in d['rows'])
+        assert cpp_mode_summary(d['rows'])==d['summary'] and cpp_pair_rows(d['rows'])==d['pairs']
+        assert cpp_pair_summary(d['pairs'])==d['paired_summary']
+        for group in ['previous_evidence_sha256','previous_figures_sha256']:
+            for name,digest in d[group].items():assert sha(ROOT/name)==digest,('historical artifact changed',name)
+        comparisons+=len(d['pairs'])*3
+    assert all(r['triple']=='arm64-apple-macosx26.0.0' and r['macro']==260000 for r in evidence['E56']['fixed_target_identity'])
+    assert all(r['pcm_files']==0 for r in evidence['E56']['rows'] if r['case'] in ['object','reuse','chain'])
+    assert all(r['pcm_files']>0 for r in evidence['E56']['rows'] if r['case']=='modules')
+    assert evidence['E57']['validation']['recipe_sanitizers']['passed'] and len(evidence['E57']['validation']['recipe_sanitizers']['suites'])==6
+    assert evidence['E57']['validation']['candidate_os']['passed'] and len(evidence['E57']['validation']['candidate_os']['suites'])==15
     return comparisons
+
+
+def cpp_mode_summary(rows):
+    out=[]
+    for case,mode in sorted({(r['case'],r['mode']) for r in rows}):
+        group=[r for r in rows if (r['case'],r['mode'],r['phase'])==(case,mode,'evaluation')]
+        item=dict(case=case,mode=mode,n=len(group))
+        keys=sorted(set.intersection(*(set(r) for r in group)))
+        for k in keys:
+            if k.endswith(('_ms','_bytes')) or k in ['pcm_files','pch_files','files','entries','eof_polls']:
+                values=[r[k] for r in group];item[k]=dict(median=statistics.median(values),min=min(values),max=max(values))
+        out.append(item)
+    return out
+
+
+def cpp_pair_rows(rows):
+    groups=collections.defaultdict(dict)
+    for r in rows:
+        if r['phase']=='evaluation':
+            key=(r['case'],r['rep']);assert r['mode'] not in groups[key];groups[key][r['mode']]=r
+    out=[];cli=rows[0]['kind']=='cpp_cli'
+    comparisons=[('isolation_overhead','off','on')]
+    if cli:comparisons += [('group_saving','grouped_on','on'),('pch_saving','pch_on','on'),('pch_off_saving','pch_off','off'),('pch_isolation_overhead','pch_off','pch_on')]
+    for (case,rep),g in sorted(groups.items()):
+        for label,a,b in comparisons:
+            if a not in g or b not in g:continue
+            item=dict(case=case,rep=rep,comparison=label)
+            for key in sorted(g[a].keys()&g[b].keys()):
+                if key.endswith('_ms'):item[key[:-3]+'_delta_ms']=g[b][key]-g[a][key]
+            out.append(item)
+    return out
+
+
+def cpp_pair_summary(rows):
+    out=[]
+    for case,comparison in sorted({(r['case'],r['comparison']) for r in rows}):
+        group=[r for r in rows if (r['case'],r['comparison'])==(case,comparison)]
+        item=dict(case=case,comparison=comparison,n=len(group),positive=sum(r['wall_delta_ms']>0 for r in group))
+        for k in sorted(set.intersection(*(set(r) for r in group))):
+            if k.endswith('_ms'):
+                values=[r[k] for r in group];item[k]=dict(median=statistics.median(values),min=min(values),max=max(values))
+        out.append(item)
+    return out
+
+
+def cpp_flat_summary(rows):
+    return [dict(**{k:v for k,v in r.items() if not isinstance(v,dict)},metric=k,unit='ms' if k.endswith('_ms') else 'file_bytes' if k.endswith('_bytes') else 'count',median=v['median'],min=v['min'],max=v['max']) for r in rows for k,v in r.items() if isinstance(v,dict)]
+
+
+def cc_mode_summary(rows):
+    result=[]
+    for case,mode in sorted({(r['case'],r['mode']) for r in rows}):
+        g=[r for r in rows if (r['case'],r['mode'],r['phase'])==(case,mode,'evaluation')]
+        item=dict(case=case,mode=mode,n=len(g))
+        keys=['wall_ms','prepare_ms','cleanup_ms','spawn_ms','phase_first_ms','phase_second_ms','outside_phase_ms'] if rows[0]['kind']=='cc_diagnostic' else ['wall_ms','inner_ms','outside_inner_ms']
+        for field in keys:
+            values=[r[field] for r in g if field in r]
+            if values:item[field]=dict(median=statistics.median(values),min=min(values),max=max(values))
+        result.append(item)
+    return result
+
+
+def cc_pair_rows(rows):
+    groups=collections.defaultdict(dict)
+    for r in rows:
+        if r['phase']=='evaluation':
+            key=(r['case'],r['rep']);assert r['mode'] not in groups[key];groups[key][r['mode']]=r
+    result=[];cli=rows[0]['kind']=='cc_cli'
+    for (case,rep),g in sorted(groups.items()):
+        comparisons=[('isolation_overhead','off','on')]
+        if cli:comparisons += [('binding_saving','pinned_on','on'),('bound_isolation_overhead','pinned_off','pinned_on'),('binding_off_saving','pinned_off','off')]
+        else:comparisons += [('nolog_overhead','on','quiet')]
+        for label,a,b in comparisons:
+            if a not in g or b not in g:continue
+            field='inner_ms' if cli else 'phase_first_ms'
+            wall=g[b]['wall_ms']-g[a]['wall_ms'];inner=g[b][field]-g[a][field]
+            result.append(dict(case=case,rep=rep,comparison=label,wall_delta_ms=wall,inner_delta_ms=inner,outside_delta_ms=wall-inner))
+    return result
+
+
+def cc_pair_summary(pairs):
+    result=[]
+    for case,comparison in sorted({(r['case'],r['comparison']) for r in pairs}):
+        g=[r for r in pairs if (r['case'],r['comparison'])==(case,comparison)]
+        item=dict(case=case,comparison=comparison,n=len(g),positive=sum(r['wall_delta_ms']>0 for r in g))
+        for field in ['wall_delta_ms','inner_delta_ms','outside_delta_ms']:
+            values=[r[field] for r in g];item[field]=dict(median=statistics.median(values),min=min(values),max=max(values))
+        result.append(item)
+    return result
+
+
+def cc_flat_summary(summary,paired=False):
+    return [dict(**{k:v for k,v in item.items() if not isinstance(v,dict)},metric=field,median_ms=value['median'],min_ms=value['min'],max_ms=value['max']) for item in summary for field,value in item.items() if isinstance(value,dict)]
+
+
+def sandbox_pair_rows(rows):
+    groups=collections.defaultdict(dict)
+    for r in rows:
+        if r['phase']=='evaluation':
+            key=(r['kind'],r['case'],r['files'],r['rep'])
+            assert r['mode'] not in groups[key]
+            groups[key][r['mode']]=r
+    pairs=[]
+    for (kind,case,files,rep),g in sorted(groups.items()):
+        assert set(g)=={'off','on'}
+        row=dict(kind=kind,case=case,files=files,rep=rep)
+        for key in ['wall_ms','inner_ms','prepare_ms','cleanup_ms','spawn_ms']:
+            if key in g['on']:row[key+'_overhead']=g['on'][key]-g['off'][key]
+        row['outside_inner_ms_overhead']=row['wall_ms_overhead']-row['inner_ms_overhead']
+        pairs.append(row)
+    return pairs
+
+
+def sandbox_summary(rows):
+    out=[];pairs=sandbox_pair_rows(rows)
+    for key in sorted({(r['kind'],r['case'],r['files']) for r in rows}):
+        g=[r for r in pairs if (r['kind'],r['case'],r['files'])==key]
+        r=dict(zip(['kind','case','files'],key));r.update(pairs=len(g),on_slower=sum(v['wall_ms_overhead']>0 for v in g))
+        for field in g[0]:
+            if field.endswith('_overhead'):
+                values=[v[field] for v in g];r[field]=dict(median=statistics.median(values),min=min(values),max=max(values))
+        for mode in ['off','on']:
+            v=[x['wall_ms'] for x in rows if x['phase']=='evaluation' and (x['kind'],x['case'],x['files'],x['mode'])==(*key,mode)]
+            r[mode+'_wall_median_ms']=statistics.median(v)
+        out.append(r)
+    return out
 
 
 def data_products(evidence):
@@ -559,6 +787,8 @@ def data_products(evidence):
                         'scope': evidence[eid].get('scope'),
                         'limits': evidence[eid].get('limits', []),
                         'historical_source_hashes_describe_the_measured_revision': True})
+        if eid=='E55':catalog[-1].update(later_identified_confound='E56 found implicit deployment target26.0 outside versus10.4 inside. Compiler/SDK hashes and outputs alone did not prove equal target semantics; retain historical values, use fixed-target E56/E57 for new comparisons.')
+        if eid=='E52':catalog[-1].update(superseded_by='E53',post_acceptance_gap='Parent startup environment remained visible via KERN_PROCARGS2; corrected with verified host protection in E53')
         groups = collections.defaultdict(list)
         for i, record in enumerate(rows):
             raw.append({'experiment': eid, 'source': relative, 'record_index': i, 'record': record})
@@ -569,11 +799,14 @@ def data_products(evidence):
             if row['kind'] == 'memory':
                 row['heap_extra_bytes'] = max(0, row['sampled_heap_peak']-row['heap_before'])
             dimensions = {k: row[k] for k in DIMS if k in row}
+            if eid in ('E52','E53'):dimensions.update(case=row['case'],files=row['files'])
+            if eid in ('E54','E55','E56','E57'):dimensions.update(case=row['case'])
+            if eid=='E57':dimensions['units']=row['units']
             groups[json.dumps(dimensions, sort_keys=True)].append(row)
         for dimensions, group in sorted(groups.items()):
             dimensions = json.loads(dimensions)
             common = set.intersection(*(set(r) for r in group))
-            for key in sorted(common-set(DIMS)-{'rep','task','seq'}):
+            for key in sorted(common-set(DIMS)-({'case','files','units'} if eid in ('E52','E53','E54','E55','E56','E57') else set())-{'rep','task','seq'}):
                 values = [r[key] for r in group]
                 if not all(isinstance(x, (int, float)) and not isinstance(x, bool) for x in values):
                     continue
@@ -598,6 +831,45 @@ def validation_rows(evidence):
     rows = []
     def add(category, case, result, source, detail):
         rows.append(dict(category=category, case=case, result=result, evidence=source, detail=detail))
+    for case in evidence['E58']['validation']['controller_sanitizers']['cases']:
+        add('security','E58:'+case,'PASS','E58:validation.controller_sanitizers','Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network')
+    for case in evidence['E58']['validation']['native_sanitizers']['cases']:
+        add('functional','E58:'+case,'PASS','E58:validation.native_sanitizers','Real0.6B KV/template correctness only; single-owner probe; no hit-rate/speed claim')
+    add('pending','E58:target_model_quality_and_performance','NOT_MEASURED','E58:limits','WSL2/CUDA and larger-model off/on tasks pending; failures/negative pairs retained by prepared runner')
+    add('negative','E58:tiny_model_budget','RETAINED','E58:validation.model_negative_smoke','One sanitized0.6B synthetic pair: both main branches exhaust256 tokens with equal output; on predicts/reads but cancels without publication. Not a hit-rate or speed estimate.')
+    for case in evidence['E57']['validation']['recipe_sanitizers']['suites']:
+        add('security','E57:'+case,'PASS','E57:validation.recipe_sanitizers','Private one-task PCH lifecycle; cold preparation included; no new permissions or skipped validation')
+    add('negative','E56:E55_implicit_target','CONFOUNDED','E56:implicit_target_identity','Old E55 default deployment target26.0 off versus10.4 on; old evidence unchanged, new controls explicitly use26.0')
+    add('performance','E56:compiler_header_split','MEASURED','E56:rows;pairs','270 fixed-target stage/cache controls; header opens versus preprocessed input; default PCM absent')
+    add('negative','E56:cold_caches','RETAINED','E56:rows','Module and stat-cache cold costs retained; private PCH single-use versus three-use costs separated')
+    add('security','E57:group_candidate','PASS','E57:validation.candidate_os;group_equivalence','Experimental generated6-group union passes15 OS suites and differential corpus; not a new grant')
+    add('performance','E57:new_tasks','MEASURED','E57:rows;pairs','180 actual CLI tasks,4 new cases,5 modes,2 warmups+7 evaluation blocks; no historical benefit accumulation')
+    for case in evidence['E55']['validation']['sandbox_sanitizers']['suites']:
+        add('security','E55:'+case,'PASS','E55:validation.sandbox_sanitizers','Explicit environment binding grants no files/network; original boundary and parent protection remain')
+    add('sanitizer','E55:compatibility','PASS','E55:validation','561 C,15 OS,12 policy,8 foundation,14K Native,16 Stream,72 output; upstream libraries not instrumented')
+    add('performance','E54:cache_and_launch','MEASURED','E54:rows;pairs;ipc_rows','126 main plus70 direct-API rows; cache invalidation/reuse causal control; IPC totals not full xcodebuild waiting')
+    add('negative','E54:nolog_and_sdk_only','RETAINED','E54:rows;development_failures','No-log does not remove seconds-scale regression; SDKROOT alone insufficient; sample produced no call stacks')
+    add('performance','E55:fresh_tasks','MEASURED','E55:rows;pairs','108 actual CLI tasks,3 new workloads,4 modes,2 warmups+7 evaluation blocks; unchanged permissions, explicit binding only')
+    for case in evidence['E53']['validation']['sandbox_sanitizers']['suites']:
+        add('security','E53:'+case,'PASS','E53:validation.sandbox_sanitizers','Final OS file/network policy and cxf startup-environment protection; explicit off positive control retained')
+    add('sanitizer','E53:native_and_process','PASS','E53:validation','542 C checks, prior12/8 suites,14K Native,16 Stream and72 output checks; fixed upstream libraries not instrumented')
+    add('negative','E52:parent_environment_gap','SUPERSEDED','E53:host_environment_control','E52/narrow-sysctl-only still exposed synthetic parent environment. E53 verifies host redaction before enabling restricted commands; other same-UID hosts remain outside the boundary.')
+    add('performance','E53:final_matched_overhead','MEASURED','E53:rows;pairs','Current runtime230 rows /93 pairs, cost-positive; E52 not relabeled as final performance')
+    for case in evidence['E52']['validation']['sandbox_sanitizers']['suites']:
+        add('security','E52:'+case,'PASS','E52:validation.sandbox_sanitizers','OS file/network restriction, explicit grants, links/fd/descendant/rename protection; synthetic files and local receivers')
+    add('sanitizer','E52:policy_and_process','PASS','E52:validation.c_sanitizers','542 rule/fd/lifecycle checks; existing445 policy checks and prior suites retained')
+    add('sanitizer','E52:native_regression','PASS','E52:validation.native_sanitizers','14K,16 Stream and72 output cases; deterministic CLT Stream fixture, actual timeout receipts independently checked')
+    add('negative','E52:loopback_candidate','REJECTED','E52:loopback_negative_control','localhost SBPL candidate also admitted a local non-loopback interface; removed, not shipped')
+    add('performance','E52:matched_overhead','MEASURED','E52:rows;pairs','230 rows including44 warmups;93 evaluation pairs; cost-positive on-minus-off, all negative values retained')
+    for case in evidence['E51']['validation']['http_sanitizers']['suites']:
+        add('security', 'E51:'+case, 'PASS', 'E51:validation.http_sanitizers', 'Synthetic secrets, real loopback HTTP/files/processes; expected refusals and normal tool loop; no universal DLP/sandbox claim')
+    add('sanitizer', 'E51:protected_files_and_egress', 'PASS', 'E51:validation.policy_sanitizers', '445 file/path/secret/scope/capacity checks under ASan/UBSan')
+    add('sanitizer', 'E51:foundation_regression', 'PASS', 'E51:validation.foundation_sanitizers', 'Eight prior foundation suites revalidated with explicit local scope and credential-safe inheritance marker')
+    add('sanitizer', 'E51:native_regression', 'PASS', 'E51:validation.native_sanitizers', '14K, Stream and output compatibility including Native input/prefill secret rejection; fixed upstream libraries not instrumented')
+    for case in evidence['E50']['validation']['http_sanitizers']['suites']:
+        add('functional', 'E50:'+case, 'PASS', 'E50:validation.http_sanitizers', 'Scripted primary/local HTTP providers; real files/processes; no model quality or speed claim')
+    add('sanitizer', 'E50:guarded_edit_and_environment', 'PASS', 'E50:validation.basic_sanitizers', 'ASan/UBSan file editing and clean/inherit fork/spawn process checks')
+    add('sanitizer', 'E50:native_regression', 'PASS', 'E50:validation.native_sanitizers', '14,357-token Native, 16 Stream cases and72 output cases; prebuilt upstream libraries not instrumented')
     add('implementation', 'native_context', 'PASS', 'E03:runs', 'Shared tokens, revisions, rollback, OOM, lifetime, independent libllama reference, capacity retry')
     add('implementation', 'chat_tokens_and_actions', 'PASS', 'E04:runs; E09:validation', 'Upstream token oracle and parser; 256 byte/escape corpora; Chinese tokenizer retry')
     add('implementation', 'long_context_14357_tokens', 'PASS', 'E11:validation.native_chat_sanitized_output', 'Independent full upstream tokenization and cached greedy result')
@@ -921,6 +1193,65 @@ def contention_report(e,zh):
     return lines
 
 
+def cpp_report(e,zh):
+    def tr(a,b):return b if zh else a
+    a=e['E56'];b=e['E57']
+    def cell(d,case,mode):return next(r for r in d['summary'] if (r['case'],r['mode'])==(case,mode))
+    def paired(d,case,label):return next(r for r in d['paired_summary'] if (r['case'],r['comparison'])==(case,label))
+    def fmt(v):return f"{v['median']:.3f} [{v['min']:.3f},{v['max']:.3f}]"
+    lines=['## '+tr('E56/E57 — Fixed-target C++: headers, caches and host coordination','E56/E57 — 固定target的C++头文件、缓存与宿主协调'),'',
+      tr('E55 had an incomplete equivalence check: bound-off defaulted to macOS26.0 and bound-on to10.4, despite identical compiler/SDK hashes and program results. Its59ms residual is retained as target-confounded history. Cross-compiling the off-preprocessed input inside the sandbox exposed availability errors. New trials explicitly use -mmacosx-version-min=26.0 in every mode and verify both driver triple and deployment macro. No sysctl or other permission is opened to fix target discovery.',
+         'E55的等价性检查不完整：相同编译器／SDK与程序结果下，绑定off默认macOS26.0，绑定on却为10.4。旧59ms残差保留为带target混杂的历史读数；交叉使用预处理文件时可用性报错暴露了此问题。新试验全部显式使用-mmacosx-version-min=26.0，并核对driver triple与部署版本宏，不靠开放sysctl或其他权限修复目标探测。'),'',
+      table(tr(['E56 control','Off/on inner median ms','Off/on sys CPU median ms','Paired whole API extra ms [min,max]'],['E56对照','关闭／开启内部中位ms','关闭／开启sys CPU中位ms','完整API逐对额外ms [最小,最大]']),[[case,f"{cell(a,case,'off')['inner_ms']['median']:.3f} / {cell(a,case,'on')['inner_ms']['median']:.3f}",f"{cell(a,case,'off')['sys_ms']['median']:.3f} / {cell(a,case,'on')['sys_ms']['median']:.3f}",fmt(paired(a,case,'isolation_overhead')['wall_delta_ms'])] for case in ['noop','version','preprocess','syntax','object','preprocessed','link','fresh_run','chain']]),'',
+      tr('The extra sys CPU follows textual header access. The include trace has1051 entries (not syscall counts), and ordinary object/repeated builds emit no PCM. Compiling already-preprocessed input removes most of the sys difference; it is a diagnostic control whose preparation is not a free production optimization. Compiler startup/version and link stages have smaller differences. Parent setup is roughly1ms, cleanup fractions of a millisecond; EOF/reaping can add a roughly10ms poll. Fresh-executable execution also has variable non-CPU wall time. No per-syscall, code-signing, CPU-cluster or external-scheduler trace can allocate every old or new tail.',
+         '额外sys CPU跟随文本头文件访问。include trace有1051条记录（不是syscall次数），普通目标文件／重复编译没有PCM；编译已预处理输入后sys差异大幅缩小，但该控制不把预处理准备当免费优化。编译器启动／版本与链接差异较小；父准备约1ms、清理通常不足1ms，EOF回收可另有约10ms轮询。新可执行文件运行还存在波动的非CPU墙钟。未采逐syscall、签名、CPU簇或外部调度trace，不能精确分完所有旧／新尾部。'),'',
+      table(tr(['E56 on cache control','Complete API median ms','First/second stage median ms','PCM files','Temp logical file bytes'],['E56开启缓存对照','完整API中位ms','第一／第二阶段中位ms','PCM文件','临时文件逻辑字节']),[[case,f"{cell(a,case,'on')['wall_ms']['median']:.3f}",f"{cell(a,case,'on')['stage0_wall_ms']['median']:.3f} / "+(f"{cell(a,case,'on')['stage1_wall_ms']['median']:.3f}" if 'stage1_wall_ms' in cell(a,case,'on') else '—'),cell(a,case,'on')['pcm_files']['median'],cell(a,case,'on')['file_bytes']['median']] for case in ['object','reuse','modules','pch','stat','plain3','pch3']]),'',
+      tr('270 serial unsanitized rows,2 warmup+7 evaluation blocks. Modules create26 PCM files and speed the second compile but have a high cold cost. Fresh SDK stat-cache generation is also a negative result. Private PCH helps repeated headers only after charging its cold build. Clang documents [module activation](https://clang.llvm.org/docs/Modules.html), [PCH](https://clang.llvm.org/docs/PCHInternals.html) and the [stat-cache design](https://reviews.llvm.org/D136651); measured Apple-Clang behavior, not upstream documentation alone, decides these results.',
+         '270条串行无SAN记录，2预热＋7评价block。模块模式生成26个PCM、第二次编译更快，但冷成本高；全新SDK stat-cache生成也是负结果。PCH对重复头文件的作用要扣除冷生成成本。Clang的[模块启用](https://clang.llvm.org/docs/Modules.html)、[PCH](https://clang.llvm.org/docs/PCHInternals.html)和[stat-cache设计](https://reviews.llvm.org/D136651)提供依据，结果仍以本机Apple-Clang实测为准。'),'',
+      '![Fixed-target C++ results](figures/sandbox-cpp.png)','',
+      table(tr(['E57 new task','TUs','Plain on / PCH on median ms','Paired PCH saving ms [min,max]','Faster','PCH on−off ms [min,max]'],['E57新任务','翻译单元','原开启／PCH开启中位ms','逐对PCH节省ms [最小,最大]','更快','PCH开启−关闭ms [最小,最大]']),[[case,next(r['units'] for r in b['rows'] if r['case']==case),f"{cell(b,case,'on')['wall_ms']['median']:.3f} / {cell(b,case,'pch_on')['wall_ms']['median']:.3f}",fmt(paired(b,case,'pch_saving')['wall_delta_ms']),f"{paired(b,case,'pch_saving')['positive']}/7",fmt(paired(b,case,'pch_isolation_overhead')['wall_delta_ms'])] for case in ['single_map','single_regex','batch3','batch5']]),'',
+      tr('180 actual CLI tasks,4 new cases×5 modes×(2 warmup+7 evaluation blocks), exact program-result checks, identical explicit target/compiler/SDK/C++17/O2, rotating/reversed order. Every PCH is built fresh inside the task and deleted: generation, validation, all TUs, link, program execution, observers and cleanup are charged. Single-file PCH regresses158.765/118.314ms median;3/5 TUs save330.300/793.776ms, each7/7. PCH adds14.56–15.51MB of transient logical file payload; process RSS and physical KV were not measured. Bound/PCH on−off still has large positive and negative pairs; no claim that isolation is free.',
+         '180个真实CLI任务，4新任务×5模式×（2预热＋7评价block），核对程序结果，显式target／编译器／SDK／C++17／O2一致，顺序轮转／倒转。每任务新建并删除PCH，生成、验证、全部翻译单元、链接、程序、观察器和清理全部计入。单文件PCH中位反慢158.765／118.314ms，3／5翻译单元节省330.300／793.776ms，均7/7。PCH增加14.56–15.51MB短期逻辑文件载荷，未测进程RSS或物理KV；开启−关闭仍有宽幅正负对，不称隔离免费。'),'',
+      table(tr(['Experimental grouped deny rules','Paired saving ms [min,max]','Faster'],['实验性deny分组','逐对节省ms [最小,最大]','更快']),[[case,fmt(paired(b,case,'group_saving')['wall_delta_ms']),f"{paired(b,case,'group_saving')['positive']}/7"] for case in ['single_map','single_regex','batch3','batch5']]),'',
+      tr('The candidate factors72 original patterns into6 bounded equivalent groups (max511 bytes), passes1765-path differential checks and15 OS suites, but fails performance acceptance. The worst batch3 pair adds1299.522ms: object stages add1291.321ms (user+370.221ms, sys+106.348ms), while outside-inner drops3.256ms. This locates the regression inside compiler execution, not parent preparation; it does not prove regex grouping itself caused all the variation. Keep the original default rules and denial logging. Do not add candidate and PCH savings together.',
+         '候选把72条原模式因式分解为6个等价有界组（最长511字节），通过1765路径差分和15组OS测试，但性能验收失败。batch3最差多1299.522ms：目标文件阶段多1291.321ms（user＋370.221、sys＋106.348），外层反少3.256ms；位置在编译执行，非父准备，仍不能证明所有波动都由分组算法造成。默认保留原逐条规则与拒绝日志，不把候选和PCH收益相加。'),'',
+      tr('The implemented deliverable is the optional tools/run_cpp_batch.sh plain|pch TARGET HEADER OUTPUT SOURCE... recipe; it adds no runtime cache/grant or automatic compiler-flag change.6 recipe suites pass on normal and ASan/UBSan CLI, including failure cleanup, changed headers, protected config and real local-network refusal with explicit-off controls. Full default561 C/15 OS/12 policy/8 foundation regression passes. Inference/native sources are byte-identical to E55; its Native14K/Stream/output acceptance remains historical for that same runtime, not a new model test.',
+         '交付为可选tools/run_cpp_batch.sh plain|pch TARGET HEADER OUTPUT SOURCE...配方，不增加运行时缓存／授权或自动改编译参数。6组配方测试在普通和ASan/UBSan CLI通过，包括失败清理、头文件更新、配置保护及真实本机网络拒绝／显式off对照；默认561项C／15组OS／12策略／8基础回归通过。推理／Native源码与E55逐字节相同，其14K／Stream／输出验收仍引用相同运行时的历史版本，本轮未重跑模型。'),'',
+      tr('Two earlier E57 attempts are retained: a parser import mistake and a warmup timeout with divergent clocks (~274s CLI versus0.8s active Python time). The cause of the pause/clock gap is unresolved. Formal timing used only a process-lifetime idle-sleep assertion and dual clocks; max absolute gap was0.029ms, with all pairs retained. No system power setting or agent timeout policy changed. Small-n ranges are not p95/p99 or confidence intervals.',
+         '两次先前E57尝试保留：解析脚本漏导入与预热期时钟差异超时（CLI约274秒、Python活跃计时约0.8秒），暂停／时钟差异原因未定。正式计时仅使用进程存活期的防空闲休眠断言与双时钟，最大差异0.029ms，全部正负配对保留；不改系统电源设置或agent超时。小样本范围不是p95／p99或置信区间。'),'',
+      tr('[E56 evidence](../evidence/sandbox-cpp-diagnostic-20261102.json), [E57 evidence](../evidence/sandbox-cpp-tasks-20261102.json), [stage samples](data/sandbox-cpp-diagnostic-samples.csv), [new CLI samples](data/sandbox-cpp-tasks-samples.csv), [all paired summaries](data/sandbox-cpp-tasks-paired-summary.csv), [aborted warmups](data/sandbox-cpp-aborted.csv) and [contract](../design/test-sandbox-v1.md). Prior56 evidence files and40 figure pairs remain byte-identical; this is build-command work, not inference acceleration.',
+         '[E56证据](../evidence/sandbox-cpp-diagnostic-20261102.json)、[E57证据](../evidence/sandbox-cpp-tasks-20261102.json)、[阶段样本](data/sandbox-cpp-diagnostic-samples.csv)、[新CLI样本](data/sandbox-cpp-tasks-samples.csv)、[全部配对汇总](data/sandbox-cpp-tasks-paired-summary.csv)、[中止预热](data/sandbox-cpp-aborted.csv)和[契约](../design/test-sandbox-v1.md)。旧56份证据与40组图不改，这是构建命令工作，不计为推理加速。'),'']
+    return lines
+
+
+def cc_report(e,zh):
+    def tr(a,b):return b if zh else a
+    a=e['E54'];b=e['E55']
+    def cell(d,case,mode):return next(r for r in d['summary'] if r['case']==case and r['mode']==mode)
+    def fmt(v):return f"{v['median']:.3f} [{v['min']:.3f},{v['max']:.3f}]"
+    lines=['## '+tr('E54/E55 — Xcode cache diagnosis and explicit same-toolchain binding','E54/E55 — Xcode缓存归因与显式同工具链绑定'),'',
+        tr('Later E56 audit: the implicit deployment target differed (bound-off26.0,bound-on10.4). These historical compiler/SDK-matched measurements did not ensure equal target semantics; use E56/E57 explicit-target comparisons for new claims. The old evidence and plots are unchanged.', 'E56事后核对发现绑定控制组隐含部署target不同（off26.0，on10.4）。以下历史测量只核对了编译器／SDK，未保证目标语义等价；新结论采用E56/E57显式同target比较，旧证据与图不改。'),'',
+        tr('The major trigger is a fresh private xcrun lookup cache: the /usr/bin shim invokes xcodebuild for platform/tool discovery. Reusing that lookup cache inside the same sandbox makes the second compile fast; deleting only this task-owned xcrun_db makes it slow again. A fresh off-mode HOME/TMPDIR control is much faster than restricted cold discovery, so this is not merely the cost of an empty cache. Restricted framework initialization and rejected-service fallback also matter. Actual Clang compilation with the same SDK is fast. Apple documents the [system tool shims](https://developer.apple.com/library/archive/technotes/tn2339/_index.html); exact discovery is measured locally, not assumed from documentation.',
+           '主要触发条件是每次私有TMPDIR中的xcrun查找缓存为空：/usr/bin的shim会调用xcodebuild探测平台／工具。同一沙箱内复用缓存后第二次编译很快，只删除本任务的xcrun_db又恢复秒级耗时。off也使用全新HOME／TMPDIR时仍远快于受限冷发现，因此不能只归为空缓存；受限框架初始化和服务拒绝后的回退也有成本。同一Clang加同一SDK的实际编译很快。Apple说明了[系统工具shim](https://developer.apple.com/library/archive/technotes/tn2339/_index.html)，具体发现行为以本机实测为准。'),'',
+        table(tr(['E54 API case','Mode','N','Complete ms','First inner ms','Second inner ms'],['E54 API负载','模式','样本','完整中位ms','首次内部ms','第二次内部ms']),[[case,mode,cell(a,case,mode)['n'],f"{cell(a,case,mode)['wall_ms']['median']:.3f}",f"{cell(a,case,mode)['phase_first_ms']['median']:.3f}",f"{cell(a,case,mode)['phase_second_ms']['median']:.3f}" if 'phase_second_ms' in cell(a,case,mode) else '—'] for case,mode in [('noop','off'),('noop','on'),('compile','off'),('compile','on'),('cold_env','off'),('cold_env','on'),('reuse','on'),('invalidate','on'),('sdk_only','on'),('pinned','on'),('platform','off'),('platform','on')]]),'',
+        tr('126 serial unsanitized main records,2 warmup+5 evaluation blocks. No-log is a negative control: it does not remove the seconds-scale cost and has slower pairs; it is not shipped. SDKROOT alone also fails to avoid discovery. A direct compiler without its SDK fails to link. The attempted stack sample exited successfully but produced no call graph; a direct xcodebuild -find control emitted plugin failures and exceeded retained output. All development controls remain separate from formal timing.',
+           '126条串行无SAN主记录，2预热＋5评价block。no-log是负结果：没有消除秒级成本且有更慢配对，不发布该策略；只设SDKROOT也没有避开发现。只用直接编译器但缺SDK会链接失败。栈采样虽退出成功却无调用栈；直接xcodebuild -find对照出现插件错误并超过保留输出，开发探针不混入正式计时。'),'',
+        tr('The exact synthetic xcodebuild target produced7305 denial log entries, including2511 directory-service lookups; duplicate summaries are not exact syscall counts. Seventy separate direct-API records (1000 calls each) show quick rejected Mach lookups and accumulated costs in cache-directory/UID queries. These probes do not allocate the full xcodebuild delay to individual functions, and no rejected IPC was granted.',
+           '精确过滤的合成xcodebuild目标有7305条拒绝日志，包括2511条目录服务查找；重复汇总不等于精确系统调用次数。另有70条直接API记录（各1000次调用），显示Mach拒绝通常快速返回，缓存目录／UID查询有累计成本。这些探针不能把完整xcodebuild延迟逐函数分完，也没有通过开放被拒IPC做优化。'),'',
+        table(tr(['Direct API,1000 calls','Off median ms','On median ms','On worst single ms'],['直接API，每行1000次','关闭中位ms','开启中位ms','开启最慢单次ms']),[[case,*[f"{statistics.median(r['total_ms'] for r in a['ipc_rows'] if r['phase']=='evaluation' and r['case']==case and r['mode']==mode):.3f}" for mode in ['off','on']],f"{max(r['max_ms'] for r in a['ipc_rows'] if r['phase']=='evaluation' and r['case']==case and r['mode']=='on'):.3f}"] for case in sorted({r['case'] for r in a['ipc_rows']})]),'',
+        tr('The implemented option is explicit --test-toolchain BIN_DIR --test-sdk SDK_DIR. It sets a pinned PATH and SDKROOT and grants no directories, IPC or network. Both paths are required and validated; no outside-sandbox workspace execution, shared lookup cache, global xcode-select change or implicit CLT substitution. Absolute /usr/bin/cc and explicit xcrun calls are not rewritten. Zero-config commands retain their original behavior and regression. This is a build-command environment optimization, separate from KV/prefill/inference work.',
+           '实现的是显式--test-toolchain BIN_DIR --test-sdk SDK_DIR：绑定PATH与SDKROOT，不授权目录、IPC或网络。两路径必须同时有效；无沙箱外工作区执行、共享查找缓存、全局xcode-select修改或隐式CLT替换。不改写绝对/usr/bin/cc或显式xcrun调用。零配置命令仍保留原行为及回退。这是构建命令环境优化，与KV／预填充／推理优化分开。'),'',
+        table(tr(['E55 new CLI task','Original on / bound on median ms','Paired saving ms [min,max]','Faster','Bound on−off ms [min,max]'],['E55新CLI任务','原开启／绑定开启中位ms','逐对节省ms [最小,最大]','更快','绑定开启−关闭ms [最小,最大]']),[[case,f"{cell(b,case,'on')['wall_ms']['median']:.3f} / {cell(b,case,'pinned_on')['wall_ms']['median']:.3f}",fmt(next(r for r in b['paired_summary'] if r['case']==case and r['comparison']=='binding_saving')['wall_delta_ms']),f"{next(r for r in b['paired_summary'] if r['case']==case and r['comparison']=='binding_saving')['positive']}/7",fmt(next(r for r in b['paired_summary'] if r['case']==case and r['comparison']=='bound_isolation_overhead')['wall_delta_ms'])] for case in ['checksum','archive','templates']]),'',
+        '![Same-Xcode cache and new task controls](figures/sandbox-cc.png)','',
+        tr('108 actual CLI tasks:3 new workloads×4 modes×(2 warmup+7 evaluation blocks), rotating/reversed order, exact program-result checks and identical selected compiler/SDK hashes. Every task has a fresh private HOME/TMPDIR; off creates/removes its directory inside the timed command, unlike E53 usual warm host cache. CLI time includes initialization, tool execution, cleanup and two scripted HTTP choices, with no model inference. C++ retains wide negative/positive residual pairs. Small-n ranges are not confidence intervals or proof of stable tail latency.',
+           '108个真实CLI任务：3新负载×4模式×（2预热＋7评价block），旋转／倒序、核对程序结果和相同编译器／SDK哈希。每任务都有全新私有HOME／TMPDIR；off在计时命令中创建／清理目录，与E53通常已热的宿主缓存基线不同。CLI时间包含初始化、工具执行、清理及两次固定HTTP选择，无模型推理。C++仍有宽幅正负残差，小样本范围不是置信区间或稳定尾延迟证明。'),'',
+        tr('Acceptance:561 C checks,15 OS suites, prior12 policy/8 foundation suites under sanitizers, Native14,357-token/16 Stream/72 output checks, and full default regression. Permission-binding tests cover normal compilation, outside-file refusal, secrets/config, network, parent environment and invalid paths. Two initial test-oracle mistakes are retained. Six existing native compiler warnings and uninstrumented upstream libraries remain.',
+           '验收：561项C、15组OS、原12策略／8基础SAN套件、Native14,357-token／16 Stream／72输出及完整默认回归通过。绑定测试覆盖正常编译、外部文件拒绝、敏感文件／配置、网络、父环境和无效路径；两处初始测试预期错误保留。原6条Native编译警告和上游库未插桩边界不变。'),'',
+        tr('[E54 evidence](../evidence/sandbox-cc-diagnostic-20261101.json), [E55 evidence](../evidence/sandbox-cc-tasks-20261101.json), [diagnostic samples](data/sandbox-cc-diagnostic-samples.csv), [direct API probes](data/sandbox-cc-ipc.csv), [new CLI samples](data/sandbox-cc-tasks-samples.csv), [all pairs](data/sandbox-cc-tasks-pairs.csv), [paired summaries](data/sandbox-cc-tasks-paired-summary.csv) and [contract](../design/test-sandbox-v1.md). Prior54 evidence files and39 figure pairs remain unchanged. No inference performance or autonomous quality claim.',
+           '[E54证据](../evidence/sandbox-cc-diagnostic-20261101.json)、[E55证据](../evidence/sandbox-cc-tasks-20261101.json)、[诊断样本](data/sandbox-cc-diagnostic-samples.csv)、[直接API探针](data/sandbox-cc-ipc.csv)、[新CLI样本](data/sandbox-cc-tasks-samples.csv)、[全部配对](data/sandbox-cc-tasks-pairs.csv)、[配对汇总](data/sandbox-cc-tasks-paired-summary.csv)和[契约](../design/test-sandbox-v1.md)。旧54份证据与39组图不改，不新增推理性能或自主质量结论。'),'']
+    return lines
+
+
 def report(e, catalog, zh=False):
     def tr(en, cn): return cn if zh else en
     def stat(eid, key, **f): return stats(e, eid, key, **f)
@@ -931,10 +1262,53 @@ def report(e, catalog, zh=False):
     lines = ['# '+tr('cxf × llama.cpp — benchmark results', 'cxf × llama.cpp — 测试成果汇总'), '',
         tr('[中文](README.zh-CN.md) · [Adaptation inventory](../adaptation-status.md) · [Methodology](METHODOLOGY.md) · [All metrics](data/metrics.csv) · [Raw records](data/raw-records.jsonl) · [Acceptance matrix](data/validation.csv)',
            '[English](README.md) · [当前适配](../adaptation-status.md) · [测试方法](METHODOLOGY.md) · [全部指标](data/metrics.csv) · [原始记录](data/raw-records.jsonl) · [验收矩阵](data/validation.csv)'), '',
-        tr('Snapshot: 2026-10-31. A small, single-machine compatibility and scheduling study; Qwen3 0.6B is the test vehicle.',
-           '归档日期：2026-10-31。这是一组单机兼容性与调度实验，Qwen3 0.6B 用作验证载体。'), '',
+        tr('Snapshot: 2026-11-02. E58 adds functional read-only self-prediction and a target-machine handoff, with no new performance samples. E56/E57 audit fixed-target C++ header/cache/host costs; E53 is the host-protection baseline. Earlier performance remains measured on historical revisions. Qwen3 0.6B is the compatibility test vehicle.',
+           '归档日期：2026-11-02。E58新增只读自预测功能准备和异机交接，无新性能样本。E56/E57拆分固定同target的C++头文件／缓存／宿主成本，E53是宿主保护基线；此前性能仍对应历史源码版本，Qwen3 0.6B用于兼容验证。'), '',
         tr('The observed gains are in avoiding repeated frontend work, sharing canonical prefixes, and overlapping local work with input arrival. They are workload-dependent. Whole-process memory, autonomous coding quality, and Windows/CUDA performance have not been shown to improve.',
            '已经观测到的收益集中在减少前端重复工作、共享规范前缀，以及把本地工作与输入到达重叠执行。收益依赖场景；尚未证明整体进程内存、自主编程能力或 Windows/CUDA 性能改善。'), '',
+        '## '+tr('E58 — Read-only self-prediction: functional preparation','E58 — 只读自预测：功能准备与异机交接'),'',
+        tr('An experimental host now forks the actual evaluated prefix in the same KV pool, generates one bounded tool-call probe with the same model, starts only fs.read early, then accepts only an exact official call with matching epoch and a fresh policy/file-version check. Otherwise it discards the candidate and performs the official read. All engine operations remain on one owner; the probe pauses main decode. Default agentctl is unchanged.',
+           '实验宿主已复用同KV池的实际前缀分叉，用同模型生成有界工具探针，只提前执行fs.read；正式调用、任务epoch和当前权限／文件版本均一致才采纳，否则丢弃并正常读取。所有引擎调用仍由一个owner串行驱动，probe会暂停主解码；默认agentctl未接入。'),'',
+        tr('24 model-free security/state cases and8 Native cases (six KV/template and two injected flows) pass under ASan/UBSan; the existing14,357-token Native regression also passes. Initial JSON-stream compilation, thinking-header guard and outer-sandbox Metal/loopback failures are retained separately. No new performance rows or charts: larger-model hit rate, complete-task gains and WSL2/CUDA acceptance await the target machine. Existing58 evidence files and41 figure pairs are unchanged.',
+           '24项无模型状态／安全测试、8项Native验收（6项KV／模板及2项注入流程）及原14,357-token Native回归通过ASan/UBSan。开发期JSON流编译、thinking尾部假设与外层沙箱Metal／回环失败单独保留。没有新增性能记录或图表；更大模型命中率、完整任务收益与WSL2/CUDA留待目标机器验收。旧58份证据和41组图不改。'),'',
+        tr('[Contract](../design/self-speculation-v1.md), [target-machine handoff](../self-speculation-handoff.md) and [functional evidence](../evidence/self-speculation-20261102.json). The runner preserves all warmups, failed tasks, output-mismatch pairs and regressions, reports explicit rate denominators, probe cost and all-task versus complete/equal-task timings separately.0.6B compatibility does not establish self-prediction quality.',
+           '[契约](../design/self-speculation-v1.md)、[异机交接](../self-speculation-handoff.md)和[功能证据](../evidence/self-speculation-20261102.json)。准备好的runner保留全部预热、失败、输出不一致和回退配对，明确命中率分母，并分别展示probe成本、全部任务与完整且输出一致任务的耗时。0.6B兼容验收不代表自预测质量。'),'',
+        *cpp_report(e,zh),
+        *cc_report(e,zh),
+        '## '+tr('E53 — Host-protection baseline and original overhead', 'E53 — 宿主保护基线与原开销'), '',
+        tr('Additional review found that both broad and narrowed Seatbelt sysctl rules still exposed an unrestricted parent startup environment. E53 sets a sticky CS_RESTRICT flag on cxf itself, checks the SIP gate, and verifies effective environment omission with a trusted child before enabling restricted commands. CLI does this before configuration/model initialization; direct hosts can initialize early too. No system setting or other application is changed. Only the probe read has a1000ms poll bound; fork/reaping are not a hard deadline. Explicit off in a fresh process is the leaking positive control.',
+           '额外审查发现宽泛及收窄的Seatbelt sysctl规则都仍可读取未保护父环境。E53只为cxf自身设置粘性CS_RESTRICT、检查SIP门，并用可信子进程验证环境确实被省略后再启用命令。CLI在读配置／加载模型前完成，直接宿主也可提前初始化。不改系统设置或其他应用；1000ms只是探针读回poll上限，不是fork／回收硬deadline。新进程显式off保留为可见合成标记的正对照。'), '',
+        table(tr(['Complete CLI workload','Off / on median ms','Paired extra ms [min,max]','On slower'],['完整CLI负载','关闭／开启中位ms','逐对额外ms [最小,最大]','开启更慢']),[[r['case'],f"{r['off_wall_median_ms']:.3f} / {r['on_wall_median_ms']:.3f}",f"{r['wall_ms_overhead']['median']:.3f} [{r['wall_ms_overhead']['min']:.3f},{r['wall_ms_overhead']['max']:.3f}]",f"{r['on_slower']}/{r['pairs']}"] for r in e['E53']['summary'] if r['kind']=='cli_timing']), '',
+        '![Final test.run isolation cost](figures/test-sandbox-final.svg)', '',
+        tr('Same workload, new independent experiment:230 rows,44 warmups and93 evaluation pairs. CLI runs in a fresh process and includes host protection; API evaluation is steady state after warmups, where the sticky host flag remains common to later off/on calls. API cold warmup rows are retained. Standard cc regresses2467.548ms paired median,2534.841ms worst; paired inner-command growth median2453.219ms and outside-inner growth median21.003ms are not additive. CLT cost median3.565ms has only4/7 slower pairs, so it is not a guaranteed fixed cost or a proven improvement over E52. Exact cache/IPC effects and cold initialization after a model is already loaded are not isolated.',
+           '同工作量、独立新实验：230条记录、44条预热、93组评价配对。CLI每任务新进程，包含宿主保护；API评价是预热后稳态，粘性宿主标记对随后off/on都保持，冷启动预热行仍保留。标准cc逐对中位多2467.548ms、最差2534.841ms；命令内部差值中位2453.219ms、外层差值中位21.003ms，不可相加。CLT中位多3.565ms，只有4/7更慢，不能称固定成本或证明比E52更快。缓存／IPC以及模型已加载后才初始化的冷开销未独立测量。'), '',
+        tr('Final acceptance:542 C checks,12 OS-security suites (including effective parent-environment tests), prior12 policy and8 foundation suites under sanitizers,14,357-token Native,16 Stream and72 output cases. The73,880-byte job capacity remains common to both modes; host verification additionally uses at most256KiB transient heap and a trusted fork once per process, not a measured RSS/KV figure. Other same-UID processes are not protected by this flag, argv remains visible, and this is not a VM or universal DLP. Keys must not be supplied as command-line literals. Linux/Windows remain unsupported with default refusal. Previous53 evidence files and38 figure pairs stay unchanged.',
+           '最终验收：542项C检查、12组OS安全（含有效父环境对照）、原12组策略／8组基础SAN套件，以及14,357-token Native、16项Stream、72项输出通过。73,880字节任务容量仍为两模式共有；宿主验证另用最多256KiB临时堆和每进程一次可信fork，不是实测RSS/KV。该标记不保护其他同UID进程，argv仍可见，不能把key写进命令行，也不属于VM或通用DLP。Linux/Windows仍无后端、默认拒绝。旧53份证据与38组图保持原字节。'), '',
+        tr('All final [samples](data/test-sandbox-host-samples.csv), [pairs](data/test-sandbox-host-pairs.csv), [summary](data/test-sandbox-host-summary.csv), [contract](../design/test-sandbox-v1.md) and [E53 evidence](../evidence/test-sandbox-host-20261101.json). E52 remains below as pre-fix evidence; do not attribute cross-stage timing differences to the security fix.',
+           '最终[样本](data/test-sandbox-host-samples.csv)、[配对](data/test-sandbox-host-pairs.csv)、[汇总](data/test-sandbox-host-summary.csv)、[契约](../design/test-sandbox-v1.md)和[E53证据](../evidence/test-sandbox-host-20261101.json)。以下E52是修复前记录，不按跨阶段差值推导修复的性能收益。'), '',
+        '## '+tr('E52 — Pre-fix OS isolation and overhead (superseded by E53)', 'E52 — 修复前OS隔离与开销（已由E53取代）'), '',
+        tr('Default: workspace content read-only, fresh private temporary writes, and network denied for the command and descendants. Explicit read/write directory and full-network grants are independent; protected names/config/trace remain blocked. Existing file descriptors are closed. Unsupported platforms or preflight/setup failures do not fall back to unrestricted execution. Current backend is macOS Seatbelt; Linux/Windows are pending. Explicit isolation off is the unrestricted compatibility control.',
+           '默认工作区正文只读、独立私有临时目录可写、命令及后代禁网。读／写目录和完整联网由启动者独立授权，敏感名称／配置／trace仍拒绝；关闭已有fd。后端不支持或准备／初始化失败不降级到无限制。当前仅macOS Seatbelt，Linux/Windows待做；显式off是取消OS隔离的兼容对照。'), '',
+        table(tr(['Complete CLI workload','Off / on median ms','Paired extra ms [min,max]','On slower'],['完整CLI负载','关闭／开启中位ms','逐对额外ms [最小,最大]','开启更慢']),[[r['case'],f"{r['off_wall_median_ms']:.3f} / {r['on_wall_median_ms']:.3f}",f"{r['wall_ms_overhead']['median']:.3f} [{r['wall_ms_overhead']['min']:.3f},{r['wall_ms_overhead']['max']:.3f}]",f"{r['on_slower']}/{r['pairs']}"] for r in e['E52']['summary'] if r['kind']=='cli_timing']), '',
+        '![test.run isolation overhead](figures/test-sandbox-overhead.svg)', '',
+        tr('Timing is serial and unsanitized:176 command-API rows (8/256 extra fixture files) and54 actual CLI rows, including44 warmups and93 evaluation pairs. CLI uses two scripted HTTP model responses; no inference or real cloud. Positive overhead means isolation is slower. The standard Xcode cc CLI regresses2591.134ms in paired median and5524.787ms worst; paired inner-command growth median2561.604ms, outside-inner growth median17.541ms. These medians are not additive. Warnings show restricted cache/service behavior, but cache versus IPC causes are not isolated. The separate explicit CLT command is measured as a different workload, not silently substituted in production.',
+           '计时独占、无SAN：176条命令API记录（8／256个额外语料文件）及54条真实CLI记录，含44条预热和93组评价配对。CLI用两次脚本HTTP模型响应，无推理或真实云端。额外开销为开启−关闭，正值表示更慢。标准Xcode cc完整CLI逐对中位多2591.134ms、最差5524.787ms；命令内部增加的逐对中位2561.604ms，外层差值中位17.541ms，不可直接相加。受限缓存／服务诊断可见，但缓存和IPC成因未独立证明。显式CLT命令作为另一负载实测，没有在生产中偷偷替换编译器。'), '',
+        tr('The C job object has a fixed73,880-byte stack capacity in both current off/on paths; this is not added RSS, child peak memory or physical KV. Scanned entries and populated profile bytes are in raw records; files=8/256 counts extra fixtures, not total workspace entries. Time outside the inner command includes setup, sandbox process/application, polling and cleanup; it is not pure Seatbelt compilation time. All API cells and negative pairs are in [samples](data/test-sandbox-samples.csv), [pairs](data/test-sandbox-pairs.csv) and [summary](data/test-sandbox-summary.csv).',
+           'C任务结构固定栈容量73,880字节，当前off/on都分配，不能称新增RSS、子进程峰值或物理KV。实际扫描entries及profile实填字节在原始记录；files=8/256是额外语料数，不是工作区全部项。命令外差值包含准备、隔离进程／规则加载、轮询与清理，不等同纯Seatbelt编译。全部API分组与负对见[样本](data/test-sandbox-samples.csv)、[配对](data/test-sandbox-pairs.csv)和[汇总](data/test-sandbox-summary.csv)。'), '',
+        tr('Acceptance:542 C checks,11 OS-security suites, prior12 data-policy and8 foundation suites under ASan/UBSan; Native14,357-token,16 Stream and72 output checks. The localhost-only network candidate admitted a non-loopback local interface and was removed: only deny/allow ship. Initial Stream equality failed on timestamped Xcode output; the deterministic fixture explicitly uses CLT while retaining token/fresh-greedy checks. Both failures are retained. Runtime/benchmark code matches the timing archive; the later Stream test-command change is separately identified. Six prior native warnings remain, upstream libraries are not instrumented. This is not a VM or arbitrary-secret DLP; explicit off/inherited secrets/full network grant still require trusted deployment. See [D-EXEC](../design/test-sandbox-v1.md) and [E52 evidence](../evidence/test-sandbox-20261101.json).',
+           '验收：542项C检查、11组OS安全套件、原12组数据策略与8组基础套件在ASan/UBSan下通过；Native14,357-token、16项Stream、72项输出通过。候选localhost网络规则放行本机非回环接口，已撤下，只发布deny/allow。首次Stream全文比较受Xcode时间戳输出影响失败，确定性夹具显式用CLT并保留token／fresh-greedy检查；两次失败均保留。运行时／计时程序与归档源码一致，之后的Stream测试命令变化单列。原有6条Native警告保留，上游库未插桩。这不是VM或任意秘密DLP，显式off／凭据继承／完整网络授权仍须可信部署。见[D-EXEC](../design/test-sandbox-v1.md)和[E52证据](../evidence/test-sandbox-20261101.json)。'), '',
+        '## '+tr('E51 — Protected files and cloud egress: functional acceptance', 'E51 — 敏感文件与云端外发：功能验收'), '',
+        tr('All eight file tools share protected-name, deployed config/trace, descriptor, symlink and hardlink checks. HTTP providers default to unknown scope and cloud egress is denied before connection. Operators explicitly select local/cloud and task/workspace egress; task mode cannot dispatch tools. Tool arguments/results, HTTP requests/responses and decoded model output reject known credentials and common secret patterns. Trace admission/capacity failures preserve existing files. Native prefill has the same content checks.',
+           '8个文件工具共用敏感名称、实际配置／trace、目录fd与链接检查。HTTP默认UNKNOWN、云外发在连接前拒绝；启动者显式声明local/cloud及task/workspace，task不派发工具。工具参数／结果、HTTP请求／响应和解码动作拦截已知凭据与常见秘密模式；trace准入／容量失败保留原文件。Native预填充也检查内容。'), '',
+        tr('445 policy checks and12 real HTTP/files/process suites pass under ASan/UBSan; the prior eight foundation suites, full default regression,14,357-token Native,16 Stream and72 output checks pass. Normal cloud-authorized read/edit/test and expected access/leak refusals are separate from model quality or performance. The initial added Native test used a stale checkpoint in an assertion; its failed log hash is retained and the corrected test passes. Six existing native harness compiler warnings remain; fixed upstream libraries are not instrumented.',
+           '445项策略检查和12组真实HTTP／文件／进程套件在ASan/UBSan下通过；原8组基础套件、完整默认回归、14,357-token Native、16项Stream与72项输出检查通过。正常授权读—改—测与预期拒绝不计模型能力或性能。首次新增Native测试引用旧检查点导致断言失败，保留失败日志哈希，修正测试后通过；6条已有Native harness编译警告保留，固定上游库未插桩。'), '',
+        tr('This is bounded admission and common-pattern detection, not universal DLP or an OS sandbox. test.run still has launcher file/network rights; unknown secrets and arbitrary encodings can escape detection. No real cloud calls, direct HTTPS, Windows/CUDA or new speed/memory result. Previous51 evidence files and37 figure pairs are byte-for-byte unchanged. See the [single policy contract](../design/data-policy-v1.md) and [E51 evidence](../evidence/agent-data-policy-20261101.json).',
+           '这是有界准入与常见模式检查，不是通用DLP或OS沙箱；test.run仍有启动者文件／网络权限，任意未知秘密或编码可能漏检。未调用真实云端，直接HTTPS、Windows/CUDA与新速度／内存结果均未验收。旧51份证据与37组图逐字节保持。见[唯一策略契约](../design/data-policy-v1.md)和[E51证据](../evidence/agent-data-policy-20261101.json)。'), '',
+        '## '+tr('E50 — Agent foundation: functional acceptance', 'E50 — Agent基础能力：功能验收'), '',
+        tr('Added an opt-in guarded single-line editor, minimal child-process environment by default in the CLI, and a loopback-only llm.local text helper. Eight scripted two-provider HTTP suites pass under ASan/UBSan, alongside the default regression, edit/process sanitizers,14,357-token Native,16 Stream checks and72 tool-output cases. Helper responses are data, not actions; credentials and task quotas are separate. No new performance or real cloud/model-quality result.',
+           '新增仅随写权限挂载的单行匹配编辑、CLI默认最小子进程环境，以及仅回环的llm.local文本辅助。8组双端点HTTP桩验收在ASan/UBSan下通过，默认回归、编辑／进程sanitizer、14,357-token Native、16项Stream和72项工具输出检查通过。辅助结果是数据，不是动作；认证和任务配额独立。没有新增性能或真实端云／模型质量结论。'), '',
+        tr('Historical E50 limits (file/egress admission is added in E51): no OS sandbox, universal sensitive-file policy, atomic file CAS, direct HTTPS, automatic routing, cloud SSE or shared Native KV for the HTTP helper. Existing writer paths have not all migrated to descriptor-based traversal. Six pre-existing compiler warnings remain in the native harness; no sanitizer errors were observed. See the [tool contract](../basic-agent.md), [hybrid contract](../design/hybrid-v1.md) and [functional evidence](../evidence/agent-foundation-20261101.json).',
+           'E50历史边界（文件／外发准入见E51）：当时尚无OS沙箱、统一敏感文件策略、文件原子CAS、直接HTTPS、自动路由、云SSE或HTTP辅助共享Native KV；旧写入路径尚未全部迁移为目录fd遍历。Native harness保留6条已有编译警告，未发现sanitizer错误。见[工具契约](../basic-agent.md)、[协同契约](../design/hybrid-v1.md)和[功能证据](../evidence/agent-foundation-20261101.json)。'), '',
         '## '+tr('Results at a glance', '关键结果'), '',
         table(tr(['Experiment','Matched comparison','Observed result','Scope'], ['实验','同组对照','观测结果','范围']), [
             ['E49', 'off → existing growth; paced tools', '104.276 / 67.290 ms paired task savings', tr('Seven pairs per fixture, all faster; scripted model actions, resident KV.', '两负载各7对且全快；脚本选动作，KV常驻。')],
@@ -1672,9 +2046,20 @@ def outputs(evidence, refresh_inventory=False):
         'docs/benchmarks/data/kalman-diagnostics.csv':csv_text(list(evidence['E20']['diagnostics'][0]),evidence['E20']['diagnostics']),
         'docs/benchmarks/data/kalman-errors.csv':csv_text(list(kalman_cells[0]),kalman_cells),
         'docs/benchmarks/data/kalman-replay.csv':csv_text(list(traces[0]),traces),
+        **{f'docs/benchmarks/data/{stem}-{suffix}.csv':csv_text(union_fields(rows),rows) for eid,stem in [('E56','sandbox-cpp-diagnostic'),('E57','sandbox-cpp-tasks')] for suffix,rows in [('samples',evidence[eid]['rows']),('pairs',evidence[eid]['pairs']),('summary',cpp_flat_summary(evidence[eid]['summary'])),('paired-summary',cpp_flat_summary(evidence[eid]['paired_summary']))]},
+        'docs/benchmarks/data/sandbox-cpp-aborted.csv':csv_text(union_fields([dict(trial=a['trial'],**r) for a in evidence['E57']['aborted_runs'] for r in a['rows']]),[dict(trial=a['trial'],**r) for a in evidence['E57']['aborted_runs'] for r in a['rows']]),
+        'docs/benchmarks/data/sandbox-cpp-e55-audit.csv':csv_text(union_fields(evidence['E56']['historical_e55_pair_audit']),evidence['E56']['historical_e55_pair_audit']),
+        **{f'docs/benchmarks/data/{stem}-{suffix}.csv':csv_text(union_fields(rows),rows) for eid,stem in [('E54','sandbox-cc-diagnostic'),('E55','sandbox-cc-tasks')] for suffix,rows in [('samples',evidence[eid]['rows']),('pairs',evidence[eid]['pairs']),('summary',cc_flat_summary(evidence[eid]['summary'])),('paired-summary',cc_flat_summary(evidence[eid]['paired_summary'],True))]},
+        'docs/benchmarks/data/sandbox-cc-ipc.csv':csv_text(union_fields(evidence['E54']['ipc_rows']),evidence['E54']['ipc_rows']),
+        'docs/benchmarks/data/test-sandbox-host-samples.csv':csv_text(sorted(set().union(*(r.keys() for r in evidence['E53']['rows']))),evidence['E53']['rows']),
+        'docs/benchmarks/data/test-sandbox-host-pairs.csv':csv_text(sorted(set().union(*(r.keys() for r in evidence['E53']['pairs']))),evidence['E53']['pairs']),
+        'docs/benchmarks/data/test-sandbox-host-summary.csv':csv_text(['kind','case','files','pairs','on_slower','metric','median_ms','min_ms','max_ms','off_wall_median_ms','on_wall_median_ms'],[dict(**{k:r[k] for k in ['kind','case','files','pairs','on_slower','off_wall_median_ms','on_wall_median_ms']},metric=k,median_ms=v['median'],min_ms=v['min'],max_ms=v['max']) for r in evidence['E53']['summary'] for k,v in r.items() if isinstance(v,dict)]),
+        'docs/benchmarks/data/test-sandbox-samples.csv':csv_text(sorted(set().union(*(r.keys() for r in evidence['E52']['rows']))),evidence['E52']['rows']),
+        'docs/benchmarks/data/test-sandbox-pairs.csv':csv_text(sorted(set().union(*(r.keys() for r in evidence['E52']['pairs']))),evidence['E52']['pairs']),
+        'docs/benchmarks/data/test-sandbox-summary.csv':csv_text(['kind','case','files','pairs','on_slower','metric','median_ms','min_ms','max_ms','off_wall_median_ms','on_wall_median_ms'],[dict(**{k:r[k] for k in ['kind','case','files','pairs','on_slower','off_wall_median_ms','on_wall_median_ms']},metric=k,median_ms=v['median'],min_ms=v['min'],max_ms=v['max']) for r in evidence['E52']['summary'] for k,v in r.items() if isinstance(v,dict)]),
         'docs/benchmarks/README.md': report(evidence,catalog),
         'docs/benchmarks/README.zh-CN.md': report(evidence,catalog,True),
-        'docs/benchmarks/data/catalog.json': dump({'schema_version':1,'snapshot':'2026-10-31','experiments':catalog}),
+        'docs/benchmarks/data/catalog.json': dump({'schema_version':1,'snapshot':'2026-11-02','experiments':catalog}),
         'docs/benchmarks/data/raw-records.jsonl': ''.join(json.dumps(r,ensure_ascii=False,separators=(',',':'))+'\n' for r in raw),
         'docs/benchmarks/data/metrics.csv': csv_text(['experiment','dimensions','metric','unit','n','median','min','max','source'],metrics),
         'docs/benchmarks/data/validation.csv': csv_text(['category','case','result','evidence','detail'],validation),
@@ -1699,9 +2084,10 @@ def outputs(evidence, refresh_inventory=False):
 
 
 def allowlist():
-    files = [ROOT/'README.md', ROOT/'README.zh-CN.md', ROOT/'docs/RELEASING.md', ROOT/'docs/adaptation-status.md',
-             ROOT/'tools/build_benchmark_report.py', ROOT/'tools/render_benchmark_figures.py',ROOT/'tools/bench_cost_estimator.py',ROOT/'tools/bench_roofline_estimator.py',ROOT/'tools/bench_roofline_diagnose.py',ROOT/'tools/bench_cost_shapes.py',ROOT/'tools/bench_frozen_calibration.py',ROOT/'tools/bench_kalman_cost.py',ROOT/'tools/bench_tool_prepare.py',ROOT/'tools/bench_restore_timing.py',ROOT/'tools/bench_restore_balance.py',ROOT/'tools/bench_tool_taskcost.py',ROOT/'tools/bench_tool_isolate.py',ROOT/'tools/bench_tool_launch.py',ROOT/'tools/bench_resident.py',ROOT/'tools/bench_tool_output.py',ROOT/'tools/analyze_output_isolation.py',ROOT/'tools/analyze_output_reap.py',ROOT/'tools/analyze_output_contention.py',ROOT/'tools/analyze_decode_schedule.py',ROOT/'tools/analyze_metal_timeline.py',ROOT/'tools/bench_batch_capacity.py',ROOT/'tools/bench_device_contention.py',ROOT/'tools/analyze_batch_trace.py',ROOT/'tools/probe_schedule_clock.c',ROOT/'tools/probe_model_idle.py',ROOT/'tools/analyze_model_idle.py',ROOT/'tools/probe_output_exit.c',ROOT/'tools/test_tool_prepare_cli.py',ROOT/'tools/analyze_frozen_calibration.py']
+    files = [ROOT/'README.md', ROOT/'README.zh-CN.md', ROOT/'docs/RELEASING.md', ROOT/'docs/basic-agent.md', ROOT/'docs/adaptation-status.md',
+             ROOT/'tools/build_benchmark_report.py', ROOT/'tools/render_benchmark_figures.py', ROOT/'tools/render_sandbox_benchmark.py', ROOT/'tools/render_sandbox_final.py', ROOT/'tools/bench_test_sandbox.py', ROOT/'tools/bench_sandbox_cc.py', ROOT/'tools/bench_sandbox_cc_tasks.py', ROOT/'tools/probe_sandbox_cc.c', ROOT/'tools/probe_cc_phase.c', ROOT/'tools/probe_cc_ipc.c', ROOT/'tools/render_sandbox_cc.py', ROOT/'tools/bench_sandbox_cpp.py', ROOT/'tools/bench_sandbox_cpp_tasks.py', ROOT/'tools/build_sandbox_group_candidate.py', ROOT/'tools/probe_sandbox_cpp.c', ROOT/'tools/probe_cpp_cache.c', ROOT/'tools/probe_cpp_compiler.c', ROOT/'tools/probe_sandbox_patterns.c', ROOT/'tools/run_cpp_batch.sh', ROOT/'tools/render_sandbox_cpp.py',ROOT/'tools/bench_cost_estimator.py',ROOT/'tools/bench_roofline_estimator.py',ROOT/'tools/bench_roofline_diagnose.py',ROOT/'tools/bench_cost_shapes.py',ROOT/'tools/bench_frozen_calibration.py',ROOT/'tools/bench_kalman_cost.py',ROOT/'tools/bench_tool_prepare.py',ROOT/'tools/bench_restore_timing.py',ROOT/'tools/bench_restore_balance.py',ROOT/'tools/bench_tool_taskcost.py',ROOT/'tools/bench_tool_isolate.py',ROOT/'tools/bench_tool_launch.py',ROOT/'tools/bench_resident.py',ROOT/'tools/bench_tool_output.py',ROOT/'tools/analyze_output_isolation.py',ROOT/'tools/analyze_output_reap.py',ROOT/'tools/analyze_output_contention.py',ROOT/'tools/analyze_decode_schedule.py',ROOT/'tools/analyze_metal_timeline.py',ROOT/'tools/bench_batch_capacity.py',ROOT/'tools/bench_device_contention.py',ROOT/'tools/analyze_batch_trace.py',ROOT/'tools/probe_schedule_clock.c',ROOT/'tools/probe_model_idle.py',ROOT/'tools/analyze_model_idle.py',ROOT/'tools/probe_output_exit.c',ROOT/'tools/test_tool_prepare_cli.py',ROOT/'tools/analyze_frozen_calibration.py']
     files += [ROOT/'LICENSE'] if (ROOT/'LICENSE').exists() else []
+    files += [ROOT/'docs/self-speculation-handoff.md',ROOT/'tools/run_self_speculate.py',ROOT/'tools/test_self_speculate.py']
     files += sorted((ROOT/'docs/evidence').glob('*.json'))
     files += sorted((ROOT/'docs/design').glob('*.md'))
     files += sorted(p for p in OUT.rglob('*') if p.is_file() and p.name!='publication-manifest.json')
@@ -1752,6 +2138,28 @@ def check_figures(evidence):
         assert sha(ROOT/name)==digest, 'stale figure evidence: '+name
     for record in provenance['input_statistics']:
         assert stats(evidence,record['experiment'],record['metric'],**record['filters'])==record['statistics'], 'stale figure statistics'
+    current=json.loads((OUT/'figures/sandbox-provenance.json').read_text())
+    assert current['renderer_source_sha256']==sha(ROOT/'tools/render_sandbox_benchmark.py')
+    assert current['evidence_sha256']==sha(ROOT/'docs/evidence/test-sandbox-20261101.json')
+    assert current['summary']==evidence['E52']['summary']
+    for name,digest in current['figures'].items():assert sha(OUT/'figures'/name)==digest
+    final=json.loads((OUT/'figures/sandbox-final-provenance.json').read_text())
+    assert final['renderer_source_sha256']==sha(ROOT/'tools/render_sandbox_final.py')
+    assert final['base_renderer_sha256']==sha(ROOT/'tools/render_sandbox_benchmark.py')
+    assert final['evidence_sha256']==sha(ROOT/'docs/evidence/test-sandbox-host-20261101.json')
+    assert final['summary']==evidence['E53']['summary']
+    for name,digest in final['figures'].items():assert sha(OUT/'figures'/name)==digest
+    cc=json.loads((OUT/'figures/sandbox-cc-provenance.json').read_text())
+    assert cc['renderer_source_sha256']==sha(ROOT/'tools/render_sandbox_cc.py')
+    for name,digest in cc['evidence_sha256'].items():assert sha(ROOT/'docs/evidence'/name)==digest
+    assert cc['diagnostic_summary']==evidence['E54']['summary']
+    assert cc['task_paired_summary']==evidence['E55']['paired_summary']
+    for name,digest in cc['figures'].items():assert sha(OUT/'figures'/name)==digest
+    cpp=json.loads((OUT/'figures/sandbox-cpp-provenance.json').read_text())
+    assert cpp['renderer_source_sha256']==sha(ROOT/'tools/render_sandbox_cpp.py')
+    for name,digest in cpp['evidence_sha256'].items():assert sha(ROOT/'docs/evidence'/name)==digest
+    assert cpp['diagnostic_summary']==evidence['E56']['summary'] and cpp['paired_summary']==evidence['E57']['paired_summary']
+    for name,digest in cpp['figures'].items():assert sha(OUT/'figures'/name)==digest
 
 
 def main():
@@ -1771,7 +2179,7 @@ def main():
             path=ROOT/name; path.parent.mkdir(parents=True,exist_ok=True); path.write_text(content)
     files=allowlist()
     privacy_and_links(files)
-    manifest={'schema_version':1,'snapshot':'2026-10-31',
+    manifest={'schema_version':1,'snapshot':'2026-11-02',
               'scope':'Benchmark data release only; not a whole-repository credential audit or inference rerun',
               'files':[{'path':str(p.relative_to(ROOT)),'bytes':p.stat().st_size,'sha256':sha(p)} for p in files]}
     manifest_path=OUT/'publication-manifest.json'

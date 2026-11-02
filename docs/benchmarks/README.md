@@ -2,9 +2,172 @@
 
 [中文](README.zh-CN.md) · [Adaptation inventory](../adaptation-status.md) · [Methodology](METHODOLOGY.md) · [All metrics](data/metrics.csv) · [Raw records](data/raw-records.jsonl) · [Acceptance matrix](data/validation.csv)
 
-Snapshot: 2026-10-31. A small, single-machine compatibility and scheduling study; Qwen3 0.6B is the test vehicle.
+Snapshot: 2026-11-02. E58 adds functional read-only self-prediction and a target-machine handoff, with no new performance samples. E56/E57 audit fixed-target C++ header/cache/host costs; E53 is the host-protection baseline. Earlier performance remains measured on historical revisions. Qwen3 0.6B is the compatibility test vehicle.
 
 The observed gains are in avoiding repeated frontend work, sharing canonical prefixes, and overlapping local work with input arrival. They are workload-dependent. Whole-process memory, autonomous coding quality, and Windows/CUDA performance have not been shown to improve.
+
+## E58 — Read-only self-prediction: functional preparation
+
+An experimental host now forks the actual evaluated prefix in the same KV pool, generates one bounded tool-call probe with the same model, starts only fs.read early, then accepts only an exact official call with matching epoch and a fresh policy/file-version check. Otherwise it discards the candidate and performs the official read. All engine operations remain on one owner; the probe pauses main decode. Default agentctl is unchanged.
+
+24 model-free security/state cases and8 Native cases (six KV/template and two injected flows) pass under ASan/UBSan; the existing14,357-token Native regression also passes. Initial JSON-stream compilation, thinking-header guard and outer-sandbox Metal/loopback failures are retained separately. No new performance rows or charts: larger-model hit rate, complete-task gains and WSL2/CUDA acceptance await the target machine. Existing58 evidence files and41 figure pairs are unchanged.
+
+[Contract](../design/self-speculation-v1.md), [target-machine handoff](../self-speculation-handoff.md) and [functional evidence](../evidence/self-speculation-20261102.json). The runner preserves all warmups, failed tasks, output-mismatch pairs and regressions, reports explicit rate denominators, probe cost and all-task versus complete/equal-task timings separately.0.6B compatibility does not establish self-prediction quality.
+
+## E56/E57 — Fixed-target C++: headers, caches and host coordination
+
+E55 had an incomplete equivalence check: bound-off defaulted to macOS26.0 and bound-on to10.4, despite identical compiler/SDK hashes and program results. Its59ms residual is retained as target-confounded history. Cross-compiling the off-preprocessed input inside the sandbox exposed availability errors. New trials explicitly use -mmacosx-version-min=26.0 in every mode and verify both driver triple and deployment macro. No sysctl or other permission is opened to fix target discovery.
+
+| E56 control | Off/on inner median ms | Off/on sys CPU median ms | Paired whole API extra ms [min,max] |
+| --- | --- | --- | --- |
+| noop | 1.556 / 1.596 | 0.579 / 0.653 | 6.098 [-5.176,20.124] |
+| version | 7.671 / 7.478 | 2.941 / 3.372 | 17.685 [7.197,28.656] |
+| preprocess | 76.181 / 129.791 | 28.157 / 79.755 | 68.504 [46.339,86.966] |
+| syntax | 209.221 / 271.672 | 30.719 / 90.832 | 76.083 [41.317,178.423] |
+| object | 224.613 / 282.523 | 30.891 / 84.015 | 68.749 [58.884,98.451] |
+| preprocessed | 173.119 / 168.434 | 9.925 / 9.875 | 9.361 [-16.655,17.143] |
+| link | 24.111 / 27.030 | 14.331 / 22.443 | 18.983 [9.065,47.483] |
+| fresh_run | 284.877 / 278.972 | 1.137 / 1.581 | 10.540 [-65.379,19.423] |
+| chain | 553.606 / 602.009 | 56.226 / 116.232 | 79.925 [-91.812,187.563] |
+
+The extra sys CPU follows textual header access. The include trace has1051 entries (not syscall counts), and ordinary object/repeated builds emit no PCM. Compiling already-preprocessed input removes most of the sys difference; it is a diagnostic control whose preparation is not a free production optimization. Compiler startup/version and link stages have smaller differences. Parent setup is roughly1ms, cleanup fractions of a millisecond; EOF/reaping can add a roughly10ms poll. Fresh-executable execution also has variable non-CPU wall time. No per-syscall, code-signing, CPU-cluster or external-scheduler trace can allocate every old or new tail.
+
+| E56 on cache control | Complete API median ms | First/second stage median ms | PCM files | Temp logical file bytes |
+| --- | --- | --- | --- | --- |
+| object | 313.730 | 282.523 / — | 0 | 4376 |
+| reuse | 612.372 | 299.303 / 279.585 | 0 | 8752 |
+| modules | 1172.690 | 1079.475 / 57.816 | 26 | 27008980 |
+| pch | 430.582 | 342.723 / 53.788 | 0 | 14451812 |
+| stat | 2596.566 | 2280.301 / 299.706 | 0 | 14443316 |
+| plain3 | 886.911 | 286.456 / 283.965 | 0 | 13128 |
+| pch3 | 551.077 | 343.580 / 56.462 | 0 | 14460564 |
+
+270 serial unsanitized rows,2 warmup+7 evaluation blocks. Modules create26 PCM files and speed the second compile but have a high cold cost. Fresh SDK stat-cache generation is also a negative result. Private PCH helps repeated headers only after charging its cold build. Clang documents [module activation](https://clang.llvm.org/docs/Modules.html), [PCH](https://clang.llvm.org/docs/PCHInternals.html) and the [stat-cache design](https://reviews.llvm.org/D136651); measured Apple-Clang behavior, not upstream documentation alone, decides these results.
+
+![Fixed-target C++ results](figures/sandbox-cpp.png)
+
+| E57 new task | TUs | Plain on / PCH on median ms | Paired PCH saving ms [min,max] | Faster | PCH on−off ms [min,max] |
+| --- | --- | --- | --- | --- | --- |
+| single_map | 1 | 665.938 / 813.194 | -158.765 [-181.623,64.525] | 1/7 | 72.068 [-309.370,110.589] |
+| single_regex | 1 | 1062.859 / 1153.361 | -118.314 [-164.641,273.152] | 2/7 | 38.365 [-53.943,80.666] |
+| batch3 | 3 | 1231.752 / 940.847 | 330.300 [196.238,1643.124] | 7/7 | 54.266 [-151.971,123.342] |
+| batch5 | 5 | 1922.122 / 1053.426 | 793.776 [687.974,1624.882] | 7/7 | -6.044 [-525.332,177.296] |
+
+180 actual CLI tasks,4 new cases×5 modes×(2 warmup+7 evaluation blocks), exact program-result checks, identical explicit target/compiler/SDK/C++17/O2, rotating/reversed order. Every PCH is built fresh inside the task and deleted: generation, validation, all TUs, link, program execution, observers and cleanup are charged. Single-file PCH regresses158.765/118.314ms median;3/5 TUs save330.300/793.776ms, each7/7. PCH adds14.56–15.51MB of transient logical file payload; process RSS and physical KV were not measured. Bound/PCH on−off still has large positive and negative pairs; no claim that isolation is free.
+
+| Experimental grouped deny rules | Paired saving ms [min,max] | Faster |
+| --- | --- | --- |
+| single_map | -5.967 [-95.565,152.800] | 3/7 |
+| single_regex | 0.137 [-385.786,393.829] | 4/7 |
+| batch3 | 2.013 [-1299.522,1118.946] | 4/7 |
+| batch5 | -64.269 [-439.648,147.746] | 2/7 |
+
+The candidate factors72 original patterns into6 bounded equivalent groups (max511 bytes), passes1765-path differential checks and15 OS suites, but fails performance acceptance. The worst batch3 pair adds1299.522ms: object stages add1291.321ms (user+370.221ms, sys+106.348ms), while outside-inner drops3.256ms. This locates the regression inside compiler execution, not parent preparation; it does not prove regex grouping itself caused all the variation. Keep the original default rules and denial logging. Do not add candidate and PCH savings together.
+
+The implemented deliverable is the optional tools/run_cpp_batch.sh plain|pch TARGET HEADER OUTPUT SOURCE... recipe; it adds no runtime cache/grant or automatic compiler-flag change.6 recipe suites pass on normal and ASan/UBSan CLI, including failure cleanup, changed headers, protected config and real local-network refusal with explicit-off controls. Full default561 C/15 OS/12 policy/8 foundation regression passes. Inference/native sources are byte-identical to E55; its Native14K/Stream/output acceptance remains historical for that same runtime, not a new model test.
+
+Two earlier E57 attempts are retained: a parser import mistake and a warmup timeout with divergent clocks (~274s CLI versus0.8s active Python time). The cause of the pause/clock gap is unresolved. Formal timing used only a process-lifetime idle-sleep assertion and dual clocks; max absolute gap was0.029ms, with all pairs retained. No system power setting or agent timeout policy changed. Small-n ranges are not p95/p99 or confidence intervals.
+
+[E56 evidence](../evidence/sandbox-cpp-diagnostic-20261102.json), [E57 evidence](../evidence/sandbox-cpp-tasks-20261102.json), [stage samples](data/sandbox-cpp-diagnostic-samples.csv), [new CLI samples](data/sandbox-cpp-tasks-samples.csv), [all paired summaries](data/sandbox-cpp-tasks-paired-summary.csv), [aborted warmups](data/sandbox-cpp-aborted.csv) and [contract](../design/test-sandbox-v1.md). Prior56 evidence files and40 figure pairs remain byte-identical; this is build-command work, not inference acceleration.
+
+## E54/E55 — Xcode cache diagnosis and explicit same-toolchain binding
+
+Later E56 audit: the implicit deployment target differed (bound-off26.0,bound-on10.4). These historical compiler/SDK-matched measurements did not ensure equal target semantics; use E56/E57 explicit-target comparisons for new claims. The old evidence and plots are unchanged.
+
+The major trigger is a fresh private xcrun lookup cache: the /usr/bin shim invokes xcodebuild for platform/tool discovery. Reusing that lookup cache inside the same sandbox makes the second compile fast; deleting only this task-owned xcrun_db makes it slow again. A fresh off-mode HOME/TMPDIR control is much faster than restricted cold discovery, so this is not merely the cost of an empty cache. Restricted framework initialization and rejected-service fallback also matter. Actual Clang compilation with the same SDK is fast. Apple documents the [system tool shims](https://developer.apple.com/library/archive/technotes/tn2339/_index.html); exact discovery is measured locally, not assumed from documentation.
+
+| E54 API case | Mode | N | Complete ms | First inner ms | Second inner ms |
+| --- | --- | --- | --- | --- | --- |
+| noop | off | 5 | 6.200 | 1.725 | — |
+| noop | on | 5 | 20.265 | 1.426 | — |
+| compile | off | 5 | 350.359 | 36.564 | — |
+| compile | on | 5 | 2772.430 | 2443.726 | — |
+| cold_env | off | 5 | 108.284 | 90.856 | — |
+| cold_env | on | 5 | 2419.259 | 2381.527 | — |
+| reuse | on | 5 | 2425.482 | 2359.470 | 34.224 |
+| invalidate | on | 5 | 4844.728 | 2405.827 | 2393.318 |
+| sdk_only | on | 5 | 2425.800 | 2389.924 | — |
+| pinned | on | 5 | 361.699 | 37.008 | — |
+| platform | off | 5 | 363.920 | 346.718 | — |
+| platform | on | 5 | 1121.837 | 1102.669 | — |
+
+126 serial unsanitized main records,2 warmup+5 evaluation blocks. No-log is a negative control: it does not remove the seconds-scale cost and has slower pairs; it is not shipped. SDKROOT alone also fails to avoid discovery. A direct compiler without its SDK fails to link. The attempted stack sample exited successfully but produced no call graph; a direct xcodebuild -find control emitted plugin failures and exceeded retained output. All development controls remain separate from formal timing.
+
+The exact synthetic xcodebuild target produced7305 denial log entries, including2511 directory-service lookups; duplicate summaries are not exact syscall counts. Seventy separate direct-API records (1000 calls each) show quick rejected Mach lookups and accumulated costs in cache-directory/UID queries. These probes do not allocate the full xcodebuild delay to individual functions, and no rejected IPC was granted.
+
+| Direct API,1000 calls | Off median ms | On median ms | On worst single ms |
+| --- | --- | --- | --- |
+| com.apple.FSEvents | 22.451 | 27.755 | 0.151 |
+| com.apple.diagnosticd | 21.499 | 27.591 | 0.073 |
+| com.apple.system.opendirectoryd.libinfo | 23.093 | 29.100 | 0.834 |
+| darwin_cache_confstr | 2.512 | 292.472 | 0.912 |
+| own_uid_lookup | 0.511 | 44.754 | 0.188 |
+
+The implemented option is explicit --test-toolchain BIN_DIR --test-sdk SDK_DIR. It sets a pinned PATH and SDKROOT and grants no directories, IPC or network. Both paths are required and validated; no outside-sandbox workspace execution, shared lookup cache, global xcode-select change or implicit CLT substitution. Absolute /usr/bin/cc and explicit xcrun calls are not rewritten. Zero-config commands retain their original behavior and regression. This is a build-command environment optimization, separate from KV/prefill/inference work.
+
+| E55 new CLI task | Original on / bound on median ms | Paired saving ms [min,max] | Faster | Bound on−off ms [min,max] |
+| --- | --- | --- | --- | --- |
+| checksum | 2667.464 / 354.235 | 2367.142 [2274.834,2674.528] | 7/7 | 20.951 [-6.772,29.834] |
+| archive | 3618.348 / 176.627 | 3447.935 [3345.468,4169.586] | 7/7 | 14.789 [9.392,50.654] |
+| templates | 3004.514 / 626.083 | 2378.431 [2208.843,2579.098] | 7/7 | 59.075 [-160.955,100.214] |
+
+![Same-Xcode cache and new task controls](figures/sandbox-cc.png)
+
+108 actual CLI tasks:3 new workloads×4 modes×(2 warmup+7 evaluation blocks), rotating/reversed order, exact program-result checks and identical selected compiler/SDK hashes. Every task has a fresh private HOME/TMPDIR; off creates/removes its directory inside the timed command, unlike E53 usual warm host cache. CLI time includes initialization, tool execution, cleanup and two scripted HTTP choices, with no model inference. C++ retains wide negative/positive residual pairs. Small-n ranges are not confidence intervals or proof of stable tail latency.
+
+Acceptance:561 C checks,15 OS suites, prior12 policy/8 foundation suites under sanitizers, Native14,357-token/16 Stream/72 output checks, and full default regression. Permission-binding tests cover normal compilation, outside-file refusal, secrets/config, network, parent environment and invalid paths. Two initial test-oracle mistakes are retained. Six existing native compiler warnings and uninstrumented upstream libraries remain.
+
+[E54 evidence](../evidence/sandbox-cc-diagnostic-20261101.json), [E55 evidence](../evidence/sandbox-cc-tasks-20261101.json), [diagnostic samples](data/sandbox-cc-diagnostic-samples.csv), [direct API probes](data/sandbox-cc-ipc.csv), [new CLI samples](data/sandbox-cc-tasks-samples.csv), [all pairs](data/sandbox-cc-tasks-pairs.csv), [paired summaries](data/sandbox-cc-tasks-paired-summary.csv) and [contract](../design/test-sandbox-v1.md). Prior54 evidence files and39 figure pairs remain unchanged. No inference performance or autonomous quality claim.
+
+## E53 — Host-protection baseline and original overhead
+
+Additional review found that both broad and narrowed Seatbelt sysctl rules still exposed an unrestricted parent startup environment. E53 sets a sticky CS_RESTRICT flag on cxf itself, checks the SIP gate, and verifies effective environment omission with a trusted child before enabling restricted commands. CLI does this before configuration/model initialization; direct hosts can initialize early too. No system setting or other application is changed. Only the probe read has a1000ms poll bound; fork/reaping are not a hard deadline. Explicit off in a fresh process is the leaking positive control.
+
+| Complete CLI workload | Off / on median ms | Paired extra ms [min,max] | On slower |
+| --- | --- | --- | --- |
+| clt_compile_tmp | 367.905 / 374.075 | 3.565 [-9.989,32.725] | 4/7 |
+| noop | 30.053 / 43.051 | 15.724 [-3.644,32.934] | 5/7 |
+| system_cc_compile_write | 365.070 / 2827.838 | 2467.548 [2441.743,2534.841] | 7/7 |
+
+![Final test.run isolation cost](figures/test-sandbox-final.svg)
+
+Same workload, new independent experiment:230 rows,44 warmups and93 evaluation pairs. CLI runs in a fresh process and includes host protection; API evaluation is steady state after warmups, where the sticky host flag remains common to later off/on calls. API cold warmup rows are retained. Standard cc regresses2467.548ms paired median,2534.841ms worst; paired inner-command growth median2453.219ms and outside-inner growth median21.003ms are not additive. CLT cost median3.565ms has only4/7 slower pairs, so it is not a guaranteed fixed cost or a proven improvement over E52. Exact cache/IPC effects and cold initialization after a model is already loaded are not isolated.
+
+Final acceptance:542 C checks,12 OS-security suites (including effective parent-environment tests), prior12 policy and8 foundation suites under sanitizers,14,357-token Native,16 Stream and72 output cases. The73,880-byte job capacity remains common to both modes; host verification additionally uses at most256KiB transient heap and a trusted fork once per process, not a measured RSS/KV figure. Other same-UID processes are not protected by this flag, argv remains visible, and this is not a VM or universal DLP. Keys must not be supplied as command-line literals. Linux/Windows remain unsupported with default refusal. Previous53 evidence files and38 figure pairs stay unchanged.
+
+All final [samples](data/test-sandbox-host-samples.csv), [pairs](data/test-sandbox-host-pairs.csv), [summary](data/test-sandbox-host-summary.csv), [contract](../design/test-sandbox-v1.md) and [E53 evidence](../evidence/test-sandbox-host-20261101.json). E52 remains below as pre-fix evidence; do not attribute cross-stage timing differences to the security fix.
+
+## E52 — Pre-fix OS isolation and overhead (superseded by E53)
+
+Default: workspace content read-only, fresh private temporary writes, and network denied for the command and descendants. Explicit read/write directory and full-network grants are independent; protected names/config/trace remain blocked. Existing file descriptors are closed. Unsupported platforms or preflight/setup failures do not fall back to unrestricted execution. Current backend is macOS Seatbelt; Linux/Windows are pending. Explicit isolation off is the unrestricted compatibility control.
+
+| Complete CLI workload | Off / on median ms | Paired extra ms [min,max] | On slower |
+| --- | --- | --- | --- |
+| clt_compile_tmp | 350.576 / 376.902 | 19.042 [-33.950,48.483] | 5/7 |
+| noop | 16.518 / 35.919 | 13.925 [1.176,27.735] | 7/7 |
+| system_cc_compile_write | 337.762 / 2928.896 | 2591.134 [2367.727,5524.787] | 7/7 |
+
+![test.run isolation overhead](figures/test-sandbox-overhead.svg)
+
+Timing is serial and unsanitized:176 command-API rows (8/256 extra fixture files) and54 actual CLI rows, including44 warmups and93 evaluation pairs. CLI uses two scripted HTTP model responses; no inference or real cloud. Positive overhead means isolation is slower. The standard Xcode cc CLI regresses2591.134ms in paired median and5524.787ms worst; paired inner-command growth median2561.604ms, outside-inner growth median17.541ms. These medians are not additive. Warnings show restricted cache/service behavior, but cache versus IPC causes are not isolated. The separate explicit CLT command is measured as a different workload, not silently substituted in production.
+
+The C job object has a fixed73,880-byte stack capacity in both current off/on paths; this is not added RSS, child peak memory or physical KV. Scanned entries and populated profile bytes are in raw records; files=8/256 counts extra fixtures, not total workspace entries. Time outside the inner command includes setup, sandbox process/application, polling and cleanup; it is not pure Seatbelt compilation time. All API cells and negative pairs are in [samples](data/test-sandbox-samples.csv), [pairs](data/test-sandbox-pairs.csv) and [summary](data/test-sandbox-summary.csv).
+
+Acceptance:542 C checks,11 OS-security suites, prior12 data-policy and8 foundation suites under ASan/UBSan; Native14,357-token,16 Stream and72 output checks. The localhost-only network candidate admitted a non-loopback local interface and was removed: only deny/allow ship. Initial Stream equality failed on timestamped Xcode output; the deterministic fixture explicitly uses CLT while retaining token/fresh-greedy checks. Both failures are retained. Runtime/benchmark code matches the timing archive; the later Stream test-command change is separately identified. Six prior native warnings remain, upstream libraries are not instrumented. This is not a VM or arbitrary-secret DLP; explicit off/inherited secrets/full network grant still require trusted deployment. See [D-EXEC](../design/test-sandbox-v1.md) and [E52 evidence](../evidence/test-sandbox-20261101.json).
+
+## E51 — Protected files and cloud egress: functional acceptance
+
+All eight file tools share protected-name, deployed config/trace, descriptor, symlink and hardlink checks. HTTP providers default to unknown scope and cloud egress is denied before connection. Operators explicitly select local/cloud and task/workspace egress; task mode cannot dispatch tools. Tool arguments/results, HTTP requests/responses and decoded model output reject known credentials and common secret patterns. Trace admission/capacity failures preserve existing files. Native prefill has the same content checks.
+
+445 policy checks and12 real HTTP/files/process suites pass under ASan/UBSan; the prior eight foundation suites, full default regression,14,357-token Native,16 Stream and72 output checks pass. Normal cloud-authorized read/edit/test and expected access/leak refusals are separate from model quality or performance. The initial added Native test used a stale checkpoint in an assertion; its failed log hash is retained and the corrected test passes. Six existing native harness compiler warnings remain; fixed upstream libraries are not instrumented.
+
+This is bounded admission and common-pattern detection, not universal DLP or an OS sandbox. test.run still has launcher file/network rights; unknown secrets and arbitrary encodings can escape detection. No real cloud calls, direct HTTPS, Windows/CUDA or new speed/memory result. Previous51 evidence files and37 figure pairs are byte-for-byte unchanged. See the [single policy contract](../design/data-policy-v1.md) and [E51 evidence](../evidence/agent-data-policy-20261101.json).
+
+## E50 — Agent foundation: functional acceptance
+
+Added an opt-in guarded single-line editor, minimal child-process environment by default in the CLI, and a loopback-only llm.local text helper. Eight scripted two-provider HTTP suites pass under ASan/UBSan, alongside the default regression, edit/process sanitizers,14,357-token Native,16 Stream checks and72 tool-output cases. Helper responses are data, not actions; credentials and task quotas are separate. No new performance or real cloud/model-quality result.
+
+Historical E50 limits (file/egress admission is added in E51): no OS sandbox, universal sensitive-file policy, atomic file CAS, direct HTTPS, automatic routing, cloud SSE or shared Native KV for the HTTP helper. Existing writer paths have not all migrated to descriptor-based traversal. Six pre-existing compiler warnings remain in the native harness; no sanitizer errors were observed. See the [tool contract](../basic-agent.md), [hybrid contract](../design/hybrid-v1.md) and [functional evidence](../evidence/agent-foundation-20261101.json).
 
 ## Results at a glance
 
@@ -31,7 +194,7 @@ Paired task savings/regressions, worst pairs and allocation measurements are lab
 | Execution | 4 CPU threads · batch 512 · FP16 KV · warm runs |
 | KV allocation | E01–02: 3328 tokens / 364 MiB; E05–06, E10–11, E13–19: 8192 / 896 MiB; E07–09: 16384 / 1792 MiB |
 
-50 evidence files are indexed below. 46 contain 35520 raw records, including metadata, correctness, file timelines and cost-estimation samples; this is **not 35520 independent latency samples**. Functional, sanitized-summary and reported-only evidence remain separate. Source hashes identify the measured revisions.
+59 evidence files are indexed below. 52 contain 36664 raw records, including metadata, correctness, file timelines and cost-estimation samples; this is **not 36664 independent latency samples**. Functional, sanitized-summary and reported-only evidence remain separate. Source hashes identify the measured revisions.
 
 | ID | Experiment | Evidence class | Records |
 | --- | --- | --- | --- |
@@ -84,6 +247,15 @@ Paired task savings/regressions, worst pairs and allocation measurements are lab
 | E47 | [Same-capacity thread/token/GPU tool isolation](../evidence/tool-output-contention640-20261031.json) | raw | 1539 |
 | E48 | [Fixed-shape native CPU versus memory pressure](../evidence/device-isolation-20261031.json) | raw | 387 |
 | E49 | [Larger publication quantum on fresh actual tasks](../evidence/tool-output-coarse640-20261031.json) | raw | 1539 |
+| E50 | [Guarded editing, clean test environment and local text helper](../evidence/agent-foundation-20261101.json) | functional | 0 |
+| E51 | [Unified protected files and default-deny cloud data egress](../evidence/agent-data-policy-20261101.json) | functional | 0 |
+| E52 | [OS test.run file/network isolation and matched overhead](../evidence/test-sandbox-20261101.json) | raw | 230 |
+| E53 | [Protected host environment, narrowed system information and final overhead](../evidence/test-sandbox-host-20261101.json) | raw | 230 |
+| E54 | [Xcode lookup-cache, launch and denied-IPC controls](../evidence/sandbox-cc-diagnostic-20261101.json) | raw | 126 |
+| E55 | [Explicit same-Xcode/SDK binding on fresh actual CLI tasks](../evidence/sandbox-cc-tasks-20261101.json) | raw | 108 |
+| E56 | [Fixed-target C++ compiler/header/cache and host coordination controls](../evidence/sandbox-cpp-diagnostic-20261102.json) | raw | 270 |
+| E57 | [Fresh C++ tasks: cold private PCH and bounded-regex candidate](../evidence/sandbox-cpp-tasks-20261102.json) | raw | 180 |
+| E58 | [Read-only same-model fork probe: functional preparation and target-machine handoff](../evidence/self-speculation-20261102.json) | functional | 0 |
 | L01 | [Earlier service, budget and copy observations](../evidence/legacy-observations-20261020.json) | reported_only | 0 |
 
 ## E01–02 · direct API feasibility

@@ -1,5 +1,6 @@
 #ifndef AGENT_NET_H
 #define AGENT_NET_H
+#include "agent_policy.h"
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -25,8 +26,8 @@
  * SSRF 的形状是"模型给了 host"。所以 host / port 一律来自 `ctx`（部署事实，
  * 模型看不见也改不了），模型只能给 **path**。这与 `fs.*` 完全同构：
  *
- *     fs : 根目录来自部署，相对路径来自模型，谓词 = realpath(父) ⊆ 根
- *     net: host:port 来自部署，路径来自模型，谓词 = 形状白名单 + 无 '..' 段
+ *     fs : 根目录来自部署，相对路径来自模型，谓词 = D-DATA组件准入 + 目录fd打开
+ *     net: host:port 来自部署，路径来自模型，谓词 = 路径白名单 + D-DATA外发许可；当前HTTP仅回环
  *
  * 于是"打到内网 metadata 服务"这件事在**类型上就表达不出来** —— 不是靠运行时
  * 黑名单挡下来的（黑名单永远漏）。这是本项目反复用的那条：**把自由度收窄，
@@ -105,6 +106,8 @@ typedef struct HttpCfg {
     uint16_t    port;
     const char *auth;        /* 原样塞进 Authorization；不进 payload、不回显 */
     uint32_t    timeout_ms;  /* 0 = 用 agent_http 的默认值 */
+    const AgentPolicy *policy;
+    uint32_t scope;
 } HttpCfg;
 
 extern const CapDef  http_capdef_post;

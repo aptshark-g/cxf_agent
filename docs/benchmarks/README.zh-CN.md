@@ -2,9 +2,172 @@
 
 [English](README.md) · [当前适配](../adaptation-status.md) · [测试方法](METHODOLOGY.md) · [全部指标](data/metrics.csv) · [原始记录](data/raw-records.jsonl) · [验收矩阵](data/validation.csv)
 
-归档日期：2026-10-31。这是一组单机兼容性与调度实验，Qwen3 0.6B 用作验证载体。
+归档日期：2026-11-02。E58新增只读自预测功能准备和异机交接，无新性能样本。E56/E57拆分固定同target的C++头文件／缓存／宿主成本，E53是宿主保护基线；此前性能仍对应历史源码版本，Qwen3 0.6B用于兼容验证。
 
 已经观测到的收益集中在减少前端重复工作、共享规范前缀，以及把本地工作与输入到达重叠执行。收益依赖场景；尚未证明整体进程内存、自主编程能力或 Windows/CUDA 性能改善。
+
+## E58 — 只读自预测：功能准备与异机交接
+
+实验宿主已复用同KV池的实际前缀分叉，用同模型生成有界工具探针，只提前执行fs.read；正式调用、任务epoch和当前权限／文件版本均一致才采纳，否则丢弃并正常读取。所有引擎调用仍由一个owner串行驱动，probe会暂停主解码；默认agentctl未接入。
+
+24项无模型状态／安全测试、8项Native验收（6项KV／模板及2项注入流程）及原14,357-token Native回归通过ASan/UBSan。开发期JSON流编译、thinking尾部假设与外层沙箱Metal／回环失败单独保留。没有新增性能记录或图表；更大模型命中率、完整任务收益与WSL2/CUDA留待目标机器验收。旧58份证据和41组图不改。
+
+[契约](../design/self-speculation-v1.md)、[异机交接](../self-speculation-handoff.md)和[功能证据](../evidence/self-speculation-20261102.json)。准备好的runner保留全部预热、失败、输出不一致和回退配对，明确命中率分母，并分别展示probe成本、全部任务与完整且输出一致任务的耗时。0.6B兼容验收不代表自预测质量。
+
+## E56/E57 — 固定target的C++头文件、缓存与宿主协调
+
+E55的等价性检查不完整：相同编译器／SDK与程序结果下，绑定off默认macOS26.0，绑定on却为10.4。旧59ms残差保留为带target混杂的历史读数；交叉使用预处理文件时可用性报错暴露了此问题。新试验全部显式使用-mmacosx-version-min=26.0，并核对driver triple与部署版本宏，不靠开放sysctl或其他权限修复目标探测。
+
+| E56对照 | 关闭／开启内部中位ms | 关闭／开启sys CPU中位ms | 完整API逐对额外ms [最小,最大] |
+| --- | --- | --- | --- |
+| noop | 1.556 / 1.596 | 0.579 / 0.653 | 6.098 [-5.176,20.124] |
+| version | 7.671 / 7.478 | 2.941 / 3.372 | 17.685 [7.197,28.656] |
+| preprocess | 76.181 / 129.791 | 28.157 / 79.755 | 68.504 [46.339,86.966] |
+| syntax | 209.221 / 271.672 | 30.719 / 90.832 | 76.083 [41.317,178.423] |
+| object | 224.613 / 282.523 | 30.891 / 84.015 | 68.749 [58.884,98.451] |
+| preprocessed | 173.119 / 168.434 | 9.925 / 9.875 | 9.361 [-16.655,17.143] |
+| link | 24.111 / 27.030 | 14.331 / 22.443 | 18.983 [9.065,47.483] |
+| fresh_run | 284.877 / 278.972 | 1.137 / 1.581 | 10.540 [-65.379,19.423] |
+| chain | 553.606 / 602.009 | 56.226 / 116.232 | 79.925 [-91.812,187.563] |
+
+额外sys CPU跟随文本头文件访问。include trace有1051条记录（不是syscall次数），普通目标文件／重复编译没有PCM；编译已预处理输入后sys差异大幅缩小，但该控制不把预处理准备当免费优化。编译器启动／版本与链接差异较小；父准备约1ms、清理通常不足1ms，EOF回收可另有约10ms轮询。新可执行文件运行还存在波动的非CPU墙钟。未采逐syscall、签名、CPU簇或外部调度trace，不能精确分完所有旧／新尾部。
+
+| E56开启缓存对照 | 完整API中位ms | 第一／第二阶段中位ms | PCM文件 | 临时文件逻辑字节 |
+| --- | --- | --- | --- | --- |
+| object | 313.730 | 282.523 / — | 0 | 4376 |
+| reuse | 612.372 | 299.303 / 279.585 | 0 | 8752 |
+| modules | 1172.690 | 1079.475 / 57.816 | 26 | 27008980 |
+| pch | 430.582 | 342.723 / 53.788 | 0 | 14451812 |
+| stat | 2596.566 | 2280.301 / 299.706 | 0 | 14443316 |
+| plain3 | 886.911 | 286.456 / 283.965 | 0 | 13128 |
+| pch3 | 551.077 | 343.580 / 56.462 | 0 | 14460564 |
+
+270条串行无SAN记录，2预热＋7评价block。模块模式生成26个PCM、第二次编译更快，但冷成本高；全新SDK stat-cache生成也是负结果。PCH对重复头文件的作用要扣除冷生成成本。Clang的[模块启用](https://clang.llvm.org/docs/Modules.html)、[PCH](https://clang.llvm.org/docs/PCHInternals.html)和[stat-cache设计](https://reviews.llvm.org/D136651)提供依据，结果仍以本机Apple-Clang实测为准。
+
+![Fixed-target C++ results](figures/sandbox-cpp.png)
+
+| E57新任务 | 翻译单元 | 原开启／PCH开启中位ms | 逐对PCH节省ms [最小,最大] | 更快 | PCH开启−关闭ms [最小,最大] |
+| --- | --- | --- | --- | --- | --- |
+| single_map | 1 | 665.938 / 813.194 | -158.765 [-181.623,64.525] | 1/7 | 72.068 [-309.370,110.589] |
+| single_regex | 1 | 1062.859 / 1153.361 | -118.314 [-164.641,273.152] | 2/7 | 38.365 [-53.943,80.666] |
+| batch3 | 3 | 1231.752 / 940.847 | 330.300 [196.238,1643.124] | 7/7 | 54.266 [-151.971,123.342] |
+| batch5 | 5 | 1922.122 / 1053.426 | 793.776 [687.974,1624.882] | 7/7 | -6.044 [-525.332,177.296] |
+
+180个真实CLI任务，4新任务×5模式×（2预热＋7评价block），核对程序结果，显式target／编译器／SDK／C++17／O2一致，顺序轮转／倒转。每任务新建并删除PCH，生成、验证、全部翻译单元、链接、程序、观察器和清理全部计入。单文件PCH中位反慢158.765／118.314ms，3／5翻译单元节省330.300／793.776ms，均7/7。PCH增加14.56–15.51MB短期逻辑文件载荷，未测进程RSS或物理KV；开启−关闭仍有宽幅正负对，不称隔离免费。
+
+| 实验性deny分组 | 逐对节省ms [最小,最大] | 更快 |
+| --- | --- | --- |
+| single_map | -5.967 [-95.565,152.800] | 3/7 |
+| single_regex | 0.137 [-385.786,393.829] | 4/7 |
+| batch3 | 2.013 [-1299.522,1118.946] | 4/7 |
+| batch5 | -64.269 [-439.648,147.746] | 2/7 |
+
+候选把72条原模式因式分解为6个等价有界组（最长511字节），通过1765路径差分和15组OS测试，但性能验收失败。batch3最差多1299.522ms：目标文件阶段多1291.321ms（user＋370.221、sys＋106.348），外层反少3.256ms；位置在编译执行，非父准备，仍不能证明所有波动都由分组算法造成。默认保留原逐条规则与拒绝日志，不把候选和PCH收益相加。
+
+交付为可选tools/run_cpp_batch.sh plain|pch TARGET HEADER OUTPUT SOURCE...配方，不增加运行时缓存／授权或自动改编译参数。6组配方测试在普通和ASan/UBSan CLI通过，包括失败清理、头文件更新、配置保护及真实本机网络拒绝／显式off对照；默认561项C／15组OS／12策略／8基础回归通过。推理／Native源码与E55逐字节相同，其14K／Stream／输出验收仍引用相同运行时的历史版本，本轮未重跑模型。
+
+两次先前E57尝试保留：解析脚本漏导入与预热期时钟差异超时（CLI约274秒、Python活跃计时约0.8秒），暂停／时钟差异原因未定。正式计时仅使用进程存活期的防空闲休眠断言与双时钟，最大差异0.029ms，全部正负配对保留；不改系统电源设置或agent超时。小样本范围不是p95／p99或置信区间。
+
+[E56证据](../evidence/sandbox-cpp-diagnostic-20261102.json)、[E57证据](../evidence/sandbox-cpp-tasks-20261102.json)、[阶段样本](data/sandbox-cpp-diagnostic-samples.csv)、[新CLI样本](data/sandbox-cpp-tasks-samples.csv)、[全部配对汇总](data/sandbox-cpp-tasks-paired-summary.csv)、[中止预热](data/sandbox-cpp-aborted.csv)和[契约](../design/test-sandbox-v1.md)。旧56份证据与40组图不改，这是构建命令工作，不计为推理加速。
+
+## E54/E55 — Xcode缓存归因与显式同工具链绑定
+
+E56事后核对发现绑定控制组隐含部署target不同（off26.0，on10.4）。以下历史测量只核对了编译器／SDK，未保证目标语义等价；新结论采用E56/E57显式同target比较，旧证据与图不改。
+
+主要触发条件是每次私有TMPDIR中的xcrun查找缓存为空：/usr/bin的shim会调用xcodebuild探测平台／工具。同一沙箱内复用缓存后第二次编译很快，只删除本任务的xcrun_db又恢复秒级耗时。off也使用全新HOME／TMPDIR时仍远快于受限冷发现，因此不能只归为空缓存；受限框架初始化和服务拒绝后的回退也有成本。同一Clang加同一SDK的实际编译很快。Apple说明了[系统工具shim](https://developer.apple.com/library/archive/technotes/tn2339/_index.html)，具体发现行为以本机实测为准。
+
+| E54 API负载 | 模式 | 样本 | 完整中位ms | 首次内部ms | 第二次内部ms |
+| --- | --- | --- | --- | --- | --- |
+| noop | off | 5 | 6.200 | 1.725 | — |
+| noop | on | 5 | 20.265 | 1.426 | — |
+| compile | off | 5 | 350.359 | 36.564 | — |
+| compile | on | 5 | 2772.430 | 2443.726 | — |
+| cold_env | off | 5 | 108.284 | 90.856 | — |
+| cold_env | on | 5 | 2419.259 | 2381.527 | — |
+| reuse | on | 5 | 2425.482 | 2359.470 | 34.224 |
+| invalidate | on | 5 | 4844.728 | 2405.827 | 2393.318 |
+| sdk_only | on | 5 | 2425.800 | 2389.924 | — |
+| pinned | on | 5 | 361.699 | 37.008 | — |
+| platform | off | 5 | 363.920 | 346.718 | — |
+| platform | on | 5 | 1121.837 | 1102.669 | — |
+
+126条串行无SAN主记录，2预热＋5评价block。no-log是负结果：没有消除秒级成本且有更慢配对，不发布该策略；只设SDKROOT也没有避开发现。只用直接编译器但缺SDK会链接失败。栈采样虽退出成功却无调用栈；直接xcodebuild -find对照出现插件错误并超过保留输出，开发探针不混入正式计时。
+
+精确过滤的合成xcodebuild目标有7305条拒绝日志，包括2511条目录服务查找；重复汇总不等于精确系统调用次数。另有70条直接API记录（各1000次调用），显示Mach拒绝通常快速返回，缓存目录／UID查询有累计成本。这些探针不能把完整xcodebuild延迟逐函数分完，也没有通过开放被拒IPC做优化。
+
+| 直接API，每行1000次 | 关闭中位ms | 开启中位ms | 开启最慢单次ms |
+| --- | --- | --- | --- |
+| com.apple.FSEvents | 22.451 | 27.755 | 0.151 |
+| com.apple.diagnosticd | 21.499 | 27.591 | 0.073 |
+| com.apple.system.opendirectoryd.libinfo | 23.093 | 29.100 | 0.834 |
+| darwin_cache_confstr | 2.512 | 292.472 | 0.912 |
+| own_uid_lookup | 0.511 | 44.754 | 0.188 |
+
+实现的是显式--test-toolchain BIN_DIR --test-sdk SDK_DIR：绑定PATH与SDKROOT，不授权目录、IPC或网络。两路径必须同时有效；无沙箱外工作区执行、共享查找缓存、全局xcode-select修改或隐式CLT替换。不改写绝对/usr/bin/cc或显式xcrun调用。零配置命令仍保留原行为及回退。这是构建命令环境优化，与KV／预填充／推理优化分开。
+
+| E55新CLI任务 | 原开启／绑定开启中位ms | 逐对节省ms [最小,最大] | 更快 | 绑定开启−关闭ms [最小,最大] |
+| --- | --- | --- | --- | --- |
+| checksum | 2667.464 / 354.235 | 2367.142 [2274.834,2674.528] | 7/7 | 20.951 [-6.772,29.834] |
+| archive | 3618.348 / 176.627 | 3447.935 [3345.468,4169.586] | 7/7 | 14.789 [9.392,50.654] |
+| templates | 3004.514 / 626.083 | 2378.431 [2208.843,2579.098] | 7/7 | 59.075 [-160.955,100.214] |
+
+![Same-Xcode cache and new task controls](figures/sandbox-cc.png)
+
+108个真实CLI任务：3新负载×4模式×（2预热＋7评价block），旋转／倒序、核对程序结果和相同编译器／SDK哈希。每任务都有全新私有HOME／TMPDIR；off在计时命令中创建／清理目录，与E53通常已热的宿主缓存基线不同。CLI时间包含初始化、工具执行、清理及两次固定HTTP选择，无模型推理。C++仍有宽幅正负残差，小样本范围不是置信区间或稳定尾延迟证明。
+
+验收：561项C、15组OS、原12策略／8基础SAN套件、Native14,357-token／16 Stream／72输出及完整默认回归通过。绑定测试覆盖正常编译、外部文件拒绝、敏感文件／配置、网络、父环境和无效路径；两处初始测试预期错误保留。原6条Native编译警告和上游库未插桩边界不变。
+
+[E54证据](../evidence/sandbox-cc-diagnostic-20261101.json)、[E55证据](../evidence/sandbox-cc-tasks-20261101.json)、[诊断样本](data/sandbox-cc-diagnostic-samples.csv)、[直接API探针](data/sandbox-cc-ipc.csv)、[新CLI样本](data/sandbox-cc-tasks-samples.csv)、[全部配对](data/sandbox-cc-tasks-pairs.csv)、[配对汇总](data/sandbox-cc-tasks-paired-summary.csv)和[契约](../design/test-sandbox-v1.md)。旧54份证据与39组图不改，不新增推理性能或自主质量结论。
+
+## E53 — 宿主保护基线与原开销
+
+额外审查发现宽泛及收窄的Seatbelt sysctl规则都仍可读取未保护父环境。E53只为cxf自身设置粘性CS_RESTRICT、检查SIP门，并用可信子进程验证环境确实被省略后再启用命令。CLI在读配置／加载模型前完成，直接宿主也可提前初始化。不改系统设置或其他应用；1000ms只是探针读回poll上限，不是fork／回收硬deadline。新进程显式off保留为可见合成标记的正对照。
+
+| 完整CLI负载 | 关闭／开启中位ms | 逐对额外ms [最小,最大] | 开启更慢 |
+| --- | --- | --- | --- |
+| clt_compile_tmp | 367.905 / 374.075 | 3.565 [-9.989,32.725] | 4/7 |
+| noop | 30.053 / 43.051 | 15.724 [-3.644,32.934] | 5/7 |
+| system_cc_compile_write | 365.070 / 2827.838 | 2467.548 [2441.743,2534.841] | 7/7 |
+
+![Final test.run isolation cost](figures/test-sandbox-final.svg)
+
+同工作量、独立新实验：230条记录、44条预热、93组评价配对。CLI每任务新进程，包含宿主保护；API评价是预热后稳态，粘性宿主标记对随后off/on都保持，冷启动预热行仍保留。标准cc逐对中位多2467.548ms、最差2534.841ms；命令内部差值中位2453.219ms、外层差值中位21.003ms，不可相加。CLT中位多3.565ms，只有4/7更慢，不能称固定成本或证明比E52更快。缓存／IPC以及模型已加载后才初始化的冷开销未独立测量。
+
+最终验收：542项C检查、12组OS安全（含有效父环境对照）、原12组策略／8组基础SAN套件，以及14,357-token Native、16项Stream、72项输出通过。73,880字节任务容量仍为两模式共有；宿主验证另用最多256KiB临时堆和每进程一次可信fork，不是实测RSS/KV。该标记不保护其他同UID进程，argv仍可见，不能把key写进命令行，也不属于VM或通用DLP。Linux/Windows仍无后端、默认拒绝。旧53份证据与38组图保持原字节。
+
+最终[样本](data/test-sandbox-host-samples.csv)、[配对](data/test-sandbox-host-pairs.csv)、[汇总](data/test-sandbox-host-summary.csv)、[契约](../design/test-sandbox-v1.md)和[E53证据](../evidence/test-sandbox-host-20261101.json)。以下E52是修复前记录，不按跨阶段差值推导修复的性能收益。
+
+## E52 — 修复前OS隔离与开销（已由E53取代）
+
+默认工作区正文只读、独立私有临时目录可写、命令及后代禁网。读／写目录和完整联网由启动者独立授权，敏感名称／配置／trace仍拒绝；关闭已有fd。后端不支持或准备／初始化失败不降级到无限制。当前仅macOS Seatbelt，Linux/Windows待做；显式off是取消OS隔离的兼容对照。
+
+| 完整CLI负载 | 关闭／开启中位ms | 逐对额外ms [最小,最大] | 开启更慢 |
+| --- | --- | --- | --- |
+| clt_compile_tmp | 350.576 / 376.902 | 19.042 [-33.950,48.483] | 5/7 |
+| noop | 16.518 / 35.919 | 13.925 [1.176,27.735] | 7/7 |
+| system_cc_compile_write | 337.762 / 2928.896 | 2591.134 [2367.727,5524.787] | 7/7 |
+
+![test.run isolation overhead](figures/test-sandbox-overhead.svg)
+
+计时独占、无SAN：176条命令API记录（8／256个额外语料文件）及54条真实CLI记录，含44条预热和93组评价配对。CLI用两次脚本HTTP模型响应，无推理或真实云端。额外开销为开启−关闭，正值表示更慢。标准Xcode cc完整CLI逐对中位多2591.134ms、最差5524.787ms；命令内部增加的逐对中位2561.604ms，外层差值中位17.541ms，不可直接相加。受限缓存／服务诊断可见，但缓存和IPC成因未独立证明。显式CLT命令作为另一负载实测，没有在生产中偷偷替换编译器。
+
+C任务结构固定栈容量73,880字节，当前off/on都分配，不能称新增RSS、子进程峰值或物理KV。实际扫描entries及profile实填字节在原始记录；files=8/256是额外语料数，不是工作区全部项。命令外差值包含准备、隔离进程／规则加载、轮询与清理，不等同纯Seatbelt编译。全部API分组与负对见[样本](data/test-sandbox-samples.csv)、[配对](data/test-sandbox-pairs.csv)和[汇总](data/test-sandbox-summary.csv)。
+
+验收：542项C检查、11组OS安全套件、原12组数据策略与8组基础套件在ASan/UBSan下通过；Native14,357-token、16项Stream、72项输出通过。候选localhost网络规则放行本机非回环接口，已撤下，只发布deny/allow。首次Stream全文比较受Xcode时间戳输出影响失败，确定性夹具显式用CLT并保留token／fresh-greedy检查；两次失败均保留。运行时／计时程序与归档源码一致，之后的Stream测试命令变化单列。原有6条Native警告保留，上游库未插桩。这不是VM或任意秘密DLP，显式off／凭据继承／完整网络授权仍须可信部署。见[D-EXEC](../design/test-sandbox-v1.md)和[E52证据](../evidence/test-sandbox-20261101.json)。
+
+## E51 — 敏感文件与云端外发：功能验收
+
+8个文件工具共用敏感名称、实际配置／trace、目录fd与链接检查。HTTP默认UNKNOWN、云外发在连接前拒绝；启动者显式声明local/cloud及task/workspace，task不派发工具。工具参数／结果、HTTP请求／响应和解码动作拦截已知凭据与常见秘密模式；trace准入／容量失败保留原文件。Native预填充也检查内容。
+
+445项策略检查和12组真实HTTP／文件／进程套件在ASan/UBSan下通过；原8组基础套件、完整默认回归、14,357-token Native、16项Stream与72项输出检查通过。正常授权读—改—测与预期拒绝不计模型能力或性能。首次新增Native测试引用旧检查点导致断言失败，保留失败日志哈希，修正测试后通过；6条已有Native harness编译警告保留，固定上游库未插桩。
+
+这是有界准入与常见模式检查，不是通用DLP或OS沙箱；test.run仍有启动者文件／网络权限，任意未知秘密或编码可能漏检。未调用真实云端，直接HTTPS、Windows/CUDA与新速度／内存结果均未验收。旧51份证据与37组图逐字节保持。见[唯一策略契约](../design/data-policy-v1.md)和[E51证据](../evidence/agent-data-policy-20261101.json)。
+
+## E50 — Agent基础能力：功能验收
+
+新增仅随写权限挂载的单行匹配编辑、CLI默认最小子进程环境，以及仅回环的llm.local文本辅助。8组双端点HTTP桩验收在ASan/UBSan下通过，默认回归、编辑／进程sanitizer、14,357-token Native、16项Stream和72项工具输出检查通过。辅助结果是数据，不是动作；认证和任务配额独立。没有新增性能或真实端云／模型质量结论。
+
+E50历史边界（文件／外发准入见E51）：当时尚无OS沙箱、统一敏感文件策略、文件原子CAS、直接HTTPS、自动路由、云SSE或HTTP辅助共享Native KV；旧写入路径尚未全部迁移为目录fd遍历。Native harness保留6条已有编译警告，未发现sanitizer错误。见[工具契约](../basic-agent.md)、[协同契约](../design/hybrid-v1.md)和[功能证据](../evidence/agent-foundation-20261101.json)。
 
 ## 关键结果
 
@@ -31,7 +194,7 @@
 | Execution | 4 CPU threads · batch 512 · FP16 KV · warm runs |
 | KV allocation | E01–02: 3328 tokens / 364 MiB; E05–06, E10–11, E13–19: 8192 / 896 MiB; E07–09: 16384 / 1792 MiB |
 
-下表索引 50 份证据。其中 46 份共含 35520 条原始记录，包含元数据、正确性、文件时间线和耗时估算样本，**不等于 35520 个独立延迟样本**。功能验收、脱敏摘要与仅文档读数分开。源码哈希对应各自实测版本。
+下表索引 59 份证据。其中 52 份共含 36664 条原始记录，包含元数据、正确性、文件时间线和耗时估算样本，**不等于 36664 个独立延迟样本**。功能验收、脱敏摘要与仅文档读数分开。源码哈希对应各自实测版本。
 
 | ID | 实验 | 证据等级 | 记录数 |
 | --- | --- | --- | --- |
@@ -84,6 +247,15 @@
 | E47 | [Same-capacity thread/token/GPU tool isolation](../evidence/tool-output-contention640-20261031.json) | raw | 1539 |
 | E48 | [Fixed-shape native CPU versus memory pressure](../evidence/device-isolation-20261031.json) | raw | 387 |
 | E49 | [Larger publication quantum on fresh actual tasks](../evidence/tool-output-coarse640-20261031.json) | raw | 1539 |
+| E50 | [Guarded editing, clean test environment and local text helper](../evidence/agent-foundation-20261101.json) | functional | 0 |
+| E51 | [Unified protected files and default-deny cloud data egress](../evidence/agent-data-policy-20261101.json) | functional | 0 |
+| E52 | [OS test.run file/network isolation and matched overhead](../evidence/test-sandbox-20261101.json) | raw | 230 |
+| E53 | [Protected host environment, narrowed system information and final overhead](../evidence/test-sandbox-host-20261101.json) | raw | 230 |
+| E54 | [Xcode lookup-cache, launch and denied-IPC controls](../evidence/sandbox-cc-diagnostic-20261101.json) | raw | 126 |
+| E55 | [Explicit same-Xcode/SDK binding on fresh actual CLI tasks](../evidence/sandbox-cc-tasks-20261101.json) | raw | 108 |
+| E56 | [Fixed-target C++ compiler/header/cache and host coordination controls](../evidence/sandbox-cpp-diagnostic-20261102.json) | raw | 270 |
+| E57 | [Fresh C++ tasks: cold private PCH and bounded-regex candidate](../evidence/sandbox-cpp-tasks-20261102.json) | raw | 180 |
+| E58 | [Read-only same-model fork probe: functional preparation and target-machine handoff](../evidence/self-speculation-20261102.json) | functional | 0 |
 | L01 | [Earlier service, budget and copy observations](../evidence/legacy-observations-20261020.json) | reported_only | 0 |
 
 ## E01–02 · 直接 API 可行性

@@ -26,10 +26,10 @@ static cxf_llama_view view(cxf_llama *e,cxf_llama_session h){cxf_llama_view v;OK
 static void no_files(const std::string &root){for(const auto &p:std::filesystem::recursive_directory_iterator(root))assert(p.path().extension()!=".kv");}
 struct Ref{std::vector<int32_t> ids;int32_t token=0;};
 struct Fixture{
- std::string root,tools,initial,log;AgentLlmCfg cfg={};BasicFsCfg read;FsRootCfg write;TestRunCfg test;double cold_ms=0,warm_ms=0;std::array<Ref,6> refs;
+ std::string root,tools,initial,log;AgentLlmCfg cfg={};BasicFsCfg read;FsRootCfg write;TestRunCfg test;TestSandbox sandbox={};double cold_ms=0,warm_ms=0;std::array<Ref,6> refs;
  Fixture(const std::string &out,int words):root(out+"/resident-project"){
   std::filesystem::create_directory(root);std::filesystem::copy_file(out+"/resident-tool",root+"/resident-tool",std::filesystem::copy_options::overwrite_existing);
-  read={root.c_str()};write={root.c_str()};test={root.c_str(),"./resident-tool verify",10000};
+  read={root.c_str()};write={root.c_str()};sandbox.writes=1;sandbox.write[0]=root.c_str();test={root.c_str(),"./resident-tool verify",10000,0,&sandbox};
   strcpy(cfg.model,"native-qwen3");strcpy(cfg.system,"Use the configured workspace tools. Verify actual receipts.");
   AgentToolSpec specs[]={{"fs.read","Read configuration","path","file"},{"fs.write_apply","Fix configuration","path and content","receipt"},{"test.run","Run fixed validator","empty","receipt"}};char data[8192];auto n=agent_llm_render_tools(specs,3,data,sizeof data);assert(n&&n<sizeof data);tools.assign(data,n);cfg.tools=tools.c_str();cfg.tools_len=n;
   initial="Read settings.ini, validate, fix limit to32, validate and read back, then validate again.\n";for(int i=0;i<words;i++)initial+="context ";initial+='\n';reset();

@@ -1,5 +1,15 @@
 # 原生聊天／工具提供者 v1
 
+E58实验宿主新增agent_native_prepare_thinking显式模式：仍用上游Qwen3模板，thinking标识进入解析缓存；默认prepare/chat_action继续false。8项Native验收（含2项注入流程）及14K Native ASan/UBSan回归通过。真实自预测宿主与跨机测量入口见[D-SPEC](design/self-speculation-v1.md)，默认agentctl未接入，性能仍待测。
+
+E55当前CLI工具环境补充：--test-toolchain BIN_DIR与--test-sdk SDK_DIR是成对的部署绑定，不增加文件／网络权限；未修改聊天、token或KV语义。Native14K／Stream／输出SAN回归通过，推理性能未重测；边界与测试见[D-EXEC](design/test-sandbox-v1.md)。
+
+> E53当前test.run在配置／模型初始化前验证cxf宿主启动环境保护，文件／网络边界仍见[D-EXEC](design/test-sandbox-v1.md)。14K、Stream、输出SAN回归通过；新开销独立测量，E52为修复前阶段，不代表所有同UID进程隔离。
+
+> E52（2026-11-01）：test.run默认macOS文件／网络隔离，详见[D-EXEC](design/test-sandbox-v1.md)。准备／执行／清理仍由父进程驱动，不改变Native KV所有权。14K、Stream、工具输出SAN回归通过；超时回执逐次用实际token／fresh-greedy核对，确定性Stream夹具显式选CLT，生产命令未替换。开销数据独立于历史推理收益。
+
+> E50（2026-11-01）新增CLI单行编辑、默认最小测试环境与可选HTTP本地文本辅助，见[工具契约](basic-agent.md)和[D-HYBRID](design/hybrid-v1.md)。Native14K／Stream／工具输出兼容回归已重跑；本地辅助没有接共享Native KV，也未证明端云任务质量／提速。
+
 > 本文件维护当前 D-CHAT。E21已实现借用engine的串行工具窗，E29已在同Native会话接真实test.run输出；通用交接／多消费者仍待实现，见 [D-PREP](design/prewarm-v1.md)。独立Stream仍独占worker，不可直接叠接。全部契约见 [设计入口](design/README.md)。
 
 > 测试与能力探测统一见 [成果汇总](benchmarks/README.zh-CN.md#正确性能力与未验证项)（E04），实现正确性与真实模型自主任务结果分开统计。

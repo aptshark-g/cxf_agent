@@ -45,7 +45,7 @@ def main():
     src = sorted((ROOT / "src").glob("*.c"))
     test_src = [ROOT / "tests" / name for name in [
         "agent_types.gen.c", "agent_caps.c", "agent_caps.gen.c", "agent_fs.c", "agent_fs.gen.c",
-        "agent_net.c", "agent.c", "agent_http.c", "agent_llm.c", "test_llama_context.c"]]
+        "agent_net.c", "agent.c", "agent_http.c", "agent_llm.c", "agent_policy.c", "agent_sandbox.c", "test_llama_context.c"]]
     command = ["cc", "-std=c11", "-O1" if args.sanitize else "-O2", "-g", "-Wall", "-Wextra", "-Wpedantic",
                "-I" + str(ROOT / "include"), "-I" + str(ROOT / "tests"),
                "-I" + str(args.sdk / "include"), "-I" + str(args.sdk / "ggml/include")]

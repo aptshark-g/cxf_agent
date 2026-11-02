@@ -58,6 +58,9 @@ class Fixture:
 def env_for(url, model="model-a"):
     env = os.environ.copy()
     env["CXF_LLM_URL"] = url
+    env["CXF_MODEL_SCOPE"] = "local"
+    env["CXF_NET_SCOPE"] = "local"
+    env["CXF_CLOUD_EGRESS"] = "deny"
     env["CXF_LLM_MODEL"] = model
     env.pop("CXF_LLM_KEY", None)
     env.pop("CXF_LLM_SYSTEM", None)
@@ -70,7 +73,7 @@ def run(args, stdin, env):
         config = Path(td) / "empty.json"
         config.write_text("{}\n")
         proc = subprocess.run(
-            [str(BIN), "--config", str(config), *args],
+            [str(BIN), "--test-write", str(Path(args[args.index("--root")+1])) if "--root" in args else str(ROOT), "--config", str(config), *args],
             input=stdin, text=True, capture_output=True,
             cwd=ROOT, env=env, timeout=20, check=False,
         )

@@ -1,6 +1,6 @@
 # 推理适配设计入口
 
-更新：2026-10-31。这里规定每个主题的契约位置与实现状态。当前功能看 [适配清单](../adaptation-status.md)，实测看 [成果报告](../benchmarks/README.zh-CN.md)，历史变化看 [CHANGELOG](../benchmarks/CHANGELOG.md)。
+更新：2026-11-02。这里规定每个主题的契约位置与实现状态。当前功能看 [适配清单](../adaptation-status.md)，实测看 [成果报告](../benchmarks/README.zh-CN.md)，历史变化看 [CHANGELOG](../benchmarks/CHANGELOG.md)。
 
 ## 契约登记
 
@@ -12,8 +12,12 @@
 | D-STREAM | [Stream v1](stream-v1.md) | 从实现与阶段记录补齐的当前契约 | 已实现API／回放；E11/E28独立Stream真实进程常驻输入；tools仍为空。E29另在Native/test.run接线，未接云SSE |
 | D-PREP | [提前意图与按需预热 v1](prewarm-v1.md) | 部分实现；通用协调接口仍为草案 | E21–E26工具窗／资源诊断；E27常驻多轮、E28真实进程新输入；E29§25真实CLI工具输出接线／515记录；E30§26首次观察窗；E31/E32§27同负载隔离与增长策略；E33–E35§28 producer/EOF/worker归因、可选macOS退出事件及竞态重试；E36/E37§29同负载CPU/decode隔离和可选按需消费者（未证明延迟改善）；E38/E39§30 decode/sync、Mach调度归因与可选prefill内部合并同步；E40/E41四状态模型CPU竞争源控制；E42–E44§31 GPU／driver／通知分解及可选有限尾批合并；E45/E46§32持续尾延迟、旋转容量512/640/1024控制；E47–E49§33同负载线程／分词、固定shape内存压力及1536量子失败试验，不主动逐出；均单owner。通用意图、ADOPT、容量、公平性及异步冷启动待实现 |
 | D-COST | [本机耗时估算 v1](cost-estimator-v1.md) | 当前独立契约／已实现 | E13–E17基础／形状；E18未完成记录、E19冻结coverage／残差对照；E20可选Kalman／EWMA回放；E21工具窗另用简单耗时EWMA，复杂成本API仍独立 |
+| D-SPEC | [只读工具自预测 v1](self-speculation-v1.md) | 当前实验契约；默认关闭 | E58：fs.read 同模型分叉探针／提前读取／精确采纳与回退；24无模型及8 Native验收（含2注入流程）；未接默认CLI，目标机器命中率／性能待测 |
 | D-MEM | `docs/context-memory-audit.md`：表示与测量口径 | 审计／优化阶段记录 | 已有 E07–09；不能作全链路单份内存承诺 |
-| D-TOOLS | `docs/basic-agent.md`：基础工具权限与执行闭环 | 当前工具契约 + 历史阶段范围 | 执行链通过；模型能力失败另列 E04/E12 |
+| D-TOOLS | `docs/basic-agent.md`：基础工具权限与执行闭环 | 当前工具契约 + 历史阶段范围 | 执行链通过；E50增补单行编辑／最小环境，E51统一数据准入，E52初版／E53宿主环境保护／E55显式工具链绑定；模型能力失败另列 E04/E12 |
+| D-HYBRID | [端云协同基础 v1](hybrid-v1.md) | 当前基础契约；E50功能验收通过 | 主提供者调用回环文本辅助，独立配置／配额／权限；真实端云质量／自动路由／云 SSE／跨模型 KV 待做 |
+| D-DATA | [敏感文件与外发策略 v1](data-policy-v1.md) | 当前契约；E51功能验收通过 | 445项策略检查、12组HTTP安全套件；默认拒绝云外发，不替代OS沙箱 |
+| D-EXEC | [test.run进程隔离v1](test-sandbox-v1.md) | 当前契约；E56/E57 C++归因与可选配方验收 | 默认文件／网络隔离与cxf宿主环境保护；561项C、15组OS套件；E52/E53各230条历史开销，E54缓存／IPC归因与E55显式同Xcode绑定新任务；E56固定target头文件归因、E57显式私有PCH；分组候选未启用。仅macOS，其他平台失败关闭 |
 | D-OLD-CONC | `docs/concurrency-snapshot-experiment.md`：通用并发快照试验 | 未运行草案，不是上述模块的隐含依赖 | 未实现、无性能数据 |
 
 完整仓库中的旧契约以上表代码路径为入口；离线展示包只携带已明确加入白名单的设计、状态与成果文件。未把旧文档整份复制进发布包。

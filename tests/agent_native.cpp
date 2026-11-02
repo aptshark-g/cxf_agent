@@ -17,6 +17,7 @@ extern "C" {
 struct AgentNative {
     cxf_llama *engine = nullptr;
     bool owns_engine = true;
+    const AgentPolicy *policy = nullptr;
     cxf_llama_session session = {};
     common_chat_templates_ptr templates;
     common_chat_parser_params parser;
@@ -25,6 +26,7 @@ struct AgentNative {
     unsigned char tools_hash[32] = {};
     AgentNativeStats stats = {};
     uint32_t context = 0, max_generate = 0;
+    bool cache_thinking = false;
     bool prepared = false;
     bool cache_enabled = true, cache_ready = false;
     bool output_pending=false;
@@ -142,11 +144,11 @@ static void append_output(const jinja::value &v,std::string &out) {
 std::string agent_native_flatten_values(const jinja::value &v,size_t limit) {
     std::string out;out.reserve(output_length(v,limit));append_output(v,out);return out;
 }
-std::string agent_native_render_values(const common_chat_template &tmpl,jinja::value_array messages,common_json tools) {
+std::string agent_native_render_values(const common_chat_template &tmpl,jinja::value_array messages,common_json tools,bool thinking) {
     jinja::context ctx(tmpl.source());
     common_json meta;
     meta["bos_token"]=tmpl.bos_token();meta["eos_token"]=tmpl.eos_token();
-    meta["enable_thinking"]=false;meta["add_generation_prompt"]=true;
+    meta["enable_thinking"]=thinking;meta["add_generation_prompt"]=true;
     if(!tools.empty())meta["tools"]=std::move(tools);
     jinja::global_from_json(ctx,meta,true); // preserve upstream input provenance, including tool metadata
     meta=common_json();
@@ -241,10 +243,12 @@ extern "C" cxf_result agent_native_tool_output_begin(AgentNative *p){
 }
 extern "C" cxf_result agent_native_tool_output_tokenize(AgentNative *p,const char *text,uint32_t n){
     if(!p||!p->output_pending||n>4096||(n&&!text))return CXF_ERR_RANGE;
+    if(!agent_policy_text(p->policy,text,n))return CXF_ERR_RANGE;
     try{auto t=tick();std::string suffix=p->output_prefix;suffix.append(text?text:"",n);auto tokens=tokenize(p,suffix.data(),suffix.size());p->stats.output_tokenized+=tokens.size();p->stats.output_front_ns+=tick()-t;p->stats.output_updates++;return CXF_OK;}catch(...){return CXF_ERR_FORMAT;}
 }
 extern "C" cxf_result agent_native_tool_output_update(AgentNative *p,const char *text,uint32_t n){
     if(!p||(n&&!text)||n>4096)return CXF_ERR_RANGE;if(!p->output_pending)return CXF_ERR_BAD_HANDLE;
+    if(!agent_policy_text(p->policy,text,n))return CXF_ERR_RANGE;
     try{
         // Validate complete UTF8 without assuming stdout read boundaries are BPE boundaries.
         if(!agent_native_input_utf8(text?text:"",n))return CXF_ERR_FORMAT;
@@ -273,8 +277,14 @@ extern "C" void agent_native_template_cache(AgentNative *p, bool enabled) {
 
 extern "C" cxf_result agent_native_prepare(AgentNative *p, const AgentLlmCfg *cfg,
                                              const char *log, uint32_t len) {
+    return agent_native_prepare_thinking(p,cfg,log,len,false);
+}
+extern "C" cxf_result agent_native_prepare_thinking(AgentNative *p,const AgentLlmCfg *cfg,
+                                                  const char *log,uint32_t len,bool thinking) {
     if (p) p->prepared = false;
     if (!p || !cfg || (len && !log)) return CXF_ERR_RANGE;
+    if (!agent_policy_text(cfg->policy,log,len) || !agent_policy_text(cfg->policy,cfg->system,(uint32_t)std::strlen(cfg->system))) return CXF_ERR_RANGE;
+    p->policy=cfg->policy;
     if (len > MAX_RENDER || cfg->tools_len > MAX_RENDER) return CXF_ERR_FULL;
     if (!cfg->model[0]) return CXF_ERR_FULL;
     if (!log) log = "";
@@ -302,12 +312,12 @@ extern "C" cxf_result agent_native_prepare(AgentNative *p, const AgentLlmCfg *cf
             if (cfg->tools && cfg->tools_len)
                 input.tools=common_chat_tools_parse_oaicompat(common_json::parse(std::string(cfg->tools,cfg->tools_len)));
         }
-        input.enable_thinking = false;
+        input.enable_thinking = thinking;
         input.reasoning_format = COMMON_REASONING_FORMAT_DEEPSEEK;
         auto normalized_tools = common_chat_tools_to_json_oaicompat(input.tools);
         auto tools_text = normalized_tools.dump(); unsigned char tools_hash[32];
         digest(tools_text.data(), tools_text.size(), tools_hash);
-        bool cached = p->fast_template && p->cache_enabled && p->cache_ready &&
+        bool cached = p->fast_template && p->cache_enabled && p->cache_ready && p->cache_thinking==thinking &&
                       !std::memcmp(tools_hash, p->tools_hash, sizeof tools_hash);
         common_chat_params rendered;
         if (cached) {
@@ -320,7 +330,7 @@ extern "C" cxf_result agent_native_prepare(AgentNative *p, const AgentLlmCfg *cf
                 audit_payload=payload;
 #endif
                 CONTEXT_AUDIT("jinja_values",audit_payload,0,0);
-                rendered.prompt=agent_native_render_values(*p->fast_template,std::move(messages),std::move(normalized_tools));
+                rendered.prompt=agent_native_render_values(*p->fast_template,std::move(messages),std::move(normalized_tools),thinking);
             } else {
             autoparser::generation_params params;
 #ifdef CXF_CONTEXT_AUDIT
@@ -345,7 +355,7 @@ extern "C" cxf_result agent_native_prepare(AgentNative *p, const AgentLlmCfg *cf
 #endif
             }
             params.tools = std::move(normalized_tools);
-            params.enable_thinking = false;
+            params.enable_thinking = thinking;
             params.reasoning_format = COMMON_REASONING_FORMAT_DEEPSEEK;
             params.parallel_tool_calls = false; params.add_generation_prompt = true;
             if (compact_temporaries(p)) input.messages.clear();
@@ -378,7 +388,7 @@ extern "C" cxf_result agent_native_prepare(AgentNative *p, const AgentLlmCfg *cf
         if (rendered.prompt.size() > MAX_RENDER) return CXF_ERR_FULL;
         size_t boundary = rendered.prompt.rfind(HEADER);
         if (boundary == std::string::npos || rendered.prompt.substr(boundary) !=
-            HEADER + "<think>\n\n</think>\n\n") return CXF_ERR_DEP;
+            HEADER + (thinking ? "" : "<think>\n\n</think>\n\n")) return CXF_ERR_DEP;
         uint32_t keep = p->stats.checkpoint_tokens, offset = p->stats.checkpoint_bytes;
         unsigned char hash[32];
         bool reuse = offset && offset <= boundary;
@@ -428,6 +438,7 @@ extern "C" cxf_result agent_native_prepare(AgentNative *p, const AgentLlmCfg *cf
         digest(rendered.prompt.data(), boundary, p->prefix_hash);
         if (!cached) {
             p->parser = std::move(parser);
+            p->cache_thinking = thinking;
             std::memcpy(p->tools_hash, tools_hash, sizeof tools_hash); p->cache_ready = true;
         }
         p->stats.commit_ns += tick() - stage;
@@ -446,6 +457,7 @@ extern "C" cxf_result agent_native_actions(AgentNative *p, const char *text, uin
                                              char *out, uint32_t cap, uint32_t *written) {
     if (written) *written = 0;
     if (!p || !p->prepared || !text || !out || !written) return CXF_ERR_RANGE;
+    if(!agent_policy_text(p->policy,text,n))return CXF_ERR_RANGE;
     try {
         auto message = common_chat_parse(std::string(text, n), false, p->parser);
         /* Upstream parses leniently. Never turn an unfinished tool envelope
@@ -463,6 +475,9 @@ extern "C" cxf_result agent_native_actions(AgentNative *p, const char *text, uin
         uint32_t count;
         if (cap <= AGENT_ACT_HEADROOM + 8) return CXF_ERR_FULL;
         cxf_result rc = agent_llm_actions_from_response(json.data(), (uint32_t)json.size(), out, cap, written, &count);
+        if(rc==CXF_OK&&!agent_policy_text(p->policy,out,*written)) {
+            std::memset(out,0,*written);*written=0;return CXF_ERR_RANGE;
+        }
         return rc == CXF_OK && !*written ? CXF_ERR_FORMAT : rc;
     } catch (const std::bad_alloc &) { return CXF_ERR_NOMEM;
     } catch (...) { return CXF_ERR_FORMAT; }

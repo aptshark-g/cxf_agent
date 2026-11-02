@@ -585,6 +585,20 @@ uint32_t agent_llm_render_tools(const AgentToolSpec *specs, uint32_t n,
     return b.w;
 }
 
+/* Stateless data request: never interpret user bytes as transcript records. */
+uint32_t agent_llm_build_text_request(const AgentLlmCfg *c, const char *text,
+                                     uint32_t len, char *out, uint32_t cap) {
+    if (!c || !c->model[0] || (!text && len)) return 0;
+    WBuf b = {out, out ? cap : 0, 0};
+    wb_str(&b, "{\"model\":\""); wb_json(&b, c->model, (uint32_t)strlen(c->model));
+    wb_str(&b, "\",\"messages\":[{\"role\":\"system\",\"content\":\"");
+    wb_json(&b, c->system, (uint32_t)strlen(c->system));
+    wb_str(&b, "\"},{\"role\":\"user\",\"content\":\""); wb_json(&b, text, len);
+    wb_str(&b, "\"}],\"temperature\":0,\"max_tokens\":256}");
+    if (b.w < b.cap) out[b.w] = 0;
+    return b.w;
+}
+
 /* ---- 响应解析 ---- */
 
 typedef struct JCur {
@@ -1131,6 +1145,47 @@ cxf_result agent_llm_action_from_response(const char *json, uint32_t len,
     return CXF_OK;
 }
 
+/* The auxiliary data channel rejects tool/control responses. */
+static cxf_result parse_text_only(const char *json, uint32_t len,
+                                  char *out, uint32_t cap, uint32_t *written) {
+    JCur root = {json, json + len}, choice, message, value;
+    JCur complete = root;
+    j_ws(&complete);
+    if (complete.p == complete.e || *complete.p != '{' || !j_val_skip(&complete)) return CXF_ERR_FORMAT;
+    j_ws(&complete);
+    if (complete.p != complete.e) return CXF_ERR_FORMAT;
+    if (!j_obj_key(&root, "choices", 7)) return CXF_ERR_FORMAT;
+    choice = root;
+    if (!j_arr_at(&choice, 0)) return CXF_ERR_FORMAT;
+    value = choice;
+    if (j_obj_key(&value, "finish_reason", 13)) {
+        char reason[16]; uint32_t n = 0;
+        if (j_str_copy(&value, reason, sizeof reason, &n) != 1 || n != 4 || memcmp(reason, "stop", 4))
+            return CXF_ERR_FORMAT;
+    }
+    message = choice;
+    if (!j_obj_key(&message, "message", 7)) return CXF_ERR_FORMAT;
+    value = message;
+    char role[16]; uint32_t role_size = 0;
+    if (!j_obj_key(&value, "role", 4) || j_str_copy(&value, role, sizeof role, &role_size) != 1 ||
+        role_size != 9 || memcmp(role, "assistant", 9)) return CXF_ERR_FORMAT;
+    value = message;
+    if (j_obj_key(&value, "tool_calls", 10) || j_obj_key(&message, "function_call", 13)) return CXF_ERR_FORMAT;
+    cxf_result rc = agent_llm_parse_response(json, len, out, cap, written);
+    if (rc == CXF_OK && (!*written || memchr(out, 0, *written))) return CXF_ERR_FORMAT;
+    return rc;
+}
+
+static cxf_result classify_visit(void *ctx,const AgentConvoView *v){
+    if(v->kind!=AGENT_CONVO_USER)*(uint32_t *)ctx=AGENT_DATA_WORKSPACE;
+    return CXF_OK;
+}
+uint32_t agent_llm_data_class(const char *text,uint32_t n){
+    uint32_t kind=AGENT_DATA_TASK;
+    if(agent_llm_visit_conversation(text,n,classify_visit,&kind)!=CXF_OK)return AGENT_DATA_WORKSPACE;
+    return kind;
+}
+
 /* ---- 组装 ---- */
 
 /*
@@ -1152,7 +1207,7 @@ static cxf_result chat_do(AgentLlmCfg *c,
                           const char *prompt, uint32_t prompt_len,
                           char *scratch, uint32_t scratch_cap,
                           char *out, uint32_t out_cap, uint32_t *out_len,
-                          bool as_action, uint16_t *status_out) {
+                          unsigned mode, uint16_t *status_out) {
     AgentHttpReq req;
     AgentHttpResp resp;
     char body[AGENT_LLM_REQ_CAP];
@@ -1163,12 +1218,19 @@ static cxf_result chat_do(AgentLlmCfg *c,
     if (c == NULL || scratch == NULL || out == NULL || out_len == NULL)
         return CXF_ERR_RANGE;
 
-    need = agent_llm_build_request(c, prompt, prompt_len, body, (uint32_t)sizeof(body));
+    uint32_t kind = mode==2 ? AGENT_DATA_TASK : agent_llm_data_class(prompt,prompt_len);
+    if (!agent_policy_egress(c->policy,c->scope,kind,prompt,prompt_len) ||
+        !agent_policy_text(c->policy,c->system,(uint32_t)strlen(c->system))) return CXF_ERR_RANGE;
+    if(c->scope!=AGENT_SCOPE_LOCAL && c->policy && c->policy->cloud_egress==AGENT_EGRESS_TASK && c->tools_len)
+        return CXF_ERR_RANGE;
+    need = mode == 2 ? agent_llm_build_text_request(c, prompt, prompt_len, body, sizeof body)
+                     : agent_llm_build_request(c, prompt, prompt_len, body, sizeof body);
     if (need == 0) return CXF_ERR_RANGE;
     /* 超上限不静默截断：截断的请求会让模型答非所问，而那看起来像模型的问题。 */
     if (need >= (uint32_t)sizeof(body)) return CXF_ERR_FULL;
 
     memset(&req, 0, sizeof(req));
+    req.policy = c->policy; req.scope = c->scope; req.data_class = kind;
     req.host     = c->host;
     req.port     = c->port;
     req.path     = c->path;
@@ -1191,7 +1253,11 @@ static cxf_result chat_do(AgentLlmCfg *c,
        就是上面那行 `*status_out`。两者不矛盾：**话术归人看，状态码归机器判**。 */
     if (resp.status < 200 || resp.status >= 300) return CXF_ERR_FORMAT;
 
-    if (as_action)
+    if (mode == 2) {
+        if (resp.truncated) return CXF_ERR_RANGE;
+        return parse_text_only(resp.body, resp.body_len, out, out_cap, out_len);
+    }
+    if (mode == 1)
         return agent_llm_actions_from_response(resp.body, resp.body_len,
                                                out, out_cap, out_len, &ncall);
     return agent_llm_parse_response(resp.body, resp.body_len, out, out_cap, out_len);
@@ -1202,10 +1268,13 @@ static cxf_result chat_impl(AgentLlmCfg *c,
                             const char *prompt, uint32_t prompt_len,
                             char *scratch, uint32_t scratch_cap,
                             char *out, uint32_t out_cap, uint32_t *out_len,
-                            bool as_action) {
+                            unsigned mode) {
     uint16_t status = 0u;
     cxf_result rc = chat_do(c, prompt, prompt_len, scratch, scratch_cap,
-                            out, out_cap, out_len, as_action, &status);
+                            out, out_cap, out_len, mode, &status);
+    if (rc==CXF_OK && c && out_len && !agent_policy_text(c->policy,out,*out_len)) {
+        memset(out,0,*out_len);*out_len=0;rc=CXF_ERR_RANGE;
+    }
     if (c != NULL) {
         c->last_status = status;
         c->last_rc     = (int16_t)rc;
@@ -1227,4 +1296,11 @@ cxf_result agent_llm_chat_action(AgentLlmCfg *c,
                                  char *out, uint32_t out_cap, uint32_t *out_len) {
     return chat_impl(c, prompt, prompt_len, scratch, scratch_cap,
                      out, out_cap, out_len, true);
+}
+
+cxf_result agent_llm_chat_text(AgentLlmCfg *c, const char *text, uint32_t len,
+                                char *scratch, uint32_t scratch_cap,
+                                char *out, uint32_t cap, uint32_t *written) {
+    if (written) *written = 0;
+    return chat_impl(c, text, len, scratch, scratch_cap, out, cap, written, 2);
 }

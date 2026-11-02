@@ -1,5 +1,16 @@
 # 适配与测试成果维护规则
 
+当前E58：59证据／36,664主记录／41图。只增加自预测功能证据和异机交接，不增加正式性能样本；24状态／安全和8Native验收（含2注入流程）与模型质量分开。旧58份证据、41组图不改。目标机器数据须新编号，保留全部失败／负对和明确分母；不能将本机sanitizer或脚本命中计作性能／模型能力。
+
+当前E56/E57：58份证据、36,664主记录、41组图，旧56份及40组图原字节保留。旧target混杂、缓存冷负结果、分组候选失败与中止预热分别登记；新配方不得升级成默认agent／推理收益。源码及数据用sandbox-cpp后缀新包，当前不推送。
+
+E54/E55历史快照：56份证据、36,214条主记录、40组图；70条直接API记录另列。旧54份证据与39组图保持原字节。系统服务拒绝日志不是精确syscall时间，缺失栈与失败候选必须保留；显式工具链绑定的构建收益不能合并到推理成绩。使用sandbox-cc-final后缀的新包，当前不推送。
+
+E53历史快照为宿主环境保护与OS边界验收：54份证据、35,980条主记录、39组图。E52属于修复前阶段；仅收窄Seatbelt sysctl规则仍会暴露父环境。当前只保护并验证cxf自身启动环境，不保证其他同UID进程或argv。新增230条开销记录与失败事实分别归档；旧53份证据和38组图保持原字节，最终图使用独立renderer／provenance。test-sandbox-host后缀保留为该阶段旧包，当前新包见上文。
+
+
+系统权限层单独由[D-EXEC](../design/test-sandbox-v1.md)维护，D-DATA不平行重写OS规则。安全验收、预期拒绝、失败候选、开销和模型兼容分别登记；开销为开启−关闭，正值表示变慢，不跨阶段叠加。E52当时为53份证据／35,750条主记录／38组图，保持为历史快照。
+
 用户要求后续新增或修改持续反映到文档和展示数据。当前适配看 [现状清单](../adaptation-status.md)，按阶段的变更看 [CHANGELOG](CHANGELOG.md)，测量定义看 [METHODOLOGY](METHODOLOGY.md)。根目录 `AGENTS.md` 将这条要求作为后续工作的入口。
 
 设计先从 [契约登记](../design/README.md) 进入：每个主题只维护一份当前详细契约，待实现设计与已验收运行时分开。迁移时保留旧锚点和替代链接，阶段记录不再追加规范；不为每轮对话新建版本。新预热用 D-PREP，当前 KV/Stream 用 D-KV/D-STREAM。
@@ -39,7 +50,7 @@ python3 tools/render_benchmark_figures.py
 # 文档／清单／证据有变化：更新派生文件与发布哈希
 python3 tools/build_benchmark_report.py
 python3 tools/build_benchmark_report.py --check
-python3 tools/build_benchmark_report.py --check --export build/cxf-benchmark-results-20261031-contention-isolation.zip
+python3 tools/build_benchmark_report.py --check --export build/cxf-benchmark-results-20261101-test-sandbox-host.zip
 ```
 
 渲染器改变或图表引用的 evidence 改变时，check 会拒绝旧 provenance；报告、CSV、发布文件哈希或包内链接／标题锚点过期时也会拒绝。当前检查覆盖归档统计与数据包，无法自动证明所有实现说明仍正确；实现状态仍需逐项核对源码与测试。
@@ -49,3 +60,6 @@ python3 tools/build_benchmark_report.py --check --export build/cxf-benchmark-res
 ## 首次 GitHub 源码发布检查（2026-11-01）
 
 成果包检查之外，源码还需按[发布指南](../RELEASING.md)运行 `tools/prepare_github_release.py`。该工具校验源码白名单、Git 可见范围、常见凭据／私人地址／本机路径、链接和逐文件哈希；`--export` 只写新包、不修改 Git。先重建成果清单，再重建源码清单。干净解压目录运行基础工具回归、`tests/test_release_guard.py` 和两份清单检查。新文档／源码会使源码清单过期；旧证据不能为配合清单而改写。
+
+
+E51将安全功能验收单列：合成秘密与本地HTTP桩，不将预期拒绝计作模型能力或性能；记录被阻断数据在下一轮上下文、trace／预览和接收端均不可见。E51当时共52份证据，旧51份及37图保留原字节；数据策略唯一契约为[D-DATA](../design/data-policy-v1.md)。

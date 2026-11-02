@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "snapshot": "2026-10-31",
+  "snapshot": "2026-11-02",
   "experiments": [
     {
       "id": "E01",
@@ -1341,6 +1341,224 @@
         "Old217ms bare has no per-kernel/GPU trace; new controls cannot retrospectively assign its cause.",
         "M5 public counters only stage timestamps, no dispatch boundary or bandwidth counters; no full-device/preemption/frequency attribution.",
         "All large outliers, thread/token controls and regressions retained; controlled pressure is separate E48, not injected into CLI performance."
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E50",
+      "title": "Guarded editing, clean test environment and local text helper",
+      "evidence_level": "functional",
+      "file": "docs/evidence/agent-foundation-20261101.json",
+      "sha256": "29074de066b1ed153cc5ad314572e382a80ebaf5ed3becadc5367651e95f134f",
+      "raw_records": 0,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {},
+      "official_run": "build/agent-foundation-20261101",
+      "scope": "E50: bounded single-line edit, clean CLI test environment and primary-to-loopback-text-helper-to-primary execution; scripted choices, real files/processes/HTTP; no performance result",
+      "limits": [
+        "Scripted HTTP/tool choices are execution acceptance, not autonomous task or summary quality",
+        "No real cloud calls, direct HTTPS transport, cloud SSE, automatic routing, native Windows/CUDA or cross-model KV reuse",
+        "Local text helper uses a separate loopback HTTP provider, not the primary Native session; provider may have its own state",
+        "Minimal child environment is not an OS sandbox or universal sensitive-file policy; inherited environment requires explicit CLI choice",
+        "Single-line edit detects external changes best-effort, not atomic file CAS; old writer/grep paths are not all migrated to directory descriptors",
+        "Existing native harness compiler warnings are retained separately; prebuilt llama/ggml libraries are outside sanitizer coverage",
+        "Old performance evidence and37 figures remain historical measured revisions; no current-version speedup/memory improvement measured"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E51",
+      "title": "Unified protected files and default-deny cloud data egress",
+      "evidence_level": "functional",
+      "file": "docs/evidence/agent-data-policy-20261101.json",
+      "sha256": "9c112bf88eaf76683b62268e11aa9b53a3763b046479af5652a4e235784c436e",
+      "raw_records": 0,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {},
+      "official_run": "build/agent-data-policy-20261101",
+      "scope": "E51: uniform protected files, credential admission and default-deny cloud egress; synthetic secrets and scripted providers with real files/processes/HTTP; no performance result",
+      "limits": [
+        "No universal DLP: unknown secrets, arbitrary encoding/splitting and semantic sensitivity may escape; common patterns can cause false positives",
+        "test.run is a launcher-bound command with launcher file/network rights, not an OS sandbox; result checks do not roll back command side effects",
+        "Local scope is a trusted deployment declaration; a loopback proxy route is not attested",
+        "No real cloud request, direct HTTPS, automatic routing, cloud SSE, Windows/CUDA acceptance or cross-model/shared-helper KV claim",
+        "Same-user hostile directory moves, atomic file CAS, disk/RAM/KV physical zeroing and all OS system calls are outside this boundary",
+        "Native partial streaming may prefill a fragment before a later cumulative check rejects it; existing abort/canonical rebuild prevents unchecked generation, not physical memory erasure",
+        "Precompiled upstream libraries are outside SAN coverage; six pre-existing native harness warnings retained",
+        "No current-version security-scan timing, peak RSS, KV reduction or inference speed improvement measured; previous51 evidence and37 figure pairs unchanged"
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E52",
+      "title": "OS test.run file/network isolation and matched overhead",
+      "evidence_level": "raw",
+      "file": "docs/evidence/test-sandbox-20261101.json",
+      "sha256": "1193523bd235a8bc6e0b72a5846ed9ed3841a5841bacb135ca2d4fdac2212394",
+      "raw_records": 230,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "sandbox_timing": 176,
+        "cli_timing": 54
+      },
+      "official_run": "build/test-sandbox-overhead-final-20261101",
+      "scope": "E52: macOS test.run OS file/network isolation, synthetic-secret functional acceptance and current-version matched off/on overhead; no model inference or cloud in timing",
+      "limits": [
+        "Only this macOS Seatbelt backend/OS is accepted; deprecated system mechanism. Linux/Windows backends pending and default commands fail closed there.",
+        "Explicit isolation off removes OS file/network boundaries. Network allow is broad, not per-host policy. No loopback-only promise or real cloud/network quality test.",
+        "Known credentials/pattern admission still follows D-DATA; not arbitrary-secret DLP, VM isolation, hostile same-user race protection or resource-usage containment.",
+        "Metadata reads are globally allowed except protected paths; content reads remain bounded. Trusted OS/selected standard toolchain directories are read-only grants.",
+        "Standard Xcode cc has a large measured slowdown. Most paired extra time is inside command; cache/IPC causes not isolated. Explicit CLT is a separate workload, not proof of the same compiler running faster.",
+        "CLI timing includes process startup, local HTTP stubs and real tool execution; no real model decisions, inference, cloud traffic or streaming speedup claim.",
+        "Small single-machine samples, scheduling tails and negative pairs retained. Medians of phase differences must not be added together.",
+        "Private job stack capacity is shared by off/on baseline allocation, not incremental RSS. Child/system tool memory peaks and pure Seatbelt compilation time unmeasured.",
+        "Execution timeout starts after parent preparation; scan/profile work is bounded separately. Temporary cleanup failure reports io_error and does not rerun side-effecting commands.",
+        "Precompiled upstream libraries and OS programs are outside sanitizer coverage; six pre-existing native harness compiler warnings retained.",
+        "Old52 evidence files and37 figure pairs stay unchanged. E52 overhead is not added to or subtracted from older inference gains."
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true,
+      "superseded_by": "E53",
+      "post_acceptance_gap": "Parent startup environment remained visible via KERN_PROCARGS2; corrected with verified host protection in E53"
+    },
+    {
+      "id": "E53",
+      "title": "Protected host environment, narrowed system information and final overhead",
+      "evidence_level": "raw",
+      "file": "docs/evidence/test-sandbox-host-20261101.json",
+      "sha256": "5a4be8bbdae23f27b7c03b75adc15d1cbbcddc79f34005ec0b42e142594ccd56",
+      "raw_records": 230,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "sandbox_timing": 176,
+        "cli_timing": 54
+      },
+      "official_run": "build/test-sandbox-host-overhead-final-20261101",
+      "scope": "E53: final macOS test.run OS restrictions plus effective protection of cxf startup environment; repeated independent matched overhead, no model inference/cloud in timing",
+      "limits": [
+        "Only this macOS Seatbelt plus SIP/CS_RESTRICT host-verification backend is accepted; deprecated system mechanism. Linux/Windows backends pending and default commands fail closed there.",
+        "Explicit isolation off removes OS file/network boundaries. Network allow is broad, not per-host policy. No loopback-only promise or real cloud/network quality test. Other same-UID process environments and visible argv are outside the host-protection guarantee.",
+        "Known credentials/pattern admission still follows D-DATA; not arbitrary-secret DLP, VM isolation, hostile same-user race protection or resource-usage containment.",
+        "Metadata reads are globally allowed except protected paths; content reads remain bounded. Trusted OS/selected standard toolchain directories are read-only grants.",
+        "Standard Xcode cc has a large measured slowdown. Most paired extra time is inside command; cache/IPC causes not isolated. Explicit CLT is a separate workload, not proof of the same compiler running faster.",
+        "CLI timing includes process startup, local HTTP stubs and real tool execution; no real model decisions, inference, cloud traffic or streaming speedup claim.",
+        "Small single-machine samples, scheduling tails and negative pairs retained. Medians of phase differences must not be added together.",
+        "Job capacity is shared off/on; host probe transient allocation is a bound, not a measured RSS peak. Child/system tool memory peaks and pure Seatbelt compilation time unmeasured.",
+        "Execution timeout starts after parent preparation; scan/profile work is bounded separately. Temporary cleanup failure reports io_error and does not rerun side-effecting commands.",
+        "Precompiled upstream libraries and OS programs are outside sanitizer coverage; six pre-existing native harness compiler warnings retained.",
+        "Old53 evidence files and38 figure pairs stay unchanged. E53 overhead is not added to or subtracted from older inference gains."
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E54",
+      "title": "Xcode lookup-cache, launch and denied-IPC controls",
+      "evidence_level": "raw",
+      "file": "docs/evidence/sandbox-cc-diagnostic-20261101.json",
+      "sha256": "9303cec93f10b1d03de8f968d2b84f6bf66001f371424b24acc65ba37e9514fd",
+      "raw_records": 126,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "cc_diagnostic": 126
+      },
+      "official_run": "build/sandbox-cc-diagnostic-final-20261101",
+      "scope": "E54: same-Xcode cache, launch, denied-API and no-log controls; no production runtime change",
+      "limits": [
+        "No full call stacks were obtained: sample exited zero but call graph was empty. Cannot allocate the seconds among specific Xcode IPC retry/framework functions.",
+        "Mach denial microprobes use the same policy, not the full xcodebuild workload. Aggregated/duplicate OS logs are not exact syscall counts or timing.",
+        "No grant of rejected Mach services, passwd/group contents, user cache, network or broader system paths was tested or shipped.",
+        "Initial direct Clang without SDK failed; direct xcodebuild -find produced plugin errors and exceeded retained output, so its phase marker was unavailable. Development probes are not pooled into formal timing.",
+        "No model inference or historical streaming/KV performance rerun."
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E55",
+      "title": "Explicit same-Xcode/SDK binding on fresh actual CLI tasks",
+      "evidence_level": "raw",
+      "file": "docs/evidence/sandbox-cc-tasks-20261101.json",
+      "sha256": "2f014eb97077b48cdbdcc83e45ba13866c437fe1847a8ef1323aa6df2ae37778",
+      "raw_records": 108,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "cc_cli": 108
+      },
+      "official_run": "build/sandbox-cc-tasks-final-20261101",
+      "scope": "E55: explicit same-Xcode/SDK environment binding on three frozen new actual agentctl workloads; permissions unchanged, not default compiler replacement or inference optimization",
+      "limits": [
+        "Explicit binding is opt-in; zero-config standard /usr/bin shims still rebuild their private lookup cache and can regress.",
+        "Bound PATH uses the chosen bin plus fixed system paths and SDKROOT; tested only these macOS C/archive/C++ tasks. Not a proof of equivalence for arbitrary Xcode projects, iOS, alternative toolchains or software that needs extra discovery.",
+        "No universal DLP, VM isolation or protection of other unprotected same-UID process environments/argv. Linux/Windows backend remains fail-closed.",
+        "No exact decomposition of all Xcode retry/initialization time; direct API probe results are not full-workload waiting times.",
+        "No RSS or physical KV improvement measured; no new autonomous-agent quality or cloud/model speedup."
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true,
+      "later_identified_confound": "E56 found implicit deployment target26.0 outside versus10.4 inside. Compiler/SDK hashes and outputs alone did not prove equal target semantics; retain historical values, use fixed-target E56/E57 for new comparisons."
+    },
+    {
+      "id": "E56",
+      "title": "Fixed-target C++ compiler/header/cache and host coordination controls",
+      "evidence_level": "raw",
+      "file": "docs/evidence/sandbox-cpp-diagnostic-20261102.json",
+      "sha256": "22dfc0c71ba6b31c20fccc1f8d5590294c6b7e3cbc003fbf5b525f367f93c978",
+      "raw_records": 270,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "cpp_diagnostic": 270
+      },
+      "official_run": "build/sandbox-cpp-diagnostic-final-20261102",
+      "scope": "E56: fixed-target C++ compiler/header/cache/host diagnosis; default runtime unchanged",
+      "limits": [
+        "E55 bound on/off had different implicit deployment targets; its old59ms residual is a confounded historical value, not an exact equal-target cost. Original evidence/plots unchanged.",
+        "Default textual includes generated0 PCM files; cannot call their extra sys CPU a module-cache miss. Include trace counts are not exact syscall counts.",
+        "Header/preprocessed control supports file-access-related kernel cost, not exact per-function security-check timing; no kernel/per-syscall tracing or fixed-policy-relaxation experiment.",
+        "Fresh executable run walls contain large non-CPU intervals; signing, external scheduling and OS-policy timing were not separately captured. Cannot retroactively attribute each old E55 tail.",
+        "Private module/PCH/stat-cache experiments include cold build cost; cache file_bytes are logical file lengths, not RSS or physical KV.",
+        "No model inference/quality or historical streaming benchmark rerun."
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E57",
+      "title": "Fresh C++ tasks: cold private PCH and bounded-regex candidate",
+      "evidence_level": "raw",
+      "file": "docs/evidence/sandbox-cpp-tasks-20261102.json",
+      "sha256": "95f74dfd8dfd4855bacace91c491f522897fcef0c3a9a146abbf4ba7acdfcc6c",
+      "raw_records": 180,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {
+        "cpp_cli": 180
+      },
+      "official_run": "build/sandbox-cpp-tasks-final3-20261102",
+      "scope": "E57: four frozen new equal-target actual CLI tasks; cold task-private PCH and experimental bounded-regex control, default security unchanged",
+      "limits": [
+        "PCH setup may cost more for single translation units; only workload-specific measured net benefits can be claimed. New tasks do not prove arbitrary project macro/ABI equivalence.",
+        "A shared common header must be valid as an early prefix; recipe fixes C++17/O2 and requires an explicit deployment target. It is an optional build recipe, not an automatic agent tool change.",
+        "Grouped candidate has the same regex language and no new grants but may regress; its results are not pooled with PCH gains or treated as default improvement.",
+        "Default sensitive-file/network/IPC/parent-environment limitations remain E53/E55. No VM/universal DLP or Linux/Windows backend is introduced.",
+        "Small-n min/max are descriptive; no p95/p99, exact code-signing attribution, process-RSS or model-KV benefit measured."
+      ],
+      "historical_source_hashes_describe_the_measured_revision": true
+    },
+    {
+      "id": "E58",
+      "title": "Read-only same-model fork probe: functional preparation and target-machine handoff",
+      "evidence_level": "functional",
+      "file": "docs/evidence/self-speculation-20261102.json",
+      "sha256": "d838b64cea1e01920d4b6fd707e6cf6c1145503b250aef1449096d462e686060",
+      "raw_records": 0,
+      "metal_auxiliary_records": 0,
+      "record_kinds": {},
+      "official_run": "build/self-spec-handoff-check-20261102",
+      "scope": "E58: experimental single-owner same-model KV-fork probe and one bounded fs.read; exact official-call/epoch/file-version adoption, failure fallback and target-machine handoff; default agentctl unchanged; no new performance samples",
+      "limits": [
+        "No larger-model prediction-quality or speed results. The small smoke has two budget-exhausted tasks, not an accuracy estimate.",
+        "Only fs.read; no commands, writes, network, cloud, fanout or general agentctl self-prediction integration.",
+        "Single owner pauses main generation during the probe; short local reads may not amortize probe cost.",
+        "Two Native full-flow cases inject generation tokens; never count them as model predictions.",
+        "File freshness uses optimistic descriptor metadata before/after reading and policy reopen before adoption, not a transactional filesystem snapshot.",
+        "Cancelled local pread cannot be preempted; thread must drain. Network-filesystem blocking is outside the deadline guarantee.",
+        "No confidence gate, partial-token accept, automatic scheduling, cross-model KV, physical KV/RSS reduction claim, or native Windows/WSL2/CUDA acceptance.",
+        "Historical E01-E57 performance remains tied to its archived source; this code change does not relabel it."
       ],
       "historical_source_hashes_describe_the_measured_revision": true
     },

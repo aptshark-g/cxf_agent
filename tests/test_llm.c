@@ -60,6 +60,7 @@ static void cfg_fixture(AgentLlmCfg *c) {
     strcpy(c->path, "/v1/chat/completions");
     strcpy(c->model, "m1");
     c->timeout_ms = 5000;
+    c->scope = AGENT_SCOPE_LOCAL;
 }
 
 static void test_build_request(void) {

@@ -103,6 +103,7 @@ cxf_result http_post_exec(const void *ctx, const char *args, uint32_t args_len,
     pbuf[plen] = '\0';
 
     memset(&req, 0, sizeof req);
+    req.policy=cfg->policy;req.scope=cfg->scope;req.data_class=AGENT_DATA_WORKSPACE;
     req.host       = cfg->host;        /* 部署事实：模型给不了 */
     req.port       = cfg->port;
     req.path       = pbuf;
