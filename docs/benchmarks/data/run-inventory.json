@@ -18,6 +18,27 @@
       "jsonl_record_counts": {}
     },
     {
+      "directory": "build/cloud-observe-agentctl-san.dSYM",
+      "classification": "validation_or_probe",
+      "reason": "E62/E63 source qualification or synthetic correctness; no private traces/configuration content included",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/cloud-observe-paired-20261102",
+      "classification": "official",
+      "reason": "Preserved in public evidence E63",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/cloud-observe-source-20261102",
+      "classification": "validation_or_probe",
+      "reason": "E62/E63 source qualification or synthetic correctness; no private traces/configuration content included",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
       "directory": "build/context-memory-cli-20261030",
       "classification": "validation_or_probe",
       "reason": "Correctness/CLI evidence; not extra independent performance samples",
@@ -1952,6 +1973,90 @@
       "jsonl_record_counts": {
         "kv-worker.jsonl": 2,
         "tool-prepare.jsonl": 259
+      }
+    },
+    {
+      "directory": "build/versioned-edit-clean-results-20261102",
+      "classification": "validation_or_probe",
+      "reason": "E59-E61 correctness, sanitizer, connectivity or source qualification; private configuration/trace/log content excluded",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/versioned-edit-clean-source-20261102",
+      "classification": "validation_or_probe",
+      "reason": "E59-E61 correctness, sanitizer, connectivity or source qualification; private configuration/trace/log content excluded",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/versioned-edit-cloud-first-20261102",
+      "classification": "official",
+      "reason": "Preserved in public evidence E60",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/versioned-edit-cloud-probe-20261102",
+      "classification": "validation_or_probe",
+      "reason": "E59-E61 correctness, sanitizer, connectivity or source qualification; private configuration/trace/log content excluded",
+      "artifact_names": [],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/versioned-edit-cost-probe-20261102",
+      "classification": "official",
+      "reason": "Preserved in public evidence E61",
+      "artifact_names": [
+        "manifest.json",
+        "rows.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "rows.jsonl": 153
+      }
+    },
+    {
+      "directory": "build/versioned-edit-native-fork-check-20261102",
+      "classification": "validation_or_probe",
+      "reason": "E59-E61 correctness, sanitizer, connectivity or source qualification; private configuration/trace/log content excluded",
+      "artifact_names": [
+        "rows.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "rows.jsonl": 10
+      }
+    },
+    {
+      "directory": "build/versioned-edit-native-san-20261102",
+      "classification": "validation_or_probe",
+      "reason": "E59-E61 correctness, sanitizer, connectivity or source qualification; private configuration/trace/log content excluded",
+      "artifact_names": [
+        "manifest.json"
+      ],
+      "jsonl_record_counts": {}
+    },
+    {
+      "directory": "build/versioned-edit-overhead-20261102",
+      "classification": "official",
+      "reason": "Preserved in public evidence E59",
+      "artifact_names": [
+        "manifest.json",
+        "rows.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "rows.jsonl": 363
+      }
+    },
+    {
+      "directory": "build/versioned-edit-san-20261102",
+      "classification": "validation_or_probe",
+      "reason": "E59-E61 correctness, sanitizer, connectivity or source qualification; private configuration/trace/log content excluded",
+      "artifact_names": [
+        "manifest.json",
+        "rows.jsonl"
+      ],
+      "jsonl_record_counts": {
+        "rows.jsonl": 35
       }
     }
   ]

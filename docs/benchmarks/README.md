@@ -2,7 +2,9 @@
 
 [中文](README.zh-CN.md) · [Adaptation inventory](../adaptation-status.md) · [Methodology](METHODOLOGY.md) · [All metrics](data/metrics.csv) · [Raw records](data/raw-records.jsonl) · [Acceptance matrix](data/validation.csv)
 
-Snapshot: 2026-11-02. E58 adds functional read-only self-prediction and a target-machine handoff, with no new performance samples. E56/E57 audit fixed-target C++ header/cache/host costs; E53 is the host-protection baseline. Earlier performance remains measured on historical revisions. Qwen3 0.6B is the compatibility test vehicle.
+Publication: E59–E63 source/results and privacy cleanup are included in the authorized GitHub sync. Requested model deepseek-v4-flash-0731 is public; real endpoints, credentials, local configuration and private logs are excluded. Earlier no-push statements describe pre-sync stages; no new performance sampling.
+
+Snapshot: 2026-11-02. E62/E63 add real-cloud per-round usage/cache/waiting and UTF-8/prompt controls with all regressions retained. E59–E61 add versioned editing, real cloud tasks and measured tool-policy costs; no new local-engine performance samples. E56/E57 audit fixed-target C++ header/cache/host costs; E53 is the host-protection baseline. Earlier performance remains measured on historical revisions. Qwen3 0.6B is the compatibility test vehicle.
 
 The observed gains are in avoiding repeated frontend work, sharing canonical prefixes, and overlapping local work with input arrival. They are workload-dependent. Whole-process memory, autonomous coding quality, and Windows/CUDA performance have not been shown to improve.
 
@@ -13,6 +15,71 @@ An experimental host now forks the actual evaluated prefix in the same KV pool, 
 24 model-free security/state cases and8 Native cases (six KV/template and two injected flows) pass under ASan/UBSan; the existing14,357-token Native regression also passes. Initial JSON-stream compilation, thinking-header guard and outer-sandbox Metal/loopback failures are retained separately. No new performance rows or charts: larger-model hit rate, complete-task gains and WSL2/CUDA acceptance await the target machine. Existing58 evidence files and41 figure pairs are unchanged.
 
 [Contract](../design/self-speculation-v1.md), [target-machine handoff](../self-speculation-handoff.md) and [functional evidence](../evidence/self-speculation-20261102.json). The runner preserves all warmups, failed tasks, output-mismatch pairs and regressions, reports explicit rate denominators, probe cost and all-task versus complete/equal-task timings separately.0.6B compatibility does not establish self-prediction quality.
+
+## E62/E63 — Cloud UTF-8 requests, usage and separated waiting
+
+Default read-only prompts no longer contain full-file writing guidance; create/write deployments retain it. The trusted test relay now sends compact UTF-8 JSON; C already emitted UTF-8.The requested model is deepseek-v4-flash-0731.20 real read-only CLI tasks produce50 successful API rounds, with identical requested tool sequences and unchanged source files.48 valid capability combinations and16 existing mutually exclusive combinations,16 mocked forwarding/error paths and real traced tools pass under normal and ASan/UBSan CLI builds; the full default regression passes.
+
+| Paired task (after-before) | Extra task ms [min,max] | Extra API wait ms [min,max] | After slower | Upstream bytes/task before -> after |
+| --- | --- | --- | --- | --- |
+| direct | 12.707 [-126.151,65.581] | 15.254 [-126.597,63.927] | 2/4 | 5533 → 4167 |
+| listed | 46.684 [-12592.580,750.230] | 38.488 [-12593.063,758.810] | 2/4 | 8663 → 6530 |
+
+![Cloud request measurements](figures/cloud-request.png)
+
+One warmup plus four evaluated pairs per task, reversing order per block. Every matched round reports18 fewer prompt tokens after scoped prompt cleanup. Encoding-only replay parses to exactly the same JSON object and does not establish token savings. All8 evaluation pairs remain:4 are slower after. No stable end-to-end acceleration. The large listed-before block1 includes8.531s and7.709s upstream waits; local relay work stays below1ms for each. Network versus provider queue/compute remains unresolved. Generated outputs and completion token counts vary despite temperature=0.
+
+| Evaluation workload | API wait/task median ms | C tool exec/policy median ms | Relay local/task median ms | C protocol/loopback residual median ms | Prompt/output tokens summed | Reported cached / prompt |
+| --- | --- | --- | --- | --- | --- | --- |
+| direct/before | 3555.803 | 0.100 / 0.014 | 0.566 | 1.549 | 5792 / 629 | 3584 / 5792 (61.9%) |
+| direct/after | 3508.650 | 0.101 / 0.015 | 0.833 | 1.888 | 5648 / 541 | 2048 / 5648 (36.3%) |
+| listed/before | 5369.011 | 0.469 / 0.020 | 1.041 | 2.525 | 8964 / 882 | 1536 / 8964 (17.1%) |
+| listed/after | 5390.058 | 0.399 / 0.018 | 0.798 | 2.146 | 8748 / 880 | 1792 / 8748 (20.5%) |
+
+All50 rounds return prompt/completion/total tokens and prompt_tokens_details.cached_tokens, without usage inconsistencies. Dedicated prompt_cache_hit_tokens and prompt_cache_miss_tokens are absent in all50 rounds and remain null. Reported cache fractions vary by workload/mode; no cache-hit improvement is established. Remote caches cannot be cleared/forced cold by this runner. Gateway alias does not verify backend weights or cache implementation.
+
+| Prompt | Serializer | First-request body bytes | Serialize us/op median [min,max] |
+| --- | --- | --- | --- |
+| before | ascii_spaced | 2513 | 7.066 [7.001,7.297] |
+| before | ascii_compact | 2431 | 7.604 [7.487,7.675] |
+| before | utf8_compact | 1921 | 8.388 [8.245,8.607] |
+| after | ascii_spaced | 2357 | 7.156 [7.047,7.415] |
+| after | ascii_compact | 2275 | 7.131 [7.084,7.850] |
+| after | utf8_compact | 1840 | 8.325 [8.284,8.426] |
+
+E63 isolates60 serialization blocks (1000 operations each, first block warm per cell). Initial request2513→1840B:82B from whitespace,510B from Unicode escaping at the old prompt,81B from the prompt change at UTF-8. UTF-8 serialization wall time is slightly higher in this local replay; preserve it as a negative, not an API latency claim. Request sizes exclude headers/TCP/TLS. Full provider spans overlap relay/API waits and must not be added; their difference is a protocol/local-transfer residual. Tool exec includes internal file policy; outer checks are separate. Task timer excludes relay shutdown. Nonstreaming response-header time is not TTFT. Upstream follows the explicitly selected HTTP profile, without a TLS claim.
+
+[Contract and reproduction](../design/hybrid-v1.md#e62-cloud-reproduction) · [all rounds](data/cloud-rounds.csv) · [tasks](data/cloud-tasks.csv) · [tool events](data/cloud-tools.csv) · [signed pairs](data/cloud-pairs.csv) · [serialization blocks](data/cloud-serialization.csv). Prior62 evidence files and42 figure pairs are unchanged; Native inference and Windows performance were not remeasured. Keys, endpoints, profiles and private traces are excluded.
+
+## E59–E61 — Versioned multiline edits, real cloud tasks and measured safety cost
+
+fs.read now includes an opaque descriptor-metadata version. WRITE-only fs.edit replaces one unique exact multiline block in an existing64KiB-or-smaller text file. Stale/busy/changed versions return conflict; no automatic overwrite or retry. Advisory locks coordinate this tool, while final stat/rename remains a race against noncooperating writers. Pre-commit failures preserve the original and clean private temporary files under stable directory permissions.
+
+34 deterministic state/security/failure cases under ASan/UBSan,4 actual CLI suites, the full default regression,14,357-token Native and8 fork/template cases pass. Test-only fault hooks are absent from production builds. A first CLI fixture response-envelope mistake is retained. File/root/content/network permissions were not widened.
+
+| Overhead per operation, us | 1KiB | 16KiB | 64KiB |
+| --- | --- | --- | --- |
+| read | -1.484 [-12.672,5.672] | -1.453 [-4.469,4.109] | -2.031 [-3.688,4.375] |
+| single | 77.750 [56.875,643.000] | 1335.375 [1249.625,1391.375] | 5697.750 [5484.375,6095.625] |
+| multi | 120.000 [102.625,579.250] | 1454.000 [1399.000,1489.625] | 5754.625 [5575.500,6132.125] |
+| workflow | 88.125 [-106.000,983.375] | 1337.375 [1250.875,1411.750] | 5611.500 [5424.125,7664.875] |
+| same | 31.000 [25.750,63.875] | 711.375 [669.125,751.500] | 2872.750 [2798.000,2994.000] |
+
+![Versioned editing costs](figures/versioned-edit.png)
+
+Positive overhead is slower.363 serial unsanitized block records,2 warmup+9 evaluation blocks, alternating variants; each row is a mean of8 operations (64 for reads). Old basic code comes from public commit ad5ac5a; policy and filesystem baseline code are identical. Handler reset/input preparation/oracles are outside the timer; workflow includes actual read and patch framing. Large whole-file controls call the C handler and exceed the CLI1KiB argument limit: these are not usable large-file agent writes. All signs and ranges are retained; n=9 block ranges are not confidence intervals or p95/p99.
+
+The large added cost is consistent with full text admission work. E61 retains153 independent records:64KiB one-scan medians are2.910/3.154/7.306ms for0/1/16 registered synthetic secrets. fstat+version formatting is0.426–0.457us, lock+unlock0.461–0.488us. Same-content returns scan once; successful edits scan original and assembled output. These isolated medians are not additive exact task attribution. Read overhead has mixed signs; no speedup claim. Version metadata adds79–83 receipt bytes in these fixtures, not measured model tokens or RSS.
+
+| Real cloud task | Result | API calls | Observed tools |
+| --- | --- | --- | --- |
+| normal | PASS | 5 | fs.read → fs.edit → test.run → fs.read |
+| concurrent | PASS | 7 | fs.read → fs.edit → fs.read → fs.edit → test.run → fs.read |
+| readonly | PASS | 3 | fs.list → fs.read |
+
+E60 uses the explicitly selected deepseek-v4-flash-0731 model profile through a loopback test relay, thinking disabled. All3 synthetic actual-agent tasks passed independent exact-source checks: requested multiline fix, conflict/re-read/retry preserving an external comment, and read-only refusal. Model choices are real; only the external writer is injected. Requested gateway alias does not verify remote weights/hardware. These3 tasks are not general coding accuracy;11.159/13.207/5.601s include cloud/network/relay and are excluded from tool-overhead results. The chosen upstream is HTTP with no TLS claim. No endpoint, credential, private config or raw trace is published.
+
+[Contract](../design/versioned-edit-v1.md), [E59](../evidence/versioned-edit-overhead-20261102.json), [E60](../evidence/versioned-edit-cloud-20261102.json), [E61](../evidence/versioned-edit-cost-probe-20261102.json), [all handler samples](data/versioned-edit-samples.csv), [paired costs](data/versioned-edit-paired.csv), [independent probes](data/versioned-edit-probes.csv), [model outcomes](data/versioned-edit-model-tasks.csv). Prior59 evidence files and41 figure pairs are byte-identical; historical inference data remains tied to its original source.
 
 ## E56/E57 — Fixed-target C++: headers, caches and host coordination
 
@@ -194,7 +261,7 @@ Paired task savings/regressions, worst pairs and allocation measurements are lab
 | Execution | 4 CPU threads · batch 512 · FP16 KV · warm runs |
 | KV allocation | E01–02: 3328 tokens / 364 MiB; E05–06, E10–11, E13–19: 8192 / 896 MiB; E07–09: 16384 / 1792 MiB |
 
-59 evidence files are indexed below. 52 contain 36664 raw records, including metadata, correctness, file timelines and cost-estimation samples; this is **not 36664 independent latency samples**. Functional, sanitized-summary and reported-only evidence remain separate. Source hashes identify the measured revisions.
+64 evidence files are indexed below. 56 contain 37290 raw records, including metadata, correctness, file timelines and cost-estimation samples; this is **not 37290 independent latency samples**. Functional, sanitized-summary and reported-only evidence remain separate. Source hashes identify the measured revisions.
 
 | ID | Experiment | Evidence class | Records |
 | --- | --- | --- | --- |
@@ -256,6 +323,11 @@ Paired task savings/regressions, worst pairs and allocation measurements are lab
 | E56 | [Fixed-target C++ compiler/header/cache and host coordination controls](../evidence/sandbox-cpp-diagnostic-20261102.json) | raw | 270 |
 | E57 | [Fresh C++ tasks: cold private PCH and bounded-regex candidate](../evidence/sandbox-cpp-tasks-20261102.json) | raw | 180 |
 | E58 | [Read-only same-model fork probe: functional preparation and target-machine handoff](../evidence/self-speculation-20261102.json) | functional | 0 |
+| E59 | [Versioned multiline editing: correctness and matched handler overhead](../evidence/versioned-edit-overhead-20261102.json) | raw | 363 |
+| E60 | [Real cloud DeepSeek Flash: edit, conflict recovery and read-only tasks](../evidence/versioned-edit-cloud-20261102.json) | model_acceptance | 0 |
+| E61 | [Version, advisory-lock and full text-policy cost isolation](../evidence/versioned-edit-cost-probe-20261102.json) | raw | 153 |
+| E62 | [Real cloud UTF-8/prompt pairs: usage, cache and separated waiting](../evidence/cloud-request-paired-20261102.json) | raw | 50 |
+| E63 | [Offline prompt/Unicode/whitespace serialization isolation](../evidence/cloud-serialization-20261102.json) | raw | 60 |
 | L01 | [Earlier service, budget and copy observations](../evidence/legacy-observations-20261020.json) | reported_only | 0 |
 
 ## E01–02 · direct API feasibility

@@ -78,6 +78,11 @@ SPECS = [
     ('E56', 'sandbox-cpp-diagnostic', 'Fixed-target C++ compiler/header/cache and host coordination controls', 'raw', 270, 'sandbox-cpp-diagnostic-final-20261102'),
     ('E57', 'sandbox-cpp-tasks', 'Fresh C++ tasks: cold private PCH and bounded-regex candidate', 'raw', 180, 'sandbox-cpp-tasks-final3-20261102'),
     ('E58', 'self-speculation', 'Read-only same-model fork probe: functional preparation and target-machine handoff', 'functional', 0, 'self-spec-handoff-check-20261102'),
+    ('E59', 'versioned-edit-overhead', 'Versioned multiline editing: correctness and matched handler overhead', 'raw', 363, 'versioned-edit-overhead-20261102'),
+    ('E60', 'versioned-edit-cloud', 'Real cloud DeepSeek Flash: edit, conflict recovery and read-only tasks', 'model_acceptance', 0, 'versioned-edit-cloud-first-20261102'),
+    ('E61', 'versioned-edit-cost-probe', 'Version, advisory-lock and full text-policy cost isolation', 'raw', 153, 'versioned-edit-cost-probe-20261102'),
+    ('E62', 'cloud-request-paired', 'Real cloud UTF-8/prompt pairs: usage, cache and separated waiting', 'raw', 50, 'cloud-observe-paired-20261102'),
+    ('E63', 'cloud-serialization', 'Offline prompt/Unicode/whitespace serialization isolation', 'raw', 60, 'cloud-observe-paired-20261102'),
     ('L01', 'legacy-observations', 'Earlier service, budget and copy observations', 'reported_only', 0, ''),
 ]
 DIMS = ('kind', 'scenario', 'shape', 'size', 'prefix_lines', 'words', 'records',
@@ -101,7 +106,7 @@ def csv_text(fields, rows):
 
 
 def evidence_date(eid):
-    if eid in ('E56','E57','E58'): return '20261102'
+    if eid in ('E56','E57','E58','E59','E60','E61','E62','E63'): return '20261102'
     if eid in ('E50','E51','E52','E53','E54','E55'): return '20261101'
     return '20261031' if eid in ('E20','E21','E22','E23','E24','E25','E26','E27','E28','E29','E30','E31','E32','E33','E34','E35','E36','E37','E38','E39','E40','E41','E42','E43','E44','E45','E46','E47','E48','E49') else '20261020' if eid=='L01' else '20261030'
 
@@ -212,7 +217,7 @@ def table(headers, rows):
 def check_summaries(evidence):
     comparisons = 0
     for eid, data in evidence.items():
-        if eid in ('E52','E53','E54','E55','E56','E57'):continue  # Paired overhead has its own independent replay below.
+        if eid in ('E52','E53','E54','E55','E56','E57','E59','E61','E62','E63'):continue  # Paired/per-operation overhead has its own replay below.
         for summary in data.get('summary', []):
             filters = {k: summary[k] for k in DIMS if k in summary and isinstance(summary[k],(str,int,float,bool)) and summary[k] != ''}
             # Direct-API fork/state rows have no mode; memory summaries are memory-only.
@@ -644,6 +649,26 @@ def check_summaries(evidence):
     assert all(r['pcm_files']>0 for r in evidence['E56']['rows'] if r['case']=='modules')
     assert evidence['E57']['validation']['recipe_sanitizers']['passed'] and len(evidence['E57']['validation']['recipe_sanitizers']['suites'])==6
     assert evidence['E57']['validation']['candidate_os']['passed'] and len(evidence['E57']['validation']['candidate_os']['suites'])==15
+    from bench_versioned_edit import cells as edit_cells,paired as edit_pairs
+    from probe_versioned_edit import summary as edit_probes
+    assert edit_cells(evidence['E59']['rows'])==evidence['E59']['summary']
+    assert edit_pairs(evidence['E59']['rows'])==evidence['E59']['paired_summary']
+    assert edit_probes(evidence['E61']['rows'])==evidence['E61']['summary']
+    assert len(evidence['E59']['validation']['unit_sanitizers']['cases'])==34
+    assert len(evidence['E59']['validation']['cli_suites']['suites'])==4
+    assert all(v['passed'] for v in evidence['E59']['validation'].values())
+    assert len(evidence['E60']['tasks'])==3 and not evidence['E60']['rows']
+    assert all(t['passed'] and t['exact_source_matches'] and all(s==200 for s in t['http_statuses']) for t in evidence['E60']['tasks'])
+    for eid in ['E59','E60','E61']:
+        assert len(evidence[eid]['previous_evidence_sha256'])==59
+        for group in ['previous_evidence_sha256','previous_figures_sha256']:
+            for name,digest in evidence[eid][group].items():assert sha(ROOT/name)==digest,('historical artifact changed',name)
+    comparisons+=len(evidence['E59']['paired_summary'])*3+len(evidence['E61']['summary'])*3
+    from analyze_cloud_observe import check as cloud_check,serialization_summary
+    cloud_check(evidence['E62'])
+    assert serialization_summary(evidence['E63']['rows'])==evidence['E63']['summary']
+    assert len(evidence['E63']['previous_evidence_sha256'])==62
+    comparisons+=len(evidence['E62']['pairs'])*3+len(evidence['E63']['summary'])*3
     return comparisons
 
 
@@ -794,19 +819,26 @@ def data_products(evidence):
             raw.append({'experiment': eid, 'source': relative, 'record_index': i, 'record': record})
             row = dict(record)
             row.setdefault('kind', 'timing')
+            if eid in ('E59','E61'):
+                if row['kind']!='timing':continue
+                for field in ['wall_ns','user_ns','system_ns']:
+                    if field in row:row[field.replace('_ns','_us')]=row[field]/row['iterations']/1000
+            if eid in ('E62','E63'):dimensions_cloud={k:row[k] for k in ['case','mode','round','warmup','prompt','encoding'] if k in row}
             if row['kind'] in ('metadata', 'device', 'correctness', 'closed', 'unit'):
                 continue
             if row['kind'] == 'memory':
                 row['heap_extra_bytes'] = max(0, row['sampled_heap_peak']-row['heap_before'])
             dimensions = {k: row[k] for k in DIMS if k in row}
+            if eid in ('E62','E63'):dimensions.update(dimensions_cloud)
             if eid in ('E52','E53'):dimensions.update(case=row['case'],files=row['files'])
             if eid in ('E54','E55','E56','E57'):dimensions.update(case=row['case'])
             if eid=='E57':dimensions['units']=row['units']
+            if eid in ('E59','E61'):dimensions.update(case=row['case'],file_bytes=row['file_bytes'],variant=row.get('variant','probe'),warmup=row['warmup'])
             groups[json.dumps(dimensions, sort_keys=True)].append(row)
         for dimensions, group in sorted(groups.items()):
             dimensions = json.loads(dimensions)
             common = set.intersection(*(set(r) for r in group))
-            for key in sorted(common-set(DIMS)-({'case','files','units'} if eid in ('E52','E53','E54','E55','E56','E57') else set())-{'rep','task','seq'}):
+            for key in sorted(common-set(DIMS)-({'case','files','units','file_bytes','block','order','round','iterations'} if eid in ('E52','E53','E54','E55','E56','E57','E59','E61','E62','E63') else set())-{'rep','task','seq'}):
                 values = [r[key] for r in group]
                 if not all(isinstance(x, (int, float)) and not isinstance(x, bool) for x in values):
                     continue
@@ -831,6 +863,14 @@ def validation_rows(evidence):
     rows = []
     def add(category, case, result, source, detail):
         rows.append(dict(category=category, case=case, result=result, evidence=source, detail=detail))
+    for case in evidence['E59']['validation']['unit_sanitizers']['cases']:
+        add('security','E59:'+case,'PASS','E59:validation.unit_sanitizers','Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass')
+    for case in evidence['E59']['validation']['cli_suites']['suites']:
+        add('functional','E59:cli_'+case,'PASS','E59:validation.cli_suites','Dynamic actual-read versions with deterministic decisions; no model quality claim')
+    for task in evidence['E60']['tasks']:
+        add('model','E60:'+task['case'],'PASS','E60:tasks','Real user-selected DeepSeek Flash, actual CLI and independently verified exact file bytes; n=3 synthetic tasks only')
+    add('negative','E59:edit_cost','RETAINED','E59:rows;paired_summary','64KiB successful edits add5.6-5.8ms; same adds2.9ms; no stable read speedup or free-security claim')
+    add('diagnostic','E61:text_policy','MEASURED','E61:rows;summary','Metadata/lock versus0/1/16 synthetic-secret full scans; isolated medians not additive task decomposition')
     for case in evidence['E58']['validation']['controller_sanitizers']['cases']:
         add('security','E58:'+case,'PASS','E58:validation.controller_sanitizers','Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network')
     for case in evidence['E58']['validation']['native_sanitizers']['cases']:
@@ -941,6 +981,8 @@ def validation_rows(evidence):
     add('implementation','E33:process_attribution','PASS','E33:validation','Child CPU/wall, EOF waits, callback and worker observations; matched controls')
     add('implementation','E36:contention','PASS','E36:validation','13 native sanitizer cases and40 actual CLI tasks; same growth gate and CPU/decode observations')
     add('implementation','E38:decode_scheduler','PASS','E38:validation','22 sanitizer cases,32 real CLI tasks, Mach unit calibration and decode/sync accounting')
+    add('implementation','E62:cloud_observe','PASS','E62:validation','64 capability combinations,16 forwarding/error paths,normal andASan/UBSan traced CLI plus full default regression')
+    add('model_acceptance','E62:real_cloud_readonly','PASS','E62:tasks','20 real synthetic tasks/50 requests; same tools,immutable files,39/refusal markers; not general capability')
     add('implementation','E40/E41:idle_source','PASS','E40:validation;E41:validation','32 model fixtures,96 actual tools and384 producer controls; model CPU sampled without other PID inventory')
     add('implementation','E42/E43:metal_timeline','PASS','E42:validation;E43:validation','30 native sanitizer cases and48 actual CLI tasks each; per-buffer timestamps, completion-marker and bare controls; diagnostics only')
     add('implementation','E47/E48/E49:isolation_quantum','PASS','E47:validation;E48:validation;E49:validation','Same-capacity CLI controls, pressure/fresh-greedy isolation and larger-quantum timeout/cancel checks; final14K/Stream/default acceptance')
@@ -975,7 +1017,7 @@ def inventory(evidence):
     for folder in sorted((ROOT/'build').iterdir()):
         if not folder.is_dir() or not folder.name.startswith(('llama-context-', 'llama-native-', 'native-chat-',
                 'native-template-', 'context-memory-', 'direct-messages-', 'jinja-values-', 'kv-worker-',
-                'stream-', 'cost-estimator-', 'roofline-estimator-', 'roofline-diagnose-', 'cost-shapes-', 'frozen-calibration-', 'kalman-cost-', 'tool-prepare-', 'tool-timing-', 'tool-taskcost-', 'tool-isolate-', 'tool-launch-', 'resident-', 'output-', 'tool-output-', 'model-idle-', 'device-isolation-', 'restore-timing-', 'restore-balance-', 'basic-agent-live-', 'qwen-basic-')):
+                'stream-', 'cost-estimator-', 'roofline-estimator-', 'roofline-diagnose-', 'cost-shapes-', 'frozen-calibration-', 'kalman-cost-', 'tool-prepare-', 'tool-timing-', 'tool-taskcost-', 'tool-isolate-', 'tool-launch-', 'resident-', 'output-', 'tool-output-', 'model-idle-', 'device-isolation-', 'restore-timing-', 'restore-balance-', 'basic-agent-live-', 'qwen-basic-', 'versioned-edit-', 'cloud-observe-')):
             continue
         files = sorted(p.name for p in folder.iterdir() if p.is_file() and
                        (p.suffix == '.jsonl' or p.name in ('manifest.json','results.json','report.json') or p.name.endswith('-summary.json')))
@@ -987,6 +1029,10 @@ def inventory(evidence):
             status, reason = 'historical_capability_probe', 'Failure summarized in E12; private raw logs/config excluded'
         else:
             status, reason = 'development_or_superseded', 'Kept out of final aggregates; metadata inventory only'
+        if folder.name.startswith('cloud-observe-') and folder.name not in official:
+            status,reason='validation_or_probe','E62/E63 source qualification or synthetic correctness; no private traces/configuration content included'
+        if folder.name.startswith('versioned-edit-') and folder.name not in official:
+            status,reason='validation_or_probe','E59-E61 correctness, sanitizer, connectivity or source qualification; private configuration/trace/log content excluded'
         if folder.name.startswith(('output-metal-','tool-output-metal-','output-notify-','tool-output-notify-','output-coalesce-')) and folder.name not in official:
             status,reason='development_or_superseded','Metal observer development or qualification; not extra performance samples; build failures and successful qualification described in CHANGELOG'
         metal_failures={
@@ -1252,6 +1298,54 @@ def cc_report(e,zh):
     return lines
 
 
+def cloud_report(e,zh):
+    def tr(a,b):return b if zh else a
+    a,b=e['E62'],e['E63']
+    def fmt(v):return f"{v['median']:.3f} [{v['min']:.3f},{v['max']:.3f}]"
+    lines=['## '+tr('E62/E63 — Cloud UTF-8 requests, usage and separated waiting','E62/E63 — 云请求UTF-8、逐轮usage与等待分层'),'',
+        tr('Default read-only prompts no longer contain full-file writing guidance; create/write deployments retain it. The trusted test relay now sends compact UTF-8 JSON; C already emitted UTF-8.The requested model is deepseek-v4-flash-0731.20 real read-only CLI tasks produce50 successful API rounds, with identical requested tool sequences and unchanged source files.48 valid capability combinations and16 existing mutually exclusive combinations,16 mocked forwarding/error paths and real traced tools pass under normal and ASan/UBSan CLI builds; the full default regression passes.',
+           '默认只读system已删除整文件写入提醒，仅create／write保留；可信测试relay改为紧凑UTF-8 JSON，C原本就发送UTF-8。请求模型为deepseek-v4-flash-0731；20个真实只读CLI任务、50轮API全部通过，工具顺序符合要求且文件未改。48个合法权限组合、16个既有互斥拒绝组合、16条mock转发／失败路径及真实工具计时通过普通和ASan/UBSan；完整默认回归通过。'),'',
+        table(tr(['Paired task (after-before)','Extra task ms [min,max]','Extra API wait ms [min,max]','After slower','Upstream bytes/task before -> after'],['逐对任务（改后−改前）','完整任务额外ms [最小,最大]','API等待额外ms [最小,最大]','改后更慢','每任务上游字节 改前→后']),
+              [[r['case'],fmt(r['task_ms_delta']),fmt(r['api_wait_ms_delta']),f"{r['after_slower']}/{r['pairs']}",str(next(m['upstream_request_bytes'] for m in a['mode_summary'] if m['case']==r['case'] and m['mode']=='before'))+' → '+str(next(m['upstream_request_bytes'] for m in a['mode_summary'] if m['case']==r['case'] and m['mode']=='after'))] for r in a['summary']]),'',
+        '![Cloud request measurements](figures/cloud-request.png)','',
+        tr('One warmup plus four evaluated pairs per task, reversing order per block. Every matched round reports18 fewer prompt tokens after scoped prompt cleanup. Encoding-only replay parses to exactly the same JSON object and does not establish token savings. All8 evaluation pairs remain:4 are slower after. No stable end-to-end acceleration. The large listed-before block1 includes8.531s and7.709s upstream waits; local relay work stays below1ms for each. Network versus provider queue/compute remains unresolved. Generated outputs and completion token counts vary despite temperature=0.',
+           '每任务1预热对＋4评价对、逐block倒序。匹配轮次的输入均减少18token，来自限定范围的提示清理；仅换编码的回放解析对象相同，不构成token节省证据。8个评价配对全部保留，4个改后更慢，没有稳定端到端加速。listed改前block1有8.531s和7.709s上游等待，两轮本地relay均不到1ms；网络与服务端排队／计算仍无法拆分。即使temperature=0，生成文本与输出token仍变化。'),'',
+        table(tr(['Evaluation workload','API wait/task median ms','C tool exec/policy median ms','Relay local/task median ms','C protocol/loopback residual median ms','Prompt/output tokens summed','Reported cached / prompt'],['评价负载','每任务API等待中位ms','C工具执行／外层策略中位ms','每任务relay本地中位ms','C协议／回环残差中位ms','输入／输出token总和','返回cached／prompt']),
+              [[r['case']+'/'+r['mode'],f"{r['api_wait_ms']['median']:.3f}",f"{r['tool_exec_ms']['median']:.3f} / {r['tool_policy_ms']['median']:.3f}",f"{r['relay_local_ms']['median']:.3f}",f"{r['client_residual_ms']['median']:.3f}",f"{r['prompt_tokens_sum']} / {r['completion_tokens_sum']}",f"{r['cached_tokens_sum']} / {r['prompt_tokens_sum']} ({r['reported_cached_fraction']:.1%})"] for r in a['mode_summary']]),'',
+        tr('All50 rounds return prompt/completion/total tokens and prompt_tokens_details.cached_tokens, without usage inconsistencies. Dedicated prompt_cache_hit_tokens and prompt_cache_miss_tokens are absent in all50 rounds and remain null. Reported cache fractions vary by workload/mode; no cache-hit improvement is established. Remote caches cannot be cleared/forced cold by this runner. Gateway alias does not verify backend weights or cache implementation.',
+           '50轮都返回输入／输出／总token和prompt_tokens_details.cached_tokens，未见usage矛盾。专用prompt_cache_hit_tokens和prompt_cache_miss_tokens在50轮中均缺失，保留null。返回缓存比例随任务／模式变化，没有提高命中率的结论；runner不能清理远端缓存或保证冷启动，网关别名不证明后端权重或缓存实现。'),'',
+        table(tr(['Prompt','Serializer','First-request body bytes','Serialize us/op median [min,max]'],['提示','序列化','首轮JSON正文字节','序列化每次us中位 [最小,最大]']),[[r['prompt'],r['encoding'],r['request_bytes'],fmt(r['serialize_us'])] for r in b['summary']]),'',
+        tr('E63 isolates60 serialization blocks (1000 operations each, first block warm per cell). Initial request2513→1840B:82B from whitespace,510B from Unicode escaping at the old prompt,81B from the prompt change at UTF-8. UTF-8 serialization wall time is slightly higher in this local replay; preserve it as a negative, not an API latency claim. Request sizes exclude headers/TCP/TLS. Full provider spans overlap relay/API waits and must not be added; their difference is a protocol/local-transfer residual. Tool exec includes internal file policy; outer checks are separate. Task timer excludes relay shutdown. Nonstreaming response-header time is not TTFT. Upstream follows the explicitly selected HTTP profile, without a TLS claim.',
+           'E63拆出60条序列化block（每条1000次、每格首条预热）。首轮2513→1840B：去空白82B、旧提示取消Unicode转义510B、UTF-8下提示变化81B。此本机回放UTF-8的序列化墙钟略增，保留负结果，不作API延迟结论。字节不含头／TCP／TLS；provider覆盖relay／API，不能相加，差值只是协议／本机搬运残差。工具exec含内部文件策略，外层检查另列；任务计时不含relay关闭。非流式响应头时间不是TTFT，所选上游HTTP无TLS承诺。'),'',
+        tr('[Contract and reproduction](../design/hybrid-v1.md#e62-cloud-reproduction) · [all rounds](data/cloud-rounds.csv) · [tasks](data/cloud-tasks.csv) · [tool events](data/cloud-tools.csv) · [signed pairs](data/cloud-pairs.csv) · [serialization blocks](data/cloud-serialization.csv). Prior62 evidence files and42 figure pairs are unchanged; Native inference and Windows performance were not remeasured. Keys, endpoints, profiles and private traces are excluded.',
+           '[契约与复现](../design/hybrid-v1.md#e62-cloud-reproduction) · [全部轮次](data/cloud-rounds.csv) · [任务](data/cloud-tasks.csv) · [工具事件](data/cloud-tools.csv) · [正负配对](data/cloud-pairs.csv) · [序列化block](data/cloud-serialization.csv)。旧62证据和42组图不改；未复测Native推理或Windows性能。key、端点、配置与私有trace不公开。'),'']
+    return lines
+
+
+def edit_report(e,zh):
+    def tr(a,b):return b if zh else a
+    a,b,c=e['E59'],e['E60'],e['E61']
+    def delta(case,size):return next(r for r in a['paired_summary'] if r['case']==case and r['file_bytes']==size)
+    def fmt(v):return f"{v['median']:.3f} [{v['min']:.3f},{v['max']:.3f}]"
+    lines=['## '+tr('E59–E61 — Versioned multiline edits, real cloud tasks and measured safety cost','E59–E61 — 版本化多行编辑、真实云端任务与安全成本'),'',
+        tr('fs.read now includes an opaque descriptor-metadata version. WRITE-only fs.edit replaces one unique exact multiline block in an existing64KiB-or-smaller text file. Stale/busy/changed versions return conflict; no automatic overwrite or retry. Advisory locks coordinate this tool, while final stat/rename remains a race against noncooperating writers. Pre-commit failures preserve the original and clean private temporary files under stable directory permissions.',
+           'fs.read现在返回实际fd元数据的版本；仅WRITE部署公开fs.edit，在最多64KiB的已有文本文件中替换一个唯一精确多行块。过期／忙／变化返回冲突，不自动覆盖或重试。建议锁协调本工具并发；对不遵守锁的外部程序，最终stat／rename仍有竞态。提交前失败保留原文件，目录权限稳定时清理私有临时文件。'),'',
+        tr('34 deterministic state/security/failure cases under ASan/UBSan,4 actual CLI suites, the full default regression,14,357-token Native and8 fork/template cases pass. Test-only fault hooks are absent from production builds. A first CLI fixture response-envelope mistake is retained. File/root/content/network permissions were not widened.',
+           '34项状态／安全／失败测试通过ASan/UBSan，4组实际CLI、完整默认回归、14,357-token Native及8项分叉／模板兼容通过。故障钩子只进入测试构建，生产无运行时开关；首次CLI桩封装错误保留。没有放宽文件／根／内容／网络权限。'),'',
+        table(tr(['Overhead per operation, us','1KiB','16KiB','64KiB'],['每操作额外us','1KiB','16KiB','64KiB']),[[case,*[fmt(delta(case,size)['overhead_us']) for size in [1024,16384,65536]]] for case in ['read','single','multi','workflow','same']]),'',
+        '![Versioned editing costs](figures/versioned-edit.png)','',
+        tr('Positive overhead is slower.363 serial unsanitized block records,2 warmup+9 evaluation blocks, alternating variants; each row is a mean of8 operations (64 for reads). Old basic code comes from public commit ad5ac5a; policy and filesystem baseline code are identical. Handler reset/input preparation/oracles are outside the timer; workflow includes actual read and patch framing. Large whole-file controls call the C handler and exceed the CLI1KiB argument limit: these are not usable large-file agent writes. All signs and ranges are retained; n=9 block ranges are not confidence intervals or p95/p99.',
+           '额外值为正表示变慢。363条独占无SAN的block记录，2预热＋9评价、轮换顺序；每条是8次操作均值（读取64次）。旧basic代码来自公开ad5ac5a，策略和filesystem基线源码相同。handler计时不含重置／输入准备／字节oracle；workflow包含真实读取和patch组装。大文件整写控制调用C handler，超过CLI的1KiB参数上限，不能当成可用的大文件Agent写入。所有正负对保留；9个block的范围不是置信区间或p95／p99。'),'',
+        tr('The large added cost is consistent with full text admission work. E61 retains153 independent records:64KiB one-scan medians are2.910/3.154/7.306ms for0/1/16 registered synthetic secrets. fstat+version formatting is0.426–0.457us, lock+unlock0.461–0.488us. Same-content returns scan once; successful edits scan original and assembled output. These isolated medians are not additive exact task attribution. Read overhead has mixed signs; no speedup claim. Version metadata adds79–83 receipt bytes in these fixtures, not measured model tokens or RSS.',
+           '较大开销与完整正文准入工作一致。E61另存153条独立诊断：64KiB单次扫描在登记0／1／16个合成秘密时中位2.910／3.154／7.306ms；fstat＋版本格式化0.426–0.457us，锁＋解锁0.461–0.488us。同内容返回扫描一次，成功编辑扫描原文及完整结果。这些独立中位不能相加当成精确任务归因。读取正负混合，不宣称提速；本夹具版本元数据增加79–83回执字节，不是模型token或RSS实测。'),'',
+        table(tr(['Real cloud task','Result','API calls','Observed tools'],['真实云端任务','结果','API次数','实际工具']),[[t['case'],'PASS' if t['passed'] else 'FAIL',t['api_calls'],' → '.join(t['tool_calls'])] for t in b['tasks']]),'',
+        tr('E60 uses the explicitly selected deepseek-v4-flash-0731 model profile through a loopback test relay, thinking disabled. All3 synthetic actual-agent tasks passed independent exact-source checks: requested multiline fix, conflict/re-read/retry preserving an external comment, and read-only refusal. Model choices are real; only the external writer is injected. Requested gateway alias does not verify remote weights/hardware. These3 tasks are not general coding accuracy;11.159/13.207/5.601s include cloud/network/relay and are excluded from tool-overhead results. The chosen upstream is HTTP with no TLS claim. No endpoint, credential, private config or raw trace is published.',
+           'E60使用用户明确选择的deepseek-v4-flash-0731模型配置，经回环测试转发器、关闭thinking。3个真实Agent合成任务均通过最终源码逐字节核对：指定多行修改、冲突后重读再改且保留外部注释、只读拒绝。模型决策真实，仅外部写者由夹具注入；请求网关别名不证明远端权重／硬件。3例不是通用编程准确率；11.159／13.207／5.601s包含云端／网络／转发，排除在工具开销之外。用户选定上游为HTTP，无TLS承诺；不公开端点、凭据、私有配置或原始trace。'),'',
+        tr('[Contract](../design/versioned-edit-v1.md), [E59](../evidence/versioned-edit-overhead-20261102.json), [E60](../evidence/versioned-edit-cloud-20261102.json), [E61](../evidence/versioned-edit-cost-probe-20261102.json), [all handler samples](data/versioned-edit-samples.csv), [paired costs](data/versioned-edit-paired.csv), [independent probes](data/versioned-edit-probes.csv), [model outcomes](data/versioned-edit-model-tasks.csv). Prior59 evidence files and41 figure pairs are byte-identical; historical inference data remains tied to its original source.',
+           '[契约](../design/versioned-edit-v1.md)、[E59](../evidence/versioned-edit-overhead-20261102.json)、[E60](../evidence/versioned-edit-cloud-20261102.json)、[E61](../evidence/versioned-edit-cost-probe-20261102.json)、[全部handler样本](data/versioned-edit-samples.csv)、[配对成本](data/versioned-edit-paired.csv)、[独立探针](data/versioned-edit-probes.csv)、[模型结果](data/versioned-edit-model-tasks.csv)。旧59份证据和41组图原字节保持；历史推理数据仍绑定原测量源码。'),'']
+    return lines
+
+
 def report(e, catalog, zh=False):
     def tr(en, cn): return cn if zh else en
     def stat(eid, key, **f): return stats(e, eid, key, **f)
@@ -1262,8 +1356,10 @@ def report(e, catalog, zh=False):
     lines = ['# '+tr('cxf × llama.cpp — benchmark results', 'cxf × llama.cpp — 测试成果汇总'), '',
         tr('[中文](README.zh-CN.md) · [Adaptation inventory](../adaptation-status.md) · [Methodology](METHODOLOGY.md) · [All metrics](data/metrics.csv) · [Raw records](data/raw-records.jsonl) · [Acceptance matrix](data/validation.csv)',
            '[English](README.md) · [当前适配](../adaptation-status.md) · [测试方法](METHODOLOGY.md) · [全部指标](data/metrics.csv) · [原始记录](data/raw-records.jsonl) · [验收矩阵](data/validation.csv)'), '',
-        tr('Snapshot: 2026-11-02. E58 adds functional read-only self-prediction and a target-machine handoff, with no new performance samples. E56/E57 audit fixed-target C++ header/cache/host costs; E53 is the host-protection baseline. Earlier performance remains measured on historical revisions. Qwen3 0.6B is the compatibility test vehicle.',
-           '归档日期：2026-11-02。E58新增只读自预测功能准备和异机交接，无新性能样本。E56/E57拆分固定同target的C++头文件／缓存／宿主成本，E53是宿主保护基线；此前性能仍对应历史源码版本，Qwen3 0.6B用于兼容验证。'), '',
+        tr('Publication: E59–E63 source/results and privacy cleanup are included in the authorized GitHub sync. Requested model deepseek-v4-flash-0731 is public; real endpoints, credentials, local configuration and private logs are excluded. Earlier no-push statements describe pre-sync stages; no new performance sampling.',
+           '发布范围：本轮获授权同步E59–E63源码／成果及隐私整理。保留请求模型deepseek-v4-flash-0731，实际端点、凭据、本地配置和私有日志排除；旧未推送描述同步前阶段，没有新增性能采样。'), '',
+        tr('Snapshot: 2026-11-02. E62/E63 add real-cloud per-round usage/cache/waiting and UTF-8/prompt controls with all regressions retained. E59–E61 add versioned editing, real cloud tasks and measured tool-policy costs; no new local-engine performance samples. E56/E57 audit fixed-target C++ header/cache/host costs; E53 is the host-protection baseline. Earlier performance remains measured on historical revisions. Qwen3 0.6B is the compatibility test vehicle.',
+           '归档日期：2026-11-02。E62/E63新增云端逐轮usage／缓存／等待和UTF-8／提示对照，保留全部回退；E59–E61新增版本化编辑、真实云任务与工具安全成本，没有新的本地引擎性能样本。E56/E57拆分固定同target的C++头文件／缓存／宿主成本，E53是宿主保护基线；此前性能仍对应历史源码版本，Qwen3 0.6B用于兼容验证。'), '',
         tr('The observed gains are in avoiding repeated frontend work, sharing canonical prefixes, and overlapping local work with input arrival. They are workload-dependent. Whole-process memory, autonomous coding quality, and Windows/CUDA performance have not been shown to improve.',
            '已经观测到的收益集中在减少前端重复工作、共享规范前缀，以及把本地工作与输入到达重叠执行。收益依赖场景；尚未证明整体进程内存、自主编程能力或 Windows/CUDA 性能改善。'), '',
         '## '+tr('E58 — Read-only self-prediction: functional preparation','E58 — 只读自预测：功能准备与异机交接'),'',
@@ -1273,6 +1369,8 @@ def report(e, catalog, zh=False):
            '24项无模型状态／安全测试、8项Native验收（6项KV／模板及2项注入流程）及原14,357-token Native回归通过ASan/UBSan。开发期JSON流编译、thinking尾部假设与外层沙箱Metal／回环失败单独保留。没有新增性能记录或图表；更大模型命中率、完整任务收益与WSL2/CUDA留待目标机器验收。旧58份证据和41组图不改。'),'',
         tr('[Contract](../design/self-speculation-v1.md), [target-machine handoff](../self-speculation-handoff.md) and [functional evidence](../evidence/self-speculation-20261102.json). The runner preserves all warmups, failed tasks, output-mismatch pairs and regressions, reports explicit rate denominators, probe cost and all-task versus complete/equal-task timings separately.0.6B compatibility does not establish self-prediction quality.',
            '[契约](../design/self-speculation-v1.md)、[异机交接](../self-speculation-handoff.md)和[功能证据](../evidence/self-speculation-20261102.json)。准备好的runner保留全部预热、失败、输出不一致和回退配对，明确命中率分母，并分别展示probe成本、全部任务与完整且输出一致任务的耗时。0.6B兼容验收不代表自预测质量。'),'',
+        *cloud_report(e,zh),
+        *edit_report(e,zh),
         *cpp_report(e,zh),
         *cc_report(e,zh),
         '## '+tr('E53 — Host-protection baseline and original overhead', 'E53 — 宿主保护基线与原开销'), '',
@@ -2063,6 +2161,15 @@ def outputs(evidence, refresh_inventory=False):
         'docs/benchmarks/data/raw-records.jsonl': ''.join(json.dumps(r,ensure_ascii=False,separators=(',',':'))+'\n' for r in raw),
         'docs/benchmarks/data/metrics.csv': csv_text(['experiment','dimensions','metric','unit','n','median','min','max','source'],metrics),
         'docs/benchmarks/data/validation.csv': csv_text(['category','case','result','evidence','detail'],validation),
+        'docs/benchmarks/data/cloud-rounds.csv':csv_text(['model',*union_fields(evidence['E62']['rows'])],[dict(model=evidence['E62']['model'],**r) for r in evidence['E62']['rows']]),
+        'docs/benchmarks/data/cloud-tasks.csv':csv_text(['model',*union_fields(evidence['E62']['tasks'])],[dict(model=evidence['E62']['model'],**r) for r in evidence['E62']['tasks']]),
+        'docs/benchmarks/data/cloud-tools.csv':csv_text(union_fields(evidence['E62']['tool_events']),evidence['E62']['tool_events']),
+        'docs/benchmarks/data/cloud-pairs.csv':csv_text(union_fields(evidence['E62']['pairs']),evidence['E62']['pairs']),
+        'docs/benchmarks/data/cloud-serialization.csv':csv_text(union_fields(evidence['E63']['rows']),evidence['E63']['rows']),
+        'docs/benchmarks/data/versioned-edit-samples.csv':csv_text(union_fields(evidence['E59']['rows']),evidence['E59']['rows']),
+        'docs/benchmarks/data/versioned-edit-paired.csv':csv_text(['case','file_bytes','pairs','median_us','min_us','max_us','current_slower'],[dict(case=r['case'],file_bytes=r['file_bytes'],pairs=r['pairs'],current_slower=r['current_slower'],**{k+'_us':v for k,v in r['overhead_us'].items()}) for r in evidence['E59']['paired_summary']]),
+        'docs/benchmarks/data/versioned-edit-probes.csv':csv_text(union_fields(evidence['E61']['rows']),evidence['E61']['rows']),
+        'docs/benchmarks/data/versioned-edit-model-tasks.csv':csv_text(union_fields(evidence['E60']['tasks']),evidence['E60']['tasks']),
         'docs/benchmarks/data/cost-shape-errors.csv': csv_text(['experiment','batch_tokens','prefix_tokens','new_tokens','mode','samples','wall_median_ms','wall_min_ms','wall_max_ms','wall_mad_ms','mae_ms','signed_bias_ms','max_abs_error_ms','wape_percent'],shape_cells),
         'docs/benchmarks/data/frozen-calibration-errors.csv': csv_text(['experiment','batch_tokens','prefix_tokens','new_tokens','mode','samples','wall_median_ms','wall_min_ms','wall_max_ms','wall_mad_ms','mae_ms','signed_bias_ms','max_abs_error_ms','wape_percent'],frozen_cells),
         'docs/benchmarks/data/frozen-calibration-anchors.csv': csv_text(['batch_tokens','prefix_tokens','new_tokens','stage','samples','median_ms','min_ms','max_ms'],evidence['E19']['anchor_summary']),
@@ -2088,6 +2195,8 @@ def allowlist():
              ROOT/'tools/build_benchmark_report.py', ROOT/'tools/render_benchmark_figures.py', ROOT/'tools/render_sandbox_benchmark.py', ROOT/'tools/render_sandbox_final.py', ROOT/'tools/bench_test_sandbox.py', ROOT/'tools/bench_sandbox_cc.py', ROOT/'tools/bench_sandbox_cc_tasks.py', ROOT/'tools/probe_sandbox_cc.c', ROOT/'tools/probe_cc_phase.c', ROOT/'tools/probe_cc_ipc.c', ROOT/'tools/render_sandbox_cc.py', ROOT/'tools/bench_sandbox_cpp.py', ROOT/'tools/bench_sandbox_cpp_tasks.py', ROOT/'tools/build_sandbox_group_candidate.py', ROOT/'tools/probe_sandbox_cpp.c', ROOT/'tools/probe_cpp_cache.c', ROOT/'tools/probe_cpp_compiler.c', ROOT/'tools/probe_sandbox_patterns.c', ROOT/'tools/run_cpp_batch.sh', ROOT/'tools/render_sandbox_cpp.py',ROOT/'tools/bench_cost_estimator.py',ROOT/'tools/bench_roofline_estimator.py',ROOT/'tools/bench_roofline_diagnose.py',ROOT/'tools/bench_cost_shapes.py',ROOT/'tools/bench_frozen_calibration.py',ROOT/'tools/bench_kalman_cost.py',ROOT/'tools/bench_tool_prepare.py',ROOT/'tools/bench_restore_timing.py',ROOT/'tools/bench_restore_balance.py',ROOT/'tools/bench_tool_taskcost.py',ROOT/'tools/bench_tool_isolate.py',ROOT/'tools/bench_tool_launch.py',ROOT/'tools/bench_resident.py',ROOT/'tools/bench_tool_output.py',ROOT/'tools/analyze_output_isolation.py',ROOT/'tools/analyze_output_reap.py',ROOT/'tools/analyze_output_contention.py',ROOT/'tools/analyze_decode_schedule.py',ROOT/'tools/analyze_metal_timeline.py',ROOT/'tools/bench_batch_capacity.py',ROOT/'tools/bench_device_contention.py',ROOT/'tools/analyze_batch_trace.py',ROOT/'tools/probe_schedule_clock.c',ROOT/'tools/probe_model_idle.py',ROOT/'tools/analyze_model_idle.py',ROOT/'tools/probe_output_exit.c',ROOT/'tools/test_tool_prepare_cli.py',ROOT/'tools/analyze_frozen_calibration.py']
     files += [ROOT/'LICENSE'] if (ROOT/'LICENSE').exists() else []
     files += [ROOT/'docs/self-speculation-handoff.md',ROOT/'tools/run_self_speculate.py',ROOT/'tools/test_self_speculate.py']
+    files += [ROOT/'tools/bench_versioned_edit.py',ROOT/'tools/probe_versioned_edit.py',ROOT/'tools/test_versioned_edit.py',ROOT/'tools/render_versioned_edit.py']
+    files += [ROOT/'tools/analyze_cloud_observe.py',ROOT/'tools/build_cloud_observe_baseline.py',ROOT/'tools/render_cloud_observe.py']
     files += sorted((ROOT/'docs/evidence').glob('*.json'))
     files += sorted((ROOT/'docs/design').glob('*.md'))
     files += sorted(p for p in OUT.rglob('*') if p.is_file() and p.name!='publication-manifest.json')
@@ -2160,6 +2269,16 @@ def check_figures(evidence):
     for name,digest in cpp['evidence_sha256'].items():assert sha(ROOT/'docs/evidence'/name)==digest
     assert cpp['diagnostic_summary']==evidence['E56']['summary'] and cpp['paired_summary']==evidence['E57']['paired_summary']
     for name,digest in cpp['figures'].items():assert sha(OUT/'figures'/name)==digest
+    edit=json.loads((OUT/'figures/versioned-edit-provenance.json').read_text())
+    assert edit['renderer_source_sha256']==sha(ROOT/'tools/render_versioned_edit.py')
+    for name,digest in edit['evidence_sha256'].items():assert sha(ROOT/'docs/evidence'/name)==digest
+    assert edit['paired_summary']==evidence['E59']['paired_summary'] and edit['probe_summary']==evidence['E61']['summary']
+    for name,digest in edit['figures'].items():assert sha(OUT/'figures'/name)==digest
+
+    cloud=json.loads((OUT/'figures/cloud-request-provenance.json').read_text())
+    assert cloud['renderer_source_sha256']==sha(ROOT/'tools/render_cloud_observe.py')
+    for name,digest in cloud['evidence_sha256'].items():assert sha(ROOT/'docs/evidence'/name)==digest
+    for name,digest in cloud['figures'].items():assert sha(OUT/'figures'/name)==digest
 
 
 def main():

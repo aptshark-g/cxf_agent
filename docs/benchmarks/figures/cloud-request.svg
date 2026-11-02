@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="1200" height="1120" preserveAspectRatio="xMinYMin meet" viewBox="0 0 1200 1120" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="1200" height="1120"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-1120)" style="clip-path: url(#clip)">
+		<g transform="">
+			<rect x="0" y="0" width="1200" height="1120" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<text x="45" y="1073" style="font-family: Helvetica; font-size: 26px;fill: rgb(5%,9%,16%); stroke:none;" transform="translate(0,2146) scale(1,-1)">Cloud requests: fewer bytes, no stable latency gain</text>
+			<text x="45" y="1043" style="font-family: Helvetica; font-size: 13px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,2086) scale(1,-1)">DeepSeek Flash gateway alias |20 real CLI tasks /50 API rounds |1 warmup +4 evaluation pairs per task</text>
+			<text x="45" y="992" style="font-family: Helvetica; font-size: 18px;fill: rgb(5%,9%,16%); stroke:none;" transform="translate(0,1984) scale(1,-1)">A. Same first request: isolate prompt, whitespace and Unicode representation</text>
+			<text x="45" y="947" style="font-family: Helvetica; font-size: 12px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,1894) scale(1,-1)">Before: ASCII + spaces</text>
+			<rect x="245" y="944" width="730.6314814814815" height="20" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(5%,45%,56%); fill-rule: evenodd;"/>
+			<text x="987.6314814814815" y="948" style="font-family: Helvetica; font-size: 12px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,1896) scale(1,-1)">2513 B</text>
+			<text x="45" y="909" style="font-family: Helvetica; font-size: 12px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,1818) scale(1,-1)">Before: ASCII compact</text>
+			<rect x="245" y="906" width="706.7907407407407" height="20" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(5%,45%,56%); fill-rule: evenodd;"/>
+			<text x="963.7907407407407" y="910" style="font-family: Helvetica; font-size: 12px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,1820) scale(1,-1)">2431 B</text>
+			<text x="45" y="871" style="font-family: Helvetica; font-size: 12px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,1742) scale(1,-1)">Before: UTF-8 compact</text>
+			<rect x="245" y="868" width="558.512962962963" height="20" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(5%,45%,56%); fill-rule: evenodd;"/>
+			<text x="815.512962962963" y="872" style="font-family: Helvetica; font-size: 12px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,1744) scale(1,-1)">1921 B</text>
+			<text x="45" y="833" style="font-family: Helvetica; font-size: 12px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,1666) scale(1,-1)">After: UTF-8 compact</text>
+			<rect x="245" y="830" width="534.9629629629629" height="20" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(5%,46%,43%); fill-rule: evenodd;"/>
+			<text x="791.9629629629629" y="834" style="font-family: Helvetica; font-size: 12px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,1668) scale(1,-1)">1840 B</text>
+			<text x="245" y="785" style="font-family: Helvetica; font-size: 12px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,1570) scale(1,-1)">2513 -&gt;1840 B: -82 whitespace, -510 escaping, -81 prompt. Model input: -18 tokens/round (E62).</text>
+			<text x="45" y="735" style="font-family: Helvetica; font-size: 19px;fill: rgb(5%,9%,16%); stroke:none;" transform="translate(0,1470) scale(1,-1)">B. Direct read: whole-task deltas (individual paired results)</text>
+			<path d="M 245,505 L 245,690 Z" style="stroke: rgb(88%,90%,94%); stroke-linecap: butt; stroke-width: 1;"/>
+			<text x="233.9945" y="483" style="font-family: Helvetica; font-size: 11px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,966) scale(1,-1)">-150</text>
+			<path d="M 402,505 L 402,690 Z" style="stroke: rgb(88%,90%,94%); stroke-linecap: butt; stroke-width: 1;"/>
+			<text x="390.9945" y="483" style="font-family: Helvetica; font-size: 11px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,966) scale(1,-1)">-100</text>
+			<path d="M 559,505 L 559,690 Z" style="stroke: rgb(88%,90%,94%); stroke-linecap: butt; stroke-width: 1;"/>
+			<text x="551.0525" y="483" style="font-family: Helvetica; font-size: 11px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,966) scale(1,-1)">-50</text>
+			<path d="M 716,505 L 716,690 Z" style="stroke: rgb(88%,90%,94%); stroke-linecap: butt; stroke-width: 1;"/>
+			<text x="712.942" y="483" style="font-family: Helvetica; font-size: 11px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,966) scale(1,-1)">0</text>
+			<path d="M 873,505 L 873,690 Z" style="stroke: rgb(88%,90%,94%); stroke-linecap: butt; stroke-width: 1;"/>
+			<text x="866.884" y="483" style="font-family: Helvetica; font-size: 11px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,966) scale(1,-1)">50</text>
+			<path d="M 1030,505 L 1030,690 Z" style="stroke: rgb(88%,90%,94%); stroke-linecap: butt; stroke-width: 1;"/>
+			<text x="1020.826" y="483" style="font-family: Helvetica; font-size: 11px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,966) scale(1,-1)">100</text>
+			<path d="M 716,505 L 716,690 Z" style="stroke: rgb(39%,45%,54%); stroke-linecap: butt; stroke-width: 1;"/>
+			<text x="152.968" y="662.875" style="font-family: Helvetica; font-size: 12px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,1325) scale(1,-1)">Paired block 1</text>
+			<path d="M 716,666.875 L 921.925125,666.875 Z" style="stroke: rgb(70%,32%,3%); stroke-linecap: butt; stroke-width: 2;"/>
+			<circle cx="921.9251249999992" cy="666.875" r="4" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(70%,32%,3%); fill-rule: evenodd;"/>
+			<text x="1045" y="662.875" style="font-family: Helvetica; font-size: 12px;fill: rgb(70%,32%,3%); stroke:none;" transform="translate(0,1325) scale(1,-1)">+65.581 ms</text>
+			<text x="152.968" y="616.625" style="font-family: Helvetica; font-size: 12px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,1233) scale(1,-1)">Paired block 2</text>
+			<path d="M 716,620.625 L 319.887169,620.625 Z" style="stroke: rgb(5%,46%,43%); stroke-linecap: butt; stroke-width: 2;"/>
+			<circle cx="319.8871693799997" cy="620.625" r="4" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(5%,46%,43%); fill-rule: evenodd;"/>
+			<text x="1045" y="616.625" style="font-family: Helvetica; font-size: 12px;fill: rgb(5%,46%,43%); stroke:none;" transform="translate(0,1233) scale(1,-1)">-126.151 ms</text>
+			<text x="152.968" y="570.375" style="font-family: Helvetica; font-size: 12px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,1140) scale(1,-1)">Paired block 3</text>
+			<path d="M 716,574.375 L 691.513627,574.375 Z" style="stroke: rgb(5%,46%,43%); stroke-linecap: butt; stroke-width: 2;"/>
+			<circle cx="691.5136268799995" cy="574.375" r="4" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(5%,46%,43%); fill-rule: evenodd;"/>
+			<text x="1045" y="570.375" style="font-family: Helvetica; font-size: 12px;fill: rgb(5%,46%,43%); stroke:none;" transform="translate(0,1140) scale(1,-1)">-7.798 ms</text>
+			<text x="152.968" y="524.125" style="font-family: Helvetica; font-size: 12px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,1048) scale(1,-1)">Paired block 4</text>
+			<path d="M 716,528.125 L 820.289213,528.125 Z" style="stroke: rgb(70%,32%,3%); stroke-linecap: butt; stroke-width: 2;"/>
+			<circle cx="820.2892125000008" cy="528.125" r="4" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(70%,32%,3%); fill-rule: evenodd;"/>
+			<text x="1045" y="524.125" style="font-family: Helvetica; font-size: 12px;fill: rgb(70%,32%,3%); stroke:none;" transform="translate(0,1048) scale(1,-1)">+33.213 ms</text>
+			<text x="748.169" y="462" style="font-family: Helvetica; font-size: 11px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,924) scale(1,-1)">After - before (ms): negative is faster; all4 evaluation pairs</text>
+			<text x="45" y="410" style="font-family: Helvetica; font-size: 19px;fill: rgb(5%,9%,16%); stroke:none;" transform="translate(0,820) scale(1,-1)">C. List then read: whole-task deltas (different linear axis)</text>
+			<path d="M 245,180 L 245,365 Z" style="stroke: rgb(88%,90%,94%); stroke-linecap: butt; stroke-width: 1;"/>
+			<text x="227.8785" y="158" style="font-family: Helvetica; font-size: 11px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,316) scale(1,-1)">-14000</text>
+			<path d="M 454.333333,180 L 454.333333,365 Z" style="stroke: rgb(88%,90%,94%); stroke-linecap: butt; stroke-width: 1;"/>
+			<text x="437.21183333333335" y="158" style="font-family: Helvetica; font-size: 11px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,316) scale(1,-1)">-10000</text>
+			<path d="M 663.666667,180 L 663.666667,365 Z" style="stroke: rgb(88%,90%,94%); stroke-linecap: butt; stroke-width: 1;"/>
+			<text x="649.6031666666668" y="158" style="font-family: Helvetica; font-size: 11px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,316) scale(1,-1)">-6000</text>
+			<path d="M 873,180 L 873,365 Z" style="stroke: rgb(88%,90%,94%); stroke-linecap: butt; stroke-width: 1;"/>
+			<text x="858.9365" y="158" style="font-family: Helvetica; font-size: 11px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,316) scale(1,-1)">-2000</text>
+			<path d="M 977.666667,180 L 977.666667,365 Z" style="stroke: rgb(88%,90%,94%); stroke-linecap: butt; stroke-width: 1;"/>
+			<text x="974.6086666666666" y="158" style="font-family: Helvetica; font-size: 11px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,316) scale(1,-1)">0</text>
+			<path d="M 977.666667,180 L 977.666667,365 Z" style="stroke: rgb(39%,45%,54%); stroke-linecap: butt; stroke-width: 1;"/>
+			<text x="152.968" y="337.875" style="font-family: Helvetica; font-size: 12px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,675) scale(1,-1)">Paired block 1</text>
+			<path d="M 977.666667,341.875 L 318.654954,341.875 Z" style="stroke: rgb(5%,46%,43%); stroke-linecap: butt; stroke-width: 2;"/>
+			<circle cx="318.6549538856666" cy="341.875" r="4" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(5%,46%,43%); fill-rule: evenodd;"/>
+			<text x="1045" y="337.875" style="font-family: Helvetica; font-size: 12px;fill: rgb(5%,46%,43%); stroke:none;" transform="translate(0,675) scale(1,-1)">-12592.580 ms</text>
+			<text x="152.968" y="291.625" style="font-family: Helvetica; font-size: 12px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,583) scale(1,-1)">Paired block 2</text>
+			<path d="M 977.666667,295.625 L 1013.434217,295.625 Z" style="stroke: rgb(70%,32%,3%); stroke-linecap: butt; stroke-width: 2;"/>
+			<circle cx="1013.4342170106665" cy="295.625" r="4" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(70%,32%,3%); fill-rule: evenodd;"/>
+			<text x="1045" y="291.625" style="font-family: Helvetica; font-size: 12px;fill: rgb(70%,32%,3%); stroke:none;" transform="translate(0,583) scale(1,-1)">+683.456 ms</text>
+			<text x="152.968" y="245.375" style="font-family: Helvetica; font-size: 12px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,490) scale(1,-1)">Paired block 3</text>
+			<path d="M 977.666667,249.375 L 946.785399,249.375 Z" style="stroke: rgb(5%,46%,43%); stroke-linecap: butt; stroke-width: 2;"/>
+			<circle cx="946.7853990626667" cy="249.375" r="4" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(5%,46%,43%); fill-rule: evenodd;"/>
+			<text x="1045" y="245.375" style="font-family: Helvetica; font-size: 12px;fill: rgb(5%,46%,43%); stroke:none;" transform="translate(0,490) scale(1,-1)">-590.088 ms</text>
+			<text x="152.968" y="199.125" style="font-family: Helvetica; font-size: 12px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,398) scale(1,-1)">Paired block 4</text>
+			<path d="M 977.666667,203.125 L 1016.928692,203.125 Z" style="stroke: rgb(70%,32%,3%); stroke-linecap: butt; stroke-width: 2;"/>
+			<circle cx="1016.928692448" cy="203.125" r="4" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(70%,32%,3%); fill-rule: evenodd;"/>
+			<text x="1045" y="199.125" style="font-family: Helvetica; font-size: 12px;fill: rgb(70%,32%,3%); stroke:none;" transform="translate(0,398) scale(1,-1)">+750.230 ms</text>
+			<text x="748.169" y="137" style="font-family: Helvetica; font-size: 11px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,274) scale(1,-1)">After - before (ms): negative is faster; all4 evaluation pairs</text>
+			<text x="45" y="103" style="font-family: Helvetica; font-size: 13px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,206) scale(1,-1)">4/8 evaluated pairs regress. Paired medians: +12.707ms direct, +46.684ms listed. No tail guarantee.</text>
+			<text x="45" y="78" style="font-family: Helvetica; font-size: 12px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,156) scale(1,-1)">The -12.593s pair includes8.531s /7.709s before-mode API waits; local relay &lt;1ms each. Cause upstream unresolved.</text>
+			<text x="45" y="53" style="font-family: Helvetica; font-size: 12px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,106) scale(1,-1)">Cache fields: cached_tokens returned50/50; dedicated hit/miss absent50/50. No forced cold-cache or cache-gain claim.</text>
+			<text x="45" y="28" style="font-family: Helvetica; font-size: 12px;fill: rgb(20%,25%,33%); stroke:none;" transform="translate(0,56) scale(1,-1)">E63 wall-time negative retained: old spaced ASCII7.066us/op -&gt; new compact UTF-8 8.325us/op; API time excluded.</text>
+		</g>
+	</g>
+</svg>

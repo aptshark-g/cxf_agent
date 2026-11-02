@@ -1,5 +1,9 @@
 # 基本 Agent 工具闭环
 
+E62：默认system按实际权限加入整文件参数提示，只读／append-only不带写整文件提醒；保持每轮单工具与512B预算。显式--trace增加仅数值／注册名的provider和工具计时，工具exec与外层策略分开；默认不开新增日志。云端relay编码、usage／缓存和计时口径由[D-HYBRID](design/hybrid-v1.md#e62-cloud-reproduction)统一维护。
+
+E59–E61当前：fs.read返回实际fd元数据版本，--write新增fs.edit唯一多行块编辑、版本前置条件与冲突回执。34项状态／安全、4组CLI、完整回归和Native14K／分叉兼容通过，真实云DeepSeek Flash的正常、冲突恢复、只读三例独立核对通过。64KiB成功编辑约多5.6–5.8ms，主要与完整正文策略扫描量级一致；未撤除检查。接口／边界只由[D-EDIT](design/versioned-edit-v1.md)维护，数据见[成果报告](benchmarks/README.zh-CN.md)。
+
 E58新增独立只读自预测实验宿主，未接默认agentctl：只允许fs.read，候选结果经正式调用精确匹配、epoch、当前权限和文件版本校验后采纳，否则回退。普通fs.read复用原逻辑；版本证据仅投机读取显式请求。24项状态／安全及8项Native验收通过（含2项注入流程），尚无模型命中率／提速结论。见[D-SPEC](design/self-speculation-v1.md)与[异机交接](self-speculation-handoff.md)。
 
 E56/E57当前：生产test.run接口与默认权限保持E55，只有可选tools/run_cpp_batch.sh任务私有PCH配方，新增6组正常／失效／泄露／网络测试。旧绑定目标版本漏检已在[D-EXEC](design/test-sandbox-v1.md)修正比较口径；配方不是新增agent能力或推理加速，分组候选不启用。
@@ -42,13 +46,14 @@ CLI为工具统一加参数／结果准入，在结果进入Agent transcript前�
 | 工具 | 挂载条件 | 契约 |
 |---|---|---|
 | `fs.list` | `--root DIR` | 列直接子项；参数 `.` 或相对目录，名称排序；有界输出明确报截断 |
-| `fs.read` | `--root DIR` | 读文本；参数为相对路径，可加换行和十进制字节偏移；每页最多 4096 B，收据 `next=-1` 表示读完，否则按 next 继续 |
+| `fs.read` | `--root DIR` | 读文本；每页最多4096B；回执version用于fs.edit，next为后续字节偏移，-1表示读完；读后核对版本 |
 | `fs.grep` | `--root DIR` | 既有子串检索 |
 | `fs.diff` | `--diff DIR` 或 `--write DIR` | 既有只读差异预览 |
 | `fs.write_new` | `--create DIR` | 既有新建，不覆盖 |
 | `fs.write_apply` | `--write DIR` | 既有整文件替换／创建 |
 | `fs.append` | `--append DIR` | 既有追加 |
 | `fs.replace_line` | `--write DIR` | 唯一整行匹配才替换，保留行尾，明确报告 applied／same／not_found／ambiguous |
+| `fs.edit` | `--write DIR` | 复制read版本，单文件唯一精确多行块；applied／same／conflict／not_found／ambiguous，冲突先重读；参数仍最多1KiB，文件64KiB |
 | `llm.local` | `--local-config FILE` | 回环文本辅助，每任务最多两次，无工具／执行权限；详见 D-HYBRID |
 | `test.run` | `--test-command COMMAND` | 模型参数必须为空；命令由启动者固定，工作目录为 `--root` |
 | `http.post` | `--net HOST:PORT` | 既有向固定服务发送 |

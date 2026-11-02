@@ -1,0 +1,4 @@
+agent_exit,api_calls,case,elapsed_seconds,exact_source_matches,external_writer,http_statuses,independent_valid,kind,latency_is_not_tool_overhead,model,model_ran_passing_test,passed,saw_applied,saw_conflict,tool_calls
+0,5,normal,11.159,True,False,"[200, 200, 200, 200, 200]",True,model_task,True,deepseek-v4-flash-0731,True,True,True,False,"['fs.read', 'fs.edit', 'test.run', 'fs.read']"
+0,7,concurrent,13.207,True,True,"[200, 200, 200, 200, 200, 200, 200]",True,model_task,True,deepseek-v4-flash-0731,True,True,True,True,"['fs.read', 'fs.edit', 'fs.read', 'fs.edit', 'test.run', 'fs.read']"
+0,3,readonly,5.601,True,False,"[200, 200, 200]",True,model_task,True,deepseek-v4-flash-0731,False,True,False,False,"['fs.list', 'fs.read']"

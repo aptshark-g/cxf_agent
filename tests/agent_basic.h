@@ -17,6 +17,8 @@
 #define BASIC_OUT_HINT   8192u
 #define BASIC_EDIT_BYTES 65536u
 #define BASIC_EDIT_OUT_HINT 256u
+#define BASIC_VERSION_CAP 256u
+#define BASIC_PATCH_OUT_HINT 512u
 
 typedef struct BasicFsCfg { const char *root; const AgentPolicy *policy; } BasicFsCfg;
 typedef struct TestRunCfg {
@@ -63,6 +65,13 @@ typedef struct BasicReadVersion { struct stat file; bool valid; } BasicReadVersi
 cxf_result basic_read_versioned(const BasicFsCfg *,const char *,uint32_t,
                                char *,uint32_t,uint32_t *,BasicReadVersion *);
 bool basic_read_validate(const BasicFsCfg *,const char *,uint32_t,const BasicReadVersion *);
+void basic_file_version(const struct stat *,char out[BASIC_VERSION_CAP]);
+cxf_result basic_patch_exec(const void *,const char *,uint32_t,char *,uint32_t,uint32_t *);
+#ifdef CXF_EDIT_TEST
+/* Tests only: observed stages 1=read,2=written,3=pre-rename; failures
+ * 10=create,11=write,12=fsync,13=close,14=rename,15=allocation. */
+void basic_patch_test_hook(int (*)(int,void *),void *);
+#endif
 cxf_result basic_list_exec(const void *, const char *, uint32_t,
                            char *, uint32_t, uint32_t *);
 cxf_result basic_edit_exec(const void *, const char *, uint32_t,
@@ -80,5 +89,7 @@ extern const CapDef basic_capdef_read, basic_capdef_list, basic_capdef_test;
 extern const CapImpl basic_impl_read, basic_impl_list, basic_impl_test;
 extern const CapDef basic_capdef_edit;
 extern const CapImpl basic_impl_edit;
+extern const CapDef basic_capdef_patch;
+extern const CapImpl basic_impl_patch;
 
 #endif

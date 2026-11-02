@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/file.h>
 #include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
@@ -59,6 +60,23 @@ static bool read_version_same(const struct stat *a,const struct stat *b) {
 #undef READ_CTIME
 }
 
+void basic_file_version(const struct stat *s,char out[BASIC_VERSION_CAP]) {
+#ifdef __APPLE__
+#define MTIME st_mtimespec
+#define CTIME st_ctimespec
+#else
+#define MTIME st_mtim
+#define CTIME st_ctim
+#endif
+    snprintf(out,BASIC_VERSION_CAP,"v1:%llx:%llx:%llx:%llx:%llx:%llx:%llx:%llx:%llx:%llx:%llx",
+        (unsigned long long)s->st_dev,(unsigned long long)s->st_ino,(unsigned long long)s->st_size,
+        (unsigned long long)s->st_mode,(unsigned long long)s->st_uid,(unsigned long long)s->st_gid,
+        (unsigned long long)s->st_nlink,(unsigned long long)s->MTIME.tv_sec,(unsigned long long)s->MTIME.tv_nsec,
+        (unsigned long long)s->CTIME.tv_sec,(unsigned long long)s->CTIME.tv_nsec);
+#undef MTIME
+#undef CTIME
+}
+
 cxf_result basic_read_versioned(const BasicFsCfg *cfg,const char *args,uint32_t len,
                                char *out,uint32_t cap,uint32_t *out_len,BasicReadVersion *version) {
     uint32_t plen = 0, off = 0;
@@ -85,12 +103,12 @@ cxf_result basic_read_versioned(const BasicFsCfg *cfg,const char *args,uint32_t 
         close(fd); return CXF_ERR_RANGE;
     }
     do { got = pread(fd, buf, sizeof buf, (off_t)off); } while (got < 0 && errno == EINTR);
-    if (version) {
+    {
         struct stat after;
         if (fstat(fd,&after) || !read_version_same(&st,&after)) {
             close(fd); return CXF_ERR_IO;
         }
-        version->file=after;
+        if (version) version->file=after;
     }
     close(fd);
     if (got < 0) return CXF_ERR_IO;
@@ -98,8 +116,9 @@ cxf_result basic_read_versioned(const BasicFsCfg *cfg,const char *args,uint32_t 
     if (off && got && ((unsigned char)buf[0] & 0xc0) == 0x80) return CXF_ERR_RANGE;
     uint32_t n = utf8_end(buf, (uint32_t)got);
     bool more = (off_t)off + n < st.st_size;
-    h = snprintf(out, cap, "#file %.*s offset=%u bytes=%u total=%lld next=%lld\n",
-                 (int)plen, args, off, n, (long long)st.st_size,
+    char token[BASIC_VERSION_CAP];basic_file_version(&st,token);
+    h = snprintf(out, cap, "#file %.*s version=%s offset=%u bytes=%u total=%lld next=%lld\n",
+                 (int)plen, args, token, off, n, (long long)st.st_size,
                  more ? (long long)off + n : -1LL);
     if (h < 0 || (uint32_t)h >= cap || n > cap - (uint32_t)h) return CXF_ERR_FULL;
     memcpy(out + h, buf, n);
@@ -539,12 +558,117 @@ done:
     return rc;
 }
 
+#ifdef CXF_EDIT_TEST
+static int (*patch_hook)(int,void *);
+static void *patch_opaque;
+void basic_patch_test_hook(int (*hook)(int,void *),void *ctx){patch_hook=hook;patch_opaque=ctx;}
+#define PATCH_HOOK(stage) (patch_hook ? patch_hook(stage,patch_opaque) : 0)
+#else
+#define PATCH_HOOK(stage) 0
+#endif
+static const char *patch_find(const char *s,uint32_t n,const char *needle) {
+    size_t len=strlen(needle);if(len>n)return NULL;
+    for(uint32_t i=0;i<=n-len;i++)if(!memcmp(s+i,needle,len))return s+i;
+    return NULL;
+}
+static cxf_result patch_receipt(char *out,uint32_t cap,uint32_t *n,const char *status,const char *reason,
+                                uint32_t matches,uint32_t bytes,const char *version) {
+    int h=snprintf(out,cap,"#edit status=%s reason=%s matches=%u bytes=%u version=%s\n",status,reason,matches,bytes,version);
+    if(h<0 || (uint32_t)h>=cap)return CXF_ERR_RANGE;
+    *n=(uint32_t)h;return CXF_OK;
+}
+cxf_result basic_patch_exec(const void *ctx,const char *args,uint32_t len,char *out,uint32_t cap,uint32_t *written) {
+    const BasicFsCfg *cfg=ctx;uint32_t path_n=0,version_end;
+    const char *old,*separator,*replacement,*closing;uint32_t old_n,new_n;
+    AgentPolicyPath at={.parent=-1};int source=-1,tempfd=-1;char temp[80]={0},current[BASIC_VERSION_CAP];
+    char *data=NULL;bool created=false;struct stat before,after;uint32_t size=0,matches=0,selected=0,final_size=0;
+    cxf_result rc=CXF_ERR_IO;
+    if(!written)return CXF_ERR_RANGE;*written=0;
+    if(!cfg || !cfg->root || !args || !out || cap<BASIC_PATCH_OUT_HINT)return CXF_ERR_RANGE;
+    if(!len || len>1024 || memchr(args,0,len))return CXF_ERR_FORMAT;
+    if(!agent_policy_text(cfg->policy,args,len))return CXF_ERR_RANGE;
+    while(path_n<len && args[path_n]!='\n')path_n++;
+    version_end=path_n+1;while(version_end<len && args[version_end]!='\n')version_end++;
+    if(!path_n || path_n>=len || version_end>=len || version_end-path_n-1>=BASIC_VERSION_CAP ||
+       version_end-path_n-1<4 || memcmp(args+path_n+1,"v1:",3))return CXF_ERR_FORMAT;
+    for(uint32_t i=path_n+4;i<version_end;i++)if(!((args[i]>='0'&&args[i]<='9')||(args[i]>='a'&&args[i]<='f')||args[i]==':'))return CXF_ERR_FORMAT;
+    static const char opening[]="<<<<<<< SEARCH\n",split[]="\n=======\n",ending[]="\n>>>>>>> REPLACE";
+    uint32_t pos=version_end+1;
+    if(len-pos<sizeof opening-1 || memcmp(args+pos,opening,sizeof opening-1))return CXF_ERR_FORMAT;
+    old=args+pos+sizeof opening-1;
+    separator=patch_find(old,(uint32_t)(args+len-old),split);if(!separator || separator==old)return CXF_ERR_FORMAT;
+    replacement=separator+sizeof split-1;
+    closing=patch_find(replacement,(uint32_t)(args+len-replacement),ending);if(!closing)return CXF_ERR_FORMAT;
+    const char *end=closing+sizeof ending-1;
+    if(end!=args+len && !(end+1==args+len && *end=='\n'))return CXF_ERR_FORMAT;
+    old_n=(uint32_t)(separator-old);new_n=(uint32_t)(closing-replacement);
+    if(patch_find(old,old_n,ending)||patch_find(old,old_n,opening)||patch_find(replacement,new_n,split)||patch_find(replacement,new_n,opening))return CXF_ERR_FORMAT;
+    rc=agent_policy_parent(cfg->policy,cfg->root,args,path_n,&at);if(rc!=CXF_OK)return rc;
+    source=openat(at.parent,at.leaf,O_RDONLY|O_CLOEXEC|O_NOFOLLOW|O_NONBLOCK);if(source<0){rc=CXF_ERR_IO;goto done;}
+    if(fstat(source,&before)){rc=CXF_ERR_IO;goto done;}
+    rc=CXF_ERR_RANGE;
+    if(!agent_policy_stat(cfg->policy,&before)||!S_ISREG(before.st_mode)||before.st_nlink!=1||before.st_size<0||before.st_size>BASIC_EDIT_BYTES)goto done;
+    basic_file_version(&before,current);
+    if(flock(source,LOCK_EX|LOCK_NB)) {
+        rc=errno==EWOULDBLOCK?patch_receipt(out,cap,written,"conflict","busy",0,(uint32_t)before.st_size,"-"):CXF_ERR_IO;goto done;
+    }
+    if(strlen(current)!=version_end-path_n-1 || memcmp(current,args+path_n+1,strlen(current))) {
+        rc=patch_receipt(out,cap,written,"conflict","stale",0,(uint32_t)before.st_size,current);goto done;
+    }
+    data=PATCH_HOOK(15)?NULL:malloc(BASIC_EDIT_BYTES+1);if(!data){rc=CXF_ERR_NOMEM;goto done;}
+    for(;;){ssize_t got=read(source,data+size,BASIC_EDIT_BYTES+1-size);if(got<0&&errno==EINTR)continue;
+        if(got<0){rc=CXF_ERR_IO;goto done;}size+=(uint32_t)got;if(size>BASIC_EDIT_BYTES){rc=CXF_ERR_RANGE;goto done;}if(!got)break;}
+    if(memchr(data,0,size)){rc=CXF_ERR_FORMAT;goto done;}
+    if(!agent_policy_text(cfg->policy,data,size)){rc=CXF_ERR_RANGE;goto done;}
+    (void)PATCH_HOOK(1);
+    if(fstat(source,&after)){rc=CXF_ERR_IO;goto done;}
+    if(!read_version_same(&before,&after)||size!=(uint64_t)before.st_size)goto changed;
+    if(old_n<=size)for(uint32_t i=0;i<=size-old_n;i++)if(!memcmp(data+i,old,old_n)){selected=i;if(++matches==2)break;}
+    if(matches!=1){rc=patch_receipt(out,cap,written,matches?"ambiguous":"not_found","none",matches,size,current);goto done;}
+    if(old_n==new_n&&!memcmp(old,replacement,old_n)){rc=patch_receipt(out,cap,written,"same","none",1,size,current);goto done;}
+    if(new_n>BASIC_EDIT_BYTES-(size-old_n)){rc=CXF_ERR_RANGE;goto done;}
+    final_size=size-old_n+new_n;
+    memmove(data+selected+new_n,data+selected+old_n,size-selected-old_n);
+    if(new_n)memcpy(data+selected,replacement,new_n);
+    if(!agent_policy_text(cfg->policy,data,final_size)){rc=CXF_ERR_RANGE;goto done;}
+    static _Atomic uint32_t patch_serial;
+    for(unsigned attempt=0;attempt<32;attempt++){
+        snprintf(temp,sizeof temp,".cxf-patch-%ld-%u.tmp",(long)getpid(),atomic_fetch_add(&patch_serial,1));
+        if(PATCH_HOOK(10)){errno=EIO;break;}
+        tempfd=openat(at.parent,temp,O_WRONLY|O_CREAT|O_EXCL|O_CLOEXEC|O_NOFOLLOW,0600);
+        if(tempfd>=0){created=true;break;}if(errno!=EEXIST)break;
+    }
+    rc=CXF_ERR_IO;if(tempfd<0)goto done;
+    for(uint32_t used=0;used<final_size;){
+        int injected=PATCH_HOOK(11);if(injected>0)goto done;
+        ssize_t got=write(tempfd,data+used,injected<0?1:final_size-used);
+        if(got<0&&errno==EINTR)continue;if(got<=0)goto done;used+=(uint32_t)got;
+    }
+    (void)PATCH_HOOK(2);
+    if(fchmod(tempfd,before.st_mode&0777)||PATCH_HOOK(12)||fsync(tempfd))goto done;
+    {int closed=close(tempfd);tempfd=-1;if(PATCH_HOOK(13)||closed)goto done;}
+    (void)PATCH_HOOK(3);
+    if(fstat(source,&after)){rc=CXF_ERR_IO;goto done;}
+    if(!read_version_same(&before,&after))goto changed;
+    if(fstatat(at.parent,at.leaf,&after,AT_SYMLINK_NOFOLLOW)){rc=CXF_ERR_IO;goto done;}
+    if(!agent_policy_stat(cfg->policy,&after)||!read_version_same(&before,&after))goto changed;
+    if(PATCH_HOOK(14)||renameat(at.parent,temp,at.parent,at.leaf))goto done;
+    created=false;
+    strcpy(current,"-");if(!fstatat(at.parent,at.leaf,&after,AT_SYMLINK_NOFOLLOW))basic_file_version(&after,current);
+    rc=patch_receipt(out,cap,written,"applied","none",1,final_size,current);goto done;
+changed:
+    rc=patch_receipt(out,cap,written,"conflict","changed",0,size,"-");
+done:
+    if(tempfd>=0)close(tempfd);if(created)unlinkat(at.parent,temp,0);
+    if(source>=0)close(source);if(at.parent>=0)close(at.parent);free(data);return rc;
+}
+
 const IfaceDef basic_iface_view = { "fs.view", "workspace text or directory listing", IFACE_INT };
 const IfaceDef basic_iface_test = { "test.result", "test exit status and captured output", IFACE_INT };
 const CapDef basic_capdef_read = {
     "fs.read", "Read a workspace text file; paginate large files using next byte offset",
     "relative path, optionally followed by newline and decimal byte offset (default 0)",
-    "#file receipt then original text; next=-1 means complete; otherwise read again at next",
+    "#file receipt includes version for fs.edit, then original text; next=-1 means complete; otherwise read again at next; changed version means reread",
     { IFACENAME_TASK, NULL }, "fs.view"
 };
 const CapDef basic_capdef_list = {
@@ -573,3 +697,11 @@ const CapDef basic_capdef_edit = {
 };
 const CapImpl basic_impl_edit = { "fs.replace_line", "fs", CAP_TIER_SCRIPT, 1, CAP_TRUST_WRITE,
     basic_edit_exec, NULL, BASIC_EDIT_OUT_HINT, NULL };
+
+const CapDef basic_capdef_patch = {
+    "fs.edit","Replace one unique exact multiline block in an existing file using the version from fs.read",
+    "args=path\\nversion\\n<<<<<<< SEARCH\\nold block\\n=======\\nnew block\\n>>>>>>> REPLACE; copy version from fs.read; old nonempty; exact bytes, max1KiB args/64KiB file",
+    "#edit status=applied/same/conflict/not_found/ambiguous reason=stale/busy/changed/none matches=N bytes=N version=...; conflict requires fs.read again",
+    { IFACENAME_TASK, NULL }, "fs.view"
+};
+const CapImpl basic_impl_patch={"fs.edit","fs",CAP_TIER_SCRIPT,1,CAP_TRUST_WRITE,basic_patch_exec,NULL,BASIC_PATCH_OUT_HINT,NULL};

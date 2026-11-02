@@ -70,7 +70,7 @@ def scan_text(name, text):
         private = address is not None and not address.is_global and not address.is_loopback
         private = private or host.endswith((".local", ".internal", ".lan"))
         # Real model-service URLs should be supplied at deployment, never embedded.
-        endpoint = "/v1/chat/completions" in match.group() and host not in {"host", "localhost", "example.com", "%s"}
+        endpoint = "/chat/completions" in match.group() and host not in {"host", "localhost", "example.com", "%s"}
         endpoint = endpoint and not (address is not None and address.is_loopback)
         if private or endpoint:
             findings.append({"file": name, "line": text.count("\n", 0, match.start()) + 1,

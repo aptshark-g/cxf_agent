@@ -12,7 +12,7 @@ LOCAL 只允许可信回环服务；当前明文 HTTP 不连接非回环地址�
 
 ## 文件准入
 
-read／list／grep／diff／write_new／write_apply／append／replace_line 共用默认规则，默认拒绝：
+read／list／grep／diff／write_new／write_apply／append／replace_line／edit 共用默认规则，默认拒绝：
 
 - 任意组件中的 `.env`／`.env.*`、`.git`、`.ssh`、`.aws`、`.gnupg`、`.kube`、`.azure`、`.docker`、`.workbuddy`、`.codex`、`.agents`。
 - 密钥扩展名 `.pem`、`.key`、`.p12`、`.pfx`、`.jks`，SSH 私钥常见名称，credentials／secrets／key／keys 的凭据文件名，`.netrc`、`.npmrc`、`.pypirc`、`.git-credentials`。

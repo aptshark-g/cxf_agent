@@ -37,6 +37,10 @@ class ReleaseGuardTest(unittest.TestCase):
         self.assertIn("private_or_embedded_service_url", self.rules(private))
         service = "https://" + "service.example.net/v1/chat/completions"
         self.assertIn("private_or_embedded_service_url", self.rules(service))
+        unversioned = "https://" + "service.example.net/chat/completions"
+        self.assertIn("private_or_embedded_service_url", self.rules(unversioned))
+        self.assertNotIn(unversioned, repr(guard.scan_text("fixture", unversioned)))
+        self.assertFalse(self.rules('{"model":"deepseek-v4-flash-0731"}'))
         credentials = "https://" + "user:synthetic@example.com/resource"
         self.assertIn("url_credentials", self.rules(credentials))
         home = "/".join(("", "Users", "synthetic", "models", "file"))

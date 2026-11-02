@@ -2,7 +2,9 @@
 
 [English](README.md) · [当前适配](../adaptation-status.md) · [测试方法](METHODOLOGY.md) · [全部指标](data/metrics.csv) · [原始记录](data/raw-records.jsonl) · [验收矩阵](data/validation.csv)
 
-归档日期：2026-11-02。E58新增只读自预测功能准备和异机交接，无新性能样本。E56/E57拆分固定同target的C++头文件／缓存／宿主成本，E53是宿主保护基线；此前性能仍对应历史源码版本，Qwen3 0.6B用于兼容验证。
+发布范围：本轮获授权同步E59–E63源码／成果及隐私整理。保留请求模型deepseek-v4-flash-0731，实际端点、凭据、本地配置和私有日志排除；旧未推送描述同步前阶段，没有新增性能采样。
+
+归档日期：2026-11-02。E62/E63新增云端逐轮usage／缓存／等待和UTF-8／提示对照，保留全部回退；E59–E61新增版本化编辑、真实云任务与工具安全成本，没有新的本地引擎性能样本。E56/E57拆分固定同target的C++头文件／缓存／宿主成本，E53是宿主保护基线；此前性能仍对应历史源码版本，Qwen3 0.6B用于兼容验证。
 
 已经观测到的收益集中在减少前端重复工作、共享规范前缀，以及把本地工作与输入到达重叠执行。收益依赖场景；尚未证明整体进程内存、自主编程能力或 Windows/CUDA 性能改善。
 
@@ -13,6 +15,71 @@
 24项无模型状态／安全测试、8项Native验收（6项KV／模板及2项注入流程）及原14,357-token Native回归通过ASan/UBSan。开发期JSON流编译、thinking尾部假设与外层沙箱Metal／回环失败单独保留。没有新增性能记录或图表；更大模型命中率、完整任务收益与WSL2/CUDA留待目标机器验收。旧58份证据和41组图不改。
 
 [契约](../design/self-speculation-v1.md)、[异机交接](../self-speculation-handoff.md)和[功能证据](../evidence/self-speculation-20261102.json)。准备好的runner保留全部预热、失败、输出不一致和回退配对，明确命中率分母，并分别展示probe成本、全部任务与完整且输出一致任务的耗时。0.6B兼容验收不代表自预测质量。
+
+## E62/E63 — 云请求UTF-8、逐轮usage与等待分层
+
+默认只读system已删除整文件写入提醒，仅create／write保留；可信测试relay改为紧凑UTF-8 JSON，C原本就发送UTF-8。请求模型为deepseek-v4-flash-0731；20个真实只读CLI任务、50轮API全部通过，工具顺序符合要求且文件未改。48个合法权限组合、16个既有互斥拒绝组合、16条mock转发／失败路径及真实工具计时通过普通和ASan/UBSan；完整默认回归通过。
+
+| 逐对任务（改后−改前） | 完整任务额外ms [最小,最大] | API等待额外ms [最小,最大] | 改后更慢 | 每任务上游字节 改前→后 |
+| --- | --- | --- | --- | --- |
+| direct | 12.707 [-126.151,65.581] | 15.254 [-126.597,63.927] | 2/4 | 5533 → 4167 |
+| listed | 46.684 [-12592.580,750.230] | 38.488 [-12593.063,758.810] | 2/4 | 8663 → 6530 |
+
+![Cloud request measurements](figures/cloud-request.png)
+
+每任务1预热对＋4评价对、逐block倒序。匹配轮次的输入均减少18token，来自限定范围的提示清理；仅换编码的回放解析对象相同，不构成token节省证据。8个评价配对全部保留，4个改后更慢，没有稳定端到端加速。listed改前block1有8.531s和7.709s上游等待，两轮本地relay均不到1ms；网络与服务端排队／计算仍无法拆分。即使temperature=0，生成文本与输出token仍变化。
+
+| 评价负载 | 每任务API等待中位ms | C工具执行／外层策略中位ms | 每任务relay本地中位ms | C协议／回环残差中位ms | 输入／输出token总和 | 返回cached／prompt |
+| --- | --- | --- | --- | --- | --- | --- |
+| direct/before | 3555.803 | 0.100 / 0.014 | 0.566 | 1.549 | 5792 / 629 | 3584 / 5792 (61.9%) |
+| direct/after | 3508.650 | 0.101 / 0.015 | 0.833 | 1.888 | 5648 / 541 | 2048 / 5648 (36.3%) |
+| listed/before | 5369.011 | 0.469 / 0.020 | 1.041 | 2.525 | 8964 / 882 | 1536 / 8964 (17.1%) |
+| listed/after | 5390.058 | 0.399 / 0.018 | 0.798 | 2.146 | 8748 / 880 | 1792 / 8748 (20.5%) |
+
+50轮都返回输入／输出／总token和prompt_tokens_details.cached_tokens，未见usage矛盾。专用prompt_cache_hit_tokens和prompt_cache_miss_tokens在50轮中均缺失，保留null。返回缓存比例随任务／模式变化，没有提高命中率的结论；runner不能清理远端缓存或保证冷启动，网关别名不证明后端权重或缓存实现。
+
+| 提示 | 序列化 | 首轮JSON正文字节 | 序列化每次us中位 [最小,最大] |
+| --- | --- | --- | --- |
+| before | ascii_spaced | 2513 | 7.066 [7.001,7.297] |
+| before | ascii_compact | 2431 | 7.604 [7.487,7.675] |
+| before | utf8_compact | 1921 | 8.388 [8.245,8.607] |
+| after | ascii_spaced | 2357 | 7.156 [7.047,7.415] |
+| after | ascii_compact | 2275 | 7.131 [7.084,7.850] |
+| after | utf8_compact | 1840 | 8.325 [8.284,8.426] |
+
+E63拆出60条序列化block（每条1000次、每格首条预热）。首轮2513→1840B：去空白82B、旧提示取消Unicode转义510B、UTF-8下提示变化81B。此本机回放UTF-8的序列化墙钟略增，保留负结果，不作API延迟结论。字节不含头／TCP／TLS；provider覆盖relay／API，不能相加，差值只是协议／本机搬运残差。工具exec含内部文件策略，外层检查另列；任务计时不含relay关闭。非流式响应头时间不是TTFT，所选上游HTTP无TLS承诺。
+
+[契约与复现](../design/hybrid-v1.md#e62-cloud-reproduction) · [全部轮次](data/cloud-rounds.csv) · [任务](data/cloud-tasks.csv) · [工具事件](data/cloud-tools.csv) · [正负配对](data/cloud-pairs.csv) · [序列化block](data/cloud-serialization.csv)。旧62证据和42组图不改；未复测Native推理或Windows性能。key、端点、配置与私有trace不公开。
+
+## E59–E61 — 版本化多行编辑、真实云端任务与安全成本
+
+fs.read现在返回实际fd元数据的版本；仅WRITE部署公开fs.edit，在最多64KiB的已有文本文件中替换一个唯一精确多行块。过期／忙／变化返回冲突，不自动覆盖或重试。建议锁协调本工具并发；对不遵守锁的外部程序，最终stat／rename仍有竞态。提交前失败保留原文件，目录权限稳定时清理私有临时文件。
+
+34项状态／安全／失败测试通过ASan/UBSan，4组实际CLI、完整默认回归、14,357-token Native及8项分叉／模板兼容通过。故障钩子只进入测试构建，生产无运行时开关；首次CLI桩封装错误保留。没有放宽文件／根／内容／网络权限。
+
+| 每操作额外us | 1KiB | 16KiB | 64KiB |
+| --- | --- | --- | --- |
+| read | -1.484 [-12.672,5.672] | -1.453 [-4.469,4.109] | -2.031 [-3.688,4.375] |
+| single | 77.750 [56.875,643.000] | 1335.375 [1249.625,1391.375] | 5697.750 [5484.375,6095.625] |
+| multi | 120.000 [102.625,579.250] | 1454.000 [1399.000,1489.625] | 5754.625 [5575.500,6132.125] |
+| workflow | 88.125 [-106.000,983.375] | 1337.375 [1250.875,1411.750] | 5611.500 [5424.125,7664.875] |
+| same | 31.000 [25.750,63.875] | 711.375 [669.125,751.500] | 2872.750 [2798.000,2994.000] |
+
+![Versioned editing costs](figures/versioned-edit.png)
+
+额外值为正表示变慢。363条独占无SAN的block记录，2预热＋9评价、轮换顺序；每条是8次操作均值（读取64次）。旧basic代码来自公开ad5ac5a，策略和filesystem基线源码相同。handler计时不含重置／输入准备／字节oracle；workflow包含真实读取和patch组装。大文件整写控制调用C handler，超过CLI的1KiB参数上限，不能当成可用的大文件Agent写入。所有正负对保留；9个block的范围不是置信区间或p95／p99。
+
+较大开销与完整正文准入工作一致。E61另存153条独立诊断：64KiB单次扫描在登记0／1／16个合成秘密时中位2.910／3.154／7.306ms；fstat＋版本格式化0.426–0.457us，锁＋解锁0.461–0.488us。同内容返回扫描一次，成功编辑扫描原文及完整结果。这些独立中位不能相加当成精确任务归因。读取正负混合，不宣称提速；本夹具版本元数据增加79–83回执字节，不是模型token或RSS实测。
+
+| 真实云端任务 | 结果 | API次数 | 实际工具 |
+| --- | --- | --- | --- |
+| normal | PASS | 5 | fs.read → fs.edit → test.run → fs.read |
+| concurrent | PASS | 7 | fs.read → fs.edit → fs.read → fs.edit → test.run → fs.read |
+| readonly | PASS | 3 | fs.list → fs.read |
+
+E60使用用户明确选择的deepseek-v4-flash-0731模型配置，经回环测试转发器、关闭thinking。3个真实Agent合成任务均通过最终源码逐字节核对：指定多行修改、冲突后重读再改且保留外部注释、只读拒绝。模型决策真实，仅外部写者由夹具注入；请求网关别名不证明远端权重／硬件。3例不是通用编程准确率；11.159／13.207／5.601s包含云端／网络／转发，排除在工具开销之外。用户选定上游为HTTP，无TLS承诺；不公开端点、凭据、私有配置或原始trace。
+
+[契约](../design/versioned-edit-v1.md)、[E59](../evidence/versioned-edit-overhead-20261102.json)、[E60](../evidence/versioned-edit-cloud-20261102.json)、[E61](../evidence/versioned-edit-cost-probe-20261102.json)、[全部handler样本](data/versioned-edit-samples.csv)、[配对成本](data/versioned-edit-paired.csv)、[独立探针](data/versioned-edit-probes.csv)、[模型结果](data/versioned-edit-model-tasks.csv)。旧59份证据和41组图原字节保持；历史推理数据仍绑定原测量源码。
 
 ## E56/E57 — 固定target的C++头文件、缓存与宿主协调
 
@@ -194,7 +261,7 @@ E50历史边界（文件／外发准入见E51）：当时尚无OS沙箱、统一
 | Execution | 4 CPU threads · batch 512 · FP16 KV · warm runs |
 | KV allocation | E01–02: 3328 tokens / 364 MiB; E05–06, E10–11, E13–19: 8192 / 896 MiB; E07–09: 16384 / 1792 MiB |
 
-下表索引 59 份证据。其中 52 份共含 36664 条原始记录，包含元数据、正确性、文件时间线和耗时估算样本，**不等于 36664 个独立延迟样本**。功能验收、脱敏摘要与仅文档读数分开。源码哈希对应各自实测版本。
+下表索引 64 份证据。其中 56 份共含 37290 条原始记录，包含元数据、正确性、文件时间线和耗时估算样本，**不等于 37290 个独立延迟样本**。功能验收、脱敏摘要与仅文档读数分开。源码哈希对应各自实测版本。
 
 | ID | 实验 | 证据等级 | 记录数 |
 | --- | --- | --- | --- |
@@ -256,6 +323,11 @@ E50历史边界（文件／外发准入见E51）：当时尚无OS沙箱、统一
 | E56 | [Fixed-target C++ compiler/header/cache and host coordination controls](../evidence/sandbox-cpp-diagnostic-20261102.json) | raw | 270 |
 | E57 | [Fresh C++ tasks: cold private PCH and bounded-regex candidate](../evidence/sandbox-cpp-tasks-20261102.json) | raw | 180 |
 | E58 | [Read-only same-model fork probe: functional preparation and target-machine handoff](../evidence/self-speculation-20261102.json) | functional | 0 |
+| E59 | [Versioned multiline editing: correctness and matched handler overhead](../evidence/versioned-edit-overhead-20261102.json) | raw | 363 |
+| E60 | [Real cloud DeepSeek Flash: edit, conflict recovery and read-only tasks](../evidence/versioned-edit-cloud-20261102.json) | model_acceptance | 0 |
+| E61 | [Version, advisory-lock and full text-policy cost isolation](../evidence/versioned-edit-cost-probe-20261102.json) | raw | 153 |
+| E62 | [Real cloud UTF-8/prompt pairs: usage, cache and separated waiting](../evidence/cloud-request-paired-20261102.json) | raw | 50 |
+| E63 | [Offline prompt/Unicode/whitespace serialization isolation](../evidence/cloud-serialization-20261102.json) | raw | 60 |
 | L01 | [Earlier service, budget and copy observations](../evidence/legacy-observations-20261020.json) | reported_only | 0 |
 
 ## E01–02 · 直接 API 可行性

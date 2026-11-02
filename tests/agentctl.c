@@ -98,20 +98,37 @@ static char        g_config_path[CTL_CFG_PATH_CAP] = "agentctl.json";
 static bool        g_config_explicit;
 static bool        g_config_loaded;
 /* Check tool results before the executor can append them to its transcript. */
-typedef struct CtlGuard { CapImpl original, exposed; } CtlGuard;
+static FILE *g_trace;
+static uint64_t ctl_observe_ns(void) {
+    struct timespec t;
+    return clock_gettime(CLOCK_MONOTONIC,&t)==0 ? (uint64_t)t.tv_sec*1000000000u+(uint64_t)t.tv_nsec : 0;
+}
+static void ctl_timing(const char *kind,const char *name,uint64_t a,uint64_t b,uint64_t c,uint64_t d,int rc) {
+    if(!g_trace)return;
+    bool valid=a && a<=b && b<=c && c<=d;
+    fprintf(g_trace,"[timing] {\"kind\":\"%s\",\"name\":\"%s\",\"valid\":%s,\"before_ns\":%llu,\"exec_ns\":%llu,\"after_ns\":%llu,\"total_ns\":%llu,\"rc\":%d}\n",
+        kind,name,valid?"true":"false",(unsigned long long)(valid?b-a:0),(unsigned long long)(valid?c-b:0),(unsigned long long)(valid?d-c:0),(unsigned long long)(valid?d-a:0),rc);
+}
+typedef struct CtlGuard { CapImpl original, exposed; const char *name; } CtlGuard;
 static CtlGuard g_guards[12];
 static uint32_t g_guards_count;
 static cxf_result ctl_guard_exec(const void *ctx,const char *args,uint32_t n,char *out,uint32_t cap,uint32_t *written) {
     const CtlGuard *g=ctx;
+    uint64_t a=g_trace?ctl_observe_ns():0,b,c;
     *written=0;
-    if(!agent_policy_text(&g_policy,args,n))return CXF_ERR_RANGE;
+    if(!agent_policy_text(&g_policy,args,n)) {
+        b=g_trace?ctl_observe_ns():0;ctl_timing("tool",g->name,a,b,b,b,CXF_ERR_RANGE);return CXF_ERR_RANGE;
+    }
+    b=g_trace?ctl_observe_ns():0;
     cxf_result rc=g->original.exec(g->original.ctx,args,n,out,cap,written);
+    c=g_trace?ctl_observe_ns():0;
     uint32_t visible=*written<cap?*written:cap;
     if(!agent_policy_text(&g_policy,out,visible)) {
         memset(out,0,visible);*written=0;
         fputs("[policy] blocked tool result; content withheld\n",stderr);
-        return CXF_ERR_RANGE;
+        rc=CXF_ERR_RANGE;
     }
+    ctl_timing("tool",g->name,a,b,c,g_trace?ctl_observe_ns():0,rc);
     return rc;
 }
 static bool ctl_task_only(void) { return g_llm.scope != AGENT_SCOPE_LOCAL && g_policy.cloud_egress != AGENT_EGRESS_WORKSPACE; }
@@ -163,7 +180,7 @@ static CapImpl     g_grep_impl;
 static BasicFsCfg  g_basic_fs, g_edit_fs;
 static TestRunCfg  g_test_cfg;
 static TestSandbox g_test_sandbox;
-static CapImpl     g_read_impl, g_list_impl, g_test_impl, g_edit_impl;
+static CapImpl     g_read_impl, g_list_impl, g_test_impl, g_edit_impl, g_patch_impl;
 #ifdef CXF_NATIVE_LLAMA
 static cxf_result ctl_test_output_exec(const void *ctx,const char *args,uint32_t len,char *out,uint32_t cap,uint32_t *written){
 #ifdef CTL_TOOL_OUTPUT_BEGIN
@@ -218,7 +235,6 @@ static uint32_t    g_tools_len;
 static const CapDef *g_public_tools[CAP_MAX];
 static uint32_t g_public_tool_count;
 
-static FILE       *g_trace;
 static char        g_trace_path[1024];
 static uint32_t    g_calls;
 static uint32_t    g_total_ticks;
@@ -355,6 +371,7 @@ static void ctl_print_actions(FILE *dst, const char *act, uint32_t alen) {
 static cxf_result ctl_register_impl(const char *name,const CapImpl *impl) {
     if(g_guards_count>=sizeof g_guards/sizeof g_guards[0])return CXF_ERR_RANGE;
     CtlGuard *g=&g_guards[g_guards_count++];g->original=*impl;g->exposed=*impl;
+    g->name=name;
     g->exposed.exec=ctl_guard_exec;g->exposed.ctx=g;
     return cxf_service_register(&g_world,name,1,&g->exposed);
 }
@@ -393,6 +410,7 @@ static cxf_result ctl_step_exec(const void *ctx, const char *args, uint32_t args
         if (w > 0 && (size_t)w < sizeof(g_hdr)) g_llm.hdr = g_hdr;
     }
 
+    uint64_t provider_start=g_trace?ctl_observe_ns():0;
 #ifdef CXF_NATIVE_LLAMA
     if (g_native || g_tool_prepare) {
         rc = g_tool_prepare ? agent_tool_prepare_action(g_tool_prepare, (AgentLlmCfg *)ctx, args, args_len,
@@ -407,6 +425,8 @@ static cxf_result ctl_step_exec(const void *ctx, const char *args, uint32_t args
 #endif
     rc = agent_llm_chat_action((AgentLlmCfg *)ctx, args, args_len,
                                raw, (uint32_t)sizeof(raw), act, (uint32_t)sizeof(act), &alen);
+    uint64_t provider_end=g_trace?ctl_observe_ns():0;
+    ctl_timing("provider","primary",provider_start,provider_start,provider_end,provider_end,rc);
     raw[sizeof raw-1]=0;
     bool withheld = !agent_policy_text(&g_policy,raw,(uint32_t)strlen(raw));
     if (rc==CXF_OK) {
@@ -531,20 +551,20 @@ typedef struct CtlRoots {
 static void ctl_system(char *dst, size_t cap,
                        bool diff, bool create, bool write, bool append, bool net, bool test) {
     static const char BASE[] =
-        "你是本地代码助手。";
+        "你是工作区代码助手。";
     static const char F_DIFF[] =
         "fs.diff 只读预览；";
     static const char F_CREATE[] =
         "fs.write_new 只新建；";
     static const char F_WRITE[] =
-        "fs.write_apply 替换，fs.replace_line 单行编辑；";
+        "fs.edit 版本化多行编辑，冲突先重读；fs.write_apply 整文件，fs.replace_line 单行；";
     static const char F_APPEND[] =
         "fs.append 追加；";
     static const char F_NET[] =
         "http.post 向固定服务发送；";
     static const char TAIL[] =
         "fs.list 列目录，fs.read 读文件。每轮只调一个工具，等结果再继续。"
-        "整文件写入 args 必须是路径、换行、完整内容，不能仅给路径。不得虚报成功。";
+        "不得虚报成功。";
     const char *frag[5];
     size_t n = 0u;
 
@@ -566,6 +586,7 @@ static void ctl_system(char *dst, size_t cap,
     for (uint32_t i = 0u; i < 5u; i++)
         if (frag[i] != NULL) CTL_APPEND(frag[i]);
     if (test) CTL_APPEND("改后 test.run(args=空)；exit=0 且 timeout=0 才能说通过。");
+    if (create || write) CTL_APPEND("整文件写入 args 必须是路径、换行、完整内容，不能仅给路径。");
     CTL_APPEND(TAIL);
     dst[n] = '\0';
 #undef CTL_APPEND
@@ -870,6 +891,9 @@ static void ctl_setup(const CtlRoots *r,
         if (ctl_register_tool("cap/fs.replace_line", &basic_capdef_edit) != CXF_OK ||
             ctl_register_impl("impl/fs.replace_line.fs", &g_edit_impl) != CXF_OK)
             die("line edit tool");
+        g_patch_impl=basic_impl_patch;g_patch_impl.ctx=&g_edit_fs;
+        if(ctl_register_tool("cap/fs.edit",&basic_capdef_patch)!=CXF_OK ||
+           ctl_register_impl("impl/fs.edit.fs",&g_patch_impl)!=CXF_OK)die("versioned edit tool");
     }
     if (g_local_enabled) {
         if (cxf_service_register(&g_world, "iface/llm.text", 1, &g_local_iface) != CXF_OK ||

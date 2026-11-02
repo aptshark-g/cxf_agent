@@ -131,7 +131,11 @@ build/test_self_speculate: tests/agent_basic.o tests/agent_policy.o tests/agent_
 	@mkdir -p build
 	$(CXX) -std=c++17 -O2 -Wall -Wextra -Wpedantic -Iinclude -Itests -o $@ tests/agent_basic.o tests/agent_policy.o tests/agent_sandbox.o tests/agent_speculate.cpp tests/test_self_speculate.cpp $(LDFLAGS) -pthread $(LDLIBS)
 
-test: build/test_self_speculate build/test_ds build/test_world build/test_soa build/test_registry \
+build/test_versioned_edit: tests/agent_basic.c tests/agent_basic.h tests/agent_policy.o tests/agent_sandbox.o tests/test_versioned_edit.c
+	@mkdir -p build
+	$(CC) $(CFLAGS) -DCXF_EDIT_TEST -o $@ tests/agent_basic.c tests/agent_policy.o tests/agent_sandbox.o tests/test_versioned_edit.c $(LDFLAGS) $(LDLIBS)
+
+test: build/test_versioned_edit build/test_self_speculate build/test_ds build/test_world build/test_soa build/test_registry \
       build/test_service build/test_agent build/test_stress build/test_llm build/agentctl build/test_agent_basic build/test_agent_policy build/test_agent_sandbox build/sandbox_probe build/test_cost build/test_roofline build/test_cost_residual build/test_cost_kalman
 	./build/test_roofline
 	./build/test_cost_residual
@@ -149,9 +153,12 @@ test: build/test_self_speculate build/test_ds build/test_world build/test_soa bu
 	./build/test_agent_policy
 	./build/test_agent_sandbox
 	./build/test_self_speculate
+	./build/test_versioned_edit
 	PYTHONDONTWRITEBYTECODE=1 python3 tests/test_self_speculate_report.py
 	python3 tests/test_agentctl_repl.py
 	python3 tests/test_agent_foundation.py
+	PYTHONDONTWRITEBYTECODE=1 python3 tests/test_versioned_edit_cli.py
+	PYTHONDONTWRITEBYTECODE=1 python3 tests/test_cloud_observe.py
 	python3 tests/test_agent_data_policy.py
 	python3 tests/test_agent_sandbox.py
 	python3 tests/test_cpp_batch.py

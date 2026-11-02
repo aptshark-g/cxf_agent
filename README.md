@@ -12,7 +12,7 @@ For read-only self-prediction tests on another Windows machine, follow the [targ
 
 | Component | Current scope |
 | --- | --- |
-| Agent tool loop | File listing, reading, search, diff, guarded single-line edits and optional writes; a deployment-fixed test command; bounded receipts and multi-round execution |
+| Agent tool loop | File listing, reading, search, diff, versioned multiline edits, guarded single-line edits and optional writes; a deployment-fixed test command; bounded receipts and multi-round execution |
 | Native context | One libllama context owns KV; shared canonical token blocks, explicit revisions, append/replace, prefix forks, rollback and budgeted prefill |
 | Chat bridge | Tested Qwen3 template/tool parsing, incremental suffix tokenization and cached template preparation |
 | Tool-output prefill | Optional bounded speculative prefill during `test.run`; final full token validation before generation; resident KV |
@@ -21,6 +21,16 @@ For read-only self-prediction tests on another Windows machine, follow the [targ
 | Research adapters | Explicit KV save/restore, semantic-unit streaming, cost estimation and timing diagnostics |
 
 The adapters call upstream llama.cpp APIs; inference kernels are unchanged. Shared token storage does **not** mean every text representation disappears or physical KV allocation shrinks. Snapshot/eviction is an explicit experiment, not required for normal tool use. See the [adaptation inventory](docs/adaptation-status.md) for integration levels and pending work.
+
+## Cloud request observations (E62/E63)
+
+Read-only prompts now omit write instructions, and the trusted test relay sends compact UTF-8 JSON.20 actual tasks /50 API rounds pass using requested model `deepseek-v4-flash-0731` (DeepSeek Flash). Each round uses18 fewer prompt tokens; bytes fall, but4/8 evaluated task pairs regress and no stable speedup/cache improvement is established. Per-round usage/cache/bytes/API waits, real tool time and forwarding costs are [reported separately](docs/benchmarks/README.md#e62e63--cloud-utf-8-requests-usage-and-separated-waiting). Serialization wall time slightly increases; all negatives remain. [Contract and reproduction](docs/design/hybrid-v1.md#e62-cloud-reproduction).
+
+## Versioned multiline editing (E59–E61)
+
+Read with `fs.read`, then pass its version to WRITE-only `fs.edit` for one unique exact multiline replacement. Conflicts require re-reading; pre-commit failures preserve the original. CLI args stay1KiB and files64KiB. See the [contract](docs/design/versioned-edit-v1.md).34 security/failure cases,4 CLI suites, full regression and Native compatibility pass.
+
+Three actual user-selected cloud DeepSeek Flash tasks pass exact-source checks: normal editing, conflict recovery preserving an external update, and read-only refusal. At64KiB, successful edits add about5.6–5.8ms over legacy handlers, consistent with full text-policy scan work. All negative pairs remain; cloud latency and historical inference gains are separate. See the [results](docs/benchmarks/README.md).
 
 ## Start with the tool loop
 
@@ -140,7 +150,7 @@ These are historical measured revisions, not a rerun of every current file. Sing
 
 ![Matched tool controls, including negative results](docs/benchmarks/figures/contention640-controls.svg)
 
-The archive contains **59 evidence files, 36,664 main raw records and 41 figures**. E58 adds only functional self-prediction acceptance and a [target-machine handoff](docs/self-speculation-handoff.md), with no new performance samples or model hit-rate claim. Raw counts include warmups, metadata, correctness and prediction records; they are not independent latency samples. Reports separate functional acceptance, model failures, performance, historical observations and unvalidated claims. Gains from different experiments must not be added together.
+The archive contains **64 evidence files, 37,290 main raw records and 43 figures**. E62/E63 add50 cloud rounds and60 serialization blocks, with20 task/30 tool auxiliary records separate. E59/E61 retain tool diagnostics; E60 records3 earlier cloud tasks separately. Inference performance remains tied to historical revisions. The [target-machine handoff](docs/self-speculation-handoff.md) covers later platform validation. Raw counts include warmups, metadata, correctness and prediction records; they are not independent latency samples. Reports separate functional acceptance, model failures, performance, historical observations and unvalidated claims. Gains from different experiments must not be added together.
 
 [English results](docs/benchmarks/README.md) · [中文成果汇总](docs/benchmarks/README.zh-CN.md) · [Methodology](docs/benchmarks/METHODOLOGY.md) · [Validation matrix](docs/benchmarks/data/validation.csv)
 

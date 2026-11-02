@@ -15,7 +15,8 @@
 | D-SPEC | [只读工具自预测 v1](self-speculation-v1.md) | 当前实验契约；默认关闭 | E58：fs.read 同模型分叉探针／提前读取／精确采纳与回退；24无模型及8 Native验收（含2注入流程）；未接默认CLI，目标机器命中率／性能待测 |
 | D-MEM | `docs/context-memory-audit.md`：表示与测量口径 | 审计／优化阶段记录 | 已有 E07–09；不能作全链路单份内存承诺 |
 | D-TOOLS | `docs/basic-agent.md`：基础工具权限与执行闭环 | 当前工具契约 + 历史阶段范围 | 执行链通过；E50增补单行编辑／最小环境，E51统一数据准入，E52初版／E53宿主环境保护／E55显式工具链绑定；模型能力失败另列 E04/E12 |
-| D-HYBRID | [端云协同基础 v1](hybrid-v1.md) | 当前基础契约；E50功能验收通过 | 主提供者调用回环文本辅助，独立配置／配额／权限；真实端云质量／自动路由／云 SSE／跨模型 KV 待做 |
+| D-EDIT | [多行编辑与版本前置条件v1](versioned-edit-v1.md) | 当前契约／CLI已接入 | E59：34状态／安全＋4CLI、363开销记录；E60：真实云DeepSeek Flash三任务；E61：153独立成本诊断；冲突不自动覆盖，默认权限未放宽 |
+| D-HYBRID | [端云协同基础 v1](hybrid-v1.md) | 当前基础契约；E50功能与E62/E63逐轮云观测通过 | 主提供者调用回环文本辅助；只读提示按权限、relay紧凑UTF-8，50轮usage／缓存／等待与60离线block保留负对；自动路由／云SSE／跨模型KV待做 |
 | D-DATA | [敏感文件与外发策略 v1](data-policy-v1.md) | 当前契约；E51功能验收通过 | 445项策略检查、12组HTTP安全套件；默认拒绝云外发，不替代OS沙箱 |
 | D-EXEC | [test.run进程隔离v1](test-sandbox-v1.md) | 当前契约；E56/E57 C++归因与可选配方验收 | 默认文件／网络隔离与cxf宿主环境保护；561项C、15组OS套件；E52/E53各230条历史开销，E54缓存／IPC归因与E55显式同Xcode绑定新任务；E56固定target头文件归因、E57显式私有PCH；分组候选未启用。仅macOS，其他平台失败关闭 |
 | D-OLD-CONC | `docs/concurrency-snapshot-experiment.md`：通用并发快照试验 | 未运行草案，不是上述模块的隐含依赖 | 未实现、无性能数据 |

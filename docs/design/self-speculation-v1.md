@@ -40,6 +40,6 @@ Windows 16GB 显存先走 WSL2 Linux + CUDA + 固定 b10938；原生 Windows 的
 
 ## 本轮实现与验收
 
-`tests/agent_speculate.h/.cpp` 是模型无关候选控制器；`basic_read_versioned`/`basic_read_validate` 给现有 fs.read 增加可选 fd 版本证据，普通 read 不增加后置 stat。`agent_native_prepare_thinking` 为实验宿主提供显式模式，默认 Native 行为不变。`tests/self_speculate_native.cpp` 执行真实同模型探针；`tools/run_self_speculate.py` 负责新目录、off/on 轮换、全部失败／负对、显式分母和输出一致性检查。
+`tests/agent_speculate.h/.cpp` 是模型无关候选控制器；`basic_read_versioned`/`basic_read_validate` 给fs.read增加fd版本证据。E58阶段普通read未加后置stat；E59为版本化编辑使所有read都携带版本并做读后校验，现行规则见[D-EDIT](versioned-edit-v1.md)，E58原证据不改。`agent_native_prepare_thinking` 为实验宿主提供显式模式，默认 Native 行为不变。`tests/self_speculate_native.cpp` 执行真实同模型探针；`tools/run_self_speculate.py` 负责新目录、off/on 轮换、全部失败／负对、显式分母和输出一致性检查。
 
 24项状态／权限／新鲜度测试通过；8项 Native 验收包含真实模型的 KV／模板核对及两项明确注入 token 的完整采纳／回退流程，不把后两项计作模型命中。原14K Native回归通过；没有新正式性能样本。目标机器的模型任务质量与端到端收益仍待实测，见[E58](../evidence/self-speculation-20261102.json)。

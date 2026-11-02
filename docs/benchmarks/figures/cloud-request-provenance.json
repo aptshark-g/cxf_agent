@@ -1,0 +1,12 @@
+{
+  "renderer": "ReportLab 4.4.9",
+  "renderer_source_sha256": "d1774ea56e2680dc5b36497c45e0b0eccb5cc84ad8e33d600b7e2f60b52a8fe8",
+  "evidence_sha256": {
+    "cloud-request-paired-20261102.json": "d9f54db44c0a9f77cf6ab24560b0cca20a3ef924784663e118c3ef11d296f81a",
+    "cloud-serialization-20261102.json": "6404f602b07ef5d259ba8de45a3f6173a491f4dd03db6e5ad89e6978ad1fecaf"
+  },
+  "figures": {
+    "cloud-request.svg": "924b282d19e1301f07f27a70a9b5745783aae4a06c8101b543a931b0f4fe6950",
+    "cloud-request.png": "d1cc1fac39f154a74d7f1874eb9b452b447286458fecb4ed461487c5329b4ae9"
+  }
+}

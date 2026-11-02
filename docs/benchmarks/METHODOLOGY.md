@@ -1,5 +1,19 @@
 # Measurement and reproduction
 
+## E62/E63：云端请求对照与时间分层
+
+公开记录仅保留模型标识`deepseek-v4-flash-0731`和可复核测量。实际服务地址／IP简称／key／账号／个人配置路径不进入文档、数据或发布包；逐轮与任务CSV补充model列，不改原始数值和历史证据。
+
+当前真实云采集是非流式，端点由部署者指定的私有配置在内存中读取，经可信回环relay到明确配置的HTTP上游，不承诺TLS或后台模型身份。2只读任务各1预热＋4评价对，逐block倒序，共20任务50请求；同一不可变文件让版本回执一致，两分支均用相同application/json; charset=utf-8头，真实模型独立选择工具。所有输出长度／缓存／网络漂移保留；n=4不是置信区间或尾延迟保证。
+
+每轮prompt/completion/total与cached_tokens直接来自usage；专用hit/miss缺失为null，bool／负数／字符串为非法，字段矛盾只标记、不修造数值。缓存比例按评价轮次sum(cached_tokens)/sum(prompt_tokens)，不推算缺失miss或计费。无远端清缓存能力，不能强制冷／热。首轮输入少18token是提示清理实测，UTF-8同对象回放不是token节省证据。
+
+任务墙钟截止子进程退出，剔除relay.shutdown轮询。C provider跨度覆盖请求构造、HTTP、解析；relay跨度覆盖API，二者不可相加。API到头／读体是网络＋队列＋推理合计，不是TTFT。relay本地=完整relay−API；C残差=provider−relay（含本机传输和C协议，允许小负测量残差）。工具外层前后策略与内部exec分开，后者仍含文件策略和I/O；新trace自身开销在两个分支一致，未声称它零成本。工具事件附到刚完成的模型轮次，不把交错时间间隔全部冒充工具时间。
+
+E63使用perf_counter_ns墙钟；未单独测线程CPU。归档限制中“CPU may increase”仅为可能性，不是已测CPU结论。E63的60条行均为1000次序列化的每次均值，每格1预热＋9评价，分别旧／新提示×ASCII空白／ASCII紧凑／UTF-8紧凑；同一解析对象，首轮2513→1840B。JSON正文字节不含头／TCP／TLS，序列化us来自perf_counter_ns墙钟而非线程CPU，不能与云ms混淆，也不等于模型token／KV／RSS。保留序列化墙钟略增、4/8任务回退与异常API等待；历史工具编辑和推理成绩不随本轮源码自动更新。
+
+E59 363条记录为每进程8次操作均值（read64次），2预热＋9评价block、baseline/current顺序轮换，baseline basic来自公开ad5ac5a；重置、已知版本和输入准备／bytes oracle不计入handler，workflow计入真实读取和patch组装。大文件whole只调用C handler，CLI仍限1KiB参数。E61 153条包含150定时和3回执字节诊断，1预热＋9评价；metadata/lock迭代256次、policy8次，profile0/1/16仅合成秘密。独立中位不能相加。E60三例用真实用户指定云模型，thinking disabled，经实际CLI和独立源码字节／编译校验；网络／模型耗时不作为工具开销。
+
 E58为功能准备：24项无模型状态／安全、8项Native（6项KV／模板及2项注入完整流程）、原14K兼容回归与真实0.6B预算耗尽冒烟分开记录。没有新正式性能样本。异机runner按case/block轮换off/on，不丢失败或负对，区分全部任务与完整且输出一致配对，率值保留计数／分母，probe成本及加载时间单列。短fs.read可能没有足够重叠窗口，不能用人为sleep制造收益。见[交接](../self-speculation-handoff.md)。
 
 E56/E57当前：270条固定目标API阶段记录＋180条新CLI主记录，均2预热／7评价block，58份证据／36,664主记录／41图；中止预热独立CSV，不混入性能。E55绑定off26.0／on10.4为已发现混杂，旧数不改；新轮次显式同target。PCH冷准备／全部TUs／链接／运行／清理全计，临时逻辑文件bytes不等于RSS／KV。最终基准父进程仅在存活期阻止空闲休眠，双时钟差异阈值100ms，超限中止整轮，实际最大0.029ms；之前约274s／0.8s差异原因未定。

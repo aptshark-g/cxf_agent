@@ -1,5 +1,13 @@
 # Publication package
 
+Current authorized GitHub sync: E59–E63 source, tests, designs and results, plus privacy cleanup, are included in the561-file source allowlist.64 evidence files,37,290 main records and43 figure pairs; keep model identifier deepseek-v4-flash-0731 and all negative results. Real service addresses/hosts, keys, personal configs and private logs are excluded. Earlier “no push” notes describe preparation stages and are superseded by this explicit sync authorization. Verify the remote main commit after a normal fast-forward push.
+
+The source release guard also rejects embedded non-placeholder chat-completions URLs without a version prefix. Model identifiers remain allowed. Five release-guard suites pass; findings contain locations/rules only.
+
+Current E62/E63 snapshot:64 evidence files,37,290 main records,43 figure pairs.50 cloud rounds and60 offline serialization blocks;20 task and30 tool auxiliary records separately. Preserve prior62 evidence and42 figure pairs. No stable latency/cache gain; retain4/8 regressions and serialization wall-time increase. cloud-observe artifacts exclude actual URL/key/profile/private traces/models; no push this round.
+
+Historical E59–E61 snapshot:62 evidence files,37,180 main records,42 figure pairs.363 handler block records and153 independent probes are separate from3 real-cloud tasks. Preserve all prior59 evidence and41 figure pairs; no private endpoint/config/key/trace/model. Versioned-edit artifacts only, no Git push this round. Large full-write controls are C handlers, not CLI capabilities.
+
 Current E58 snapshot:59 evidence files,36,664 main records,41 figure pairs. Read-only self-prediction adds functional acceptance and target-machine handoff only; no new performance samples or model hit-rate claim. Preserve all prior58 evidence files and41 figure pairs. Use fresh self-speculation artifact names; do not include model/runtime/build logs or push Git.
 
 Current E56/E57 snapshot:58 evidence files,36,664 main records,41 figure pairs. Old56 evidence files and40 pairs stay byte-identical. E55 bound deployment targets differed; preserve that limitation, aborted warmups and failed grouped-rule candidate. Optional one-task PCH is build-command work, not inference acceleration. Fresh sandbox-cpp artifacts only; no Git push.
@@ -18,20 +26,24 @@ This directory is the public results entry point. Use [README.md](README.md) or 
 The exact allowlist is [publication-manifest.json](publication-manifest.json), with size and SHA-256 for every file except the manifest itself:
 
 - Bilingual root project READMEs, MIT license, source release guide, current adaptation inventory, allowlisted design contracts/audit, English/Chinese benchmark reports, methodology, maintenance/change records and this publishing note. Planned designs are explicitly unimplemented.
-- Fifty-eight evidence JSON files, separated into raw/functional/sanitized-summary/reported-only classes.
+- Sixty-four evidence JSON files, separated into raw/functional/sanitized-summary/reported-only classes.
 - Full indexed raw records, tidy aggregate metrics, per-cell batch/context errors, frozen-calibration training/validation/anchor CSV, Kalman summary/per-cell/innovation/replay CSV, actual-tool task/summary/paired-difference/restore-component CSV, restore stage/ETA-audit/control/summary CSV, complete-task additive accounting and indexed historical-pair audit CSV, deletion resource/child-phase/last-close controls and executable-launch/incremental task CSV, resident tool-flow, real-process streaming call/task/pair/arrival CSV and actual CLI output task/stage/pair/overhead CSV, producer CPU/EOF/worker attribution and500 separately labeled exit-probe diagnostics, Metal per-command/per-wait and scope partitions, notification coverage, bare/probe/batch matched tasks/pairs, validation matrix, catalog, integrity checks and metadata-only run inventory.
-- Forty-one vector SVG figures and their PNG previews.
+- Forty-three vector SVG figures and their PNG previews.
 - Standard-library report/check/export script and the ReportLab figure script.
 
 Generate a deterministic, offline results bundle from repository root:
 
 ```sh
-python3 tools/build_benchmark_report.py --check --export build/cxf-benchmark-results-20261102-sandbox-cpp.zip
+python3 tools/build_benchmark_report.py --check --export build/cxf-benchmark-results-20261102-public-model.zip
 ```
 
 Extract it while preserving directories; both language reports and their local links work offline. The bundle is a **data/report release**, not the cxf executable or a source-code/model distribution. It does not require model weights or access to this machine’s build directory. Recomputing reports works from the bundle; rerunning inference requires the complete project and matching dependencies.
 
 ## Privacy boundary
+
+Public model identification is allowed: `deepseek-v4-flash-0731` is the requested model alias for E60/E62. Per-round and per-task E62 CSV include a `model` column; source evidence, numerical values and negative results remain unchanged. The alias does not verify remote weights.
+
+Do not publish real service URLs, host/IP hints, keys, authorization values, account identifiers, personal configuration paths, or the provenance of an individual's API configuration. Use placeholders in reproduction commands. Generic API schemas, loopback fixtures, protected-directory names, model aliases and the HTTP/TLS measurement boundary are technical documentation, not deployment credentials. Scan the complete source/result allowlists and packaged bytes; report only matching filenames/rules, never secret values.
 
 The allowlisted package excludes `agentctl.json`, `.workbuddy/`, sibling projects, raw HTTP/config/request traces, engine logs, model weights, native binaries, KV snapshots and local runtime paths. Imported historical data was reduced to measured fields and hashes; private request logs were not copied. Static checks inspect the release for common credential strings, private endpoint URLs and home-directory paths. Do not print secret matches in a review log.
 

@@ -1,4 +1,47 @@
 category,case,result,evidence,detail
+security,E59:multiline_lf,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:crlf_exact,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:no_final_newline,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:unicode,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:delete_block_with_lf,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:same_no_write,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:not_found_no_write,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:ambiguous_capped,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:stale_inplace,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:stale_replaced_inode,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:stale_permission,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:busy_nonblocking,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:external_mutation_stage_1,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:external_mutation_stage_2,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:external_mutation_stage_3,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:injected_precommit_failure_10,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:injected_precommit_failure_11,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:injected_precommit_failure_12,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:injected_precommit_failure_13,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:injected_precommit_failure_14,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:injected_precommit_failure_15,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:real_create_permission_error,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:small_receipt_before_io,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:malformed_frames,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:protected_names_and_traversal,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:symlink_denied,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:hardlink_denied,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:registered_config_inode,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:assembled_secret_denied,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:input_secret_denied,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:large_ambiguous_no_write,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:result_size_limit,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:argument_limit,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+security,E59:two_process_same_version_one_commit,PASS,E59:validation.unit_sanitizers,Version/unique block/old-source protection; actual concurrent processes and test-only injected I/O failures; no runtime bypass
+functional,E59:cli_normal,PASS,E59:validation.cli_suites,Dynamic actual-read versions with deterministic decisions; no model quality claim
+functional,E59:cli_conflict,PASS,E59:validation.cli_suites,Dynamic actual-read versions with deterministic decisions; no model quality claim
+functional,E59:cli_readonly,PASS,E59:validation.cli_suites,Dynamic actual-read versions with deterministic decisions; no model quality claim
+functional,E59:cli_protected,PASS,E59:validation.cli_suites,Dynamic actual-read versions with deterministic decisions; no model quality claim
+model,E60:normal,PASS,E60:tasks,"Real user-selected DeepSeek Flash, actual CLI and independently verified exact file bytes; n=3 synthetic tasks only"
+model,E60:concurrent,PASS,E60:tasks,"Real user-selected DeepSeek Flash, actual CLI and independently verified exact file bytes; n=3 synthetic tasks only"
+model,E60:readonly,PASS,E60:tasks,"Real user-selected DeepSeek Flash, actual CLI and independently verified exact file bytes; n=3 synthetic tasks only"
+negative,E59:edit_cost,RETAINED,E59:rows;paired_summary,64KiB successful edits add5.6-5.8ms; same adds2.9ms; no stable read speedup or free-security claim
+diagnostic,E61:text_policy,MEASURED,E61:rows;summary,Metadata/lock versus0/1/16 synthetic-secret full scans; isolated medians not additive task decomposition
 security,E58:exact_adopt,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
 security,E58:argument_mismatch,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
 security,E58:offset_mismatch,PASS,E58:validation.controller_sanitizers,Single fs.read candidate; exact args/epoch/file-version adoption; current file/content policy; no commands/network
@@ -222,6 +265,8 @@ implementation,E31:matched_isolation,PASS,E31:validation,13 ASan unit cases;40 C
 implementation,E33:process_attribution,PASS,E33:validation,"Child CPU/wall, EOF waits, callback and worker observations; matched controls"
 implementation,E36:contention,PASS,E36:validation,13 native sanitizer cases and40 actual CLI tasks; same growth gate and CPU/decode observations
 implementation,E38:decode_scheduler,PASS,E38:validation,"22 sanitizer cases,32 real CLI tasks, Mach unit calibration and decode/sync accounting"
+implementation,E62:cloud_observe,PASS,E62:validation,"64 capability combinations,16 forwarding/error paths,normal andASan/UBSan traced CLI plus full default regression"
+model_acceptance,E62:real_cloud_readonly,PASS,E62:tasks,"20 real synthetic tasks/50 requests; same tools,immutable files,39/refusal markers; not general capability"
 implementation,E40/E41:idle_source,PASS,E40:validation;E41:validation,"32 model fixtures,96 actual tools and384 producer controls; model CPU sampled without other PID inventory"
 implementation,E42/E43:metal_timeline,PASS,E42:validation;E43:validation,"30 native sanitizer cases and48 actual CLI tasks each; per-buffer timestamps, completion-marker and bare controls; diagnostics only"
 implementation,E47/E48/E49:isolation_quantum,PASS,E47:validation;E48:validation;E49:validation,"Same-capacity CLI controls, pressure/fresh-greedy isolation and larger-quantum timeout/cancel checks; final14K/Stream/default acceptance"

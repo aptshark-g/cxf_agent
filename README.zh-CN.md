@@ -12,7 +12,7 @@
 
 | 组件 | 当前范围 |
 | --- | --- |
-| 工具闭环 | 文件列表、读取、搜索、差异、唯一匹配的单行编辑及可选写入；部署者固定测试命令；有界收据与多轮执行 |
+| 工具闭环 | 文件列表、读取、搜索、差异、版本化多行编辑、单行编辑及可选写入；部署者固定测试命令；有界收据与多轮执行 |
 | 原生上下文 | 一个 libllama context 管理 KV；共享规范 token 块、revision、追加／替换、前缀分支、回退与预算预填充 |
 | 聊天桥接 | 已验收的 Qwen3 模板／工具解析、后缀增量分词与模板准备缓存 |
 | 工具输出预填充 | `test.run` 输出时可选有界推测；生成前完整 token 校验；KV 常驻 |
@@ -21,6 +21,16 @@
 | 实验适配 | 显式 KV 保存／恢复、语义块流式输入、耗时估算及分阶段诊断 |
 
 调用上游 llama.cpp 接口，没有修改推理 kernel。共享 token 存储不等于原文、模板和全部中间表示只占一份，也不代表物理 KV 缩小。普通工具流程不需要快照／逐出；它们属于显式资源策略实验。详细接线程度见[当前适配清单](docs/adaptation-status.md)。
+
+## 云端请求观测（E62/E63）
+
+只读默认提示已移除写入说明，可信测试relay改为紧凑UTF-8。使用`deepseek-v4-flash-0731`（DeepSeek Flash）的20个真实任务／50轮请求通过，每轮输入少18token、字节下降，但8评价对4个回退，没有稳定提速或缓存提高。逐轮usage／缓存／字节／API等待与真实工具／转发成本[分开展示](docs/benchmarks/README.zh-CN.md#e62e63--云请求utf-8逐轮usage与等待分层)，序列化墙钟略增也保留。[契约与复现](docs/design/hybrid-v1.md#e62-cloud-reproduction)。
+
+## 版本化多行编辑（E59–E61）
+
+用 `fs.read` 取得版本，再用仅随 `--write` 提供的 `fs.edit` 替换一个唯一多行块；冲突先重读，失败不截断原文件。参数仍限1KiB、文件64KiB，详细格式与并发边界见[契约](docs/design/versioned-edit-v1.md)。34项安全／失败与4组CLI、完整回归及Native兼容通过。
+
+用户指定真实云DeepSeek Flash的正常修改、并发冲突恢复、只读三例通过最终源码核对。工具并非零开销：64KiB成功编辑相对旧工具多约5.6–5.8ms，主要与完整正文安全扫描量级一致；全部负对保留，不混入云端延迟或历史推理收益。见[成果](docs/benchmarks/README.zh-CN.md)。
 
 ## 先运行基本工具流程
 
@@ -140,7 +150,7 @@ python3 tools/build_agent_native.py \
 
 ![同负载控制与负结果](docs/benchmarks/figures/contention640-controls.svg)
 
-目前归档 **59 份证据、36,664 条主记录、41 张图**。E58仅增加只读自预测功能验收与[异机交接步骤](docs/self-speculation-handoff.md)，未增加性能样本或模型命中率结论。主记录包括预热、元数据、正确性与预测样本，不能当成同等数量的独立性能样本。功能验收、模型失败、性能、历史读数与未验证项分开记录，不跨阶段累加收益。
+目前归档 **64 份证据、37,290 条主记录、43 张图**。E62/E63新增50云轮次和60序列化block，20任务／30工具附表另列；E59／E61保留工具诊断，E60的3个早期真实云任务单列；推理性能仍对应历史版本。[异机交接步骤](docs/self-speculation-handoff.md)用于后续目标机器验证。主记录包括预热、元数据、正确性与预测样本，不能当成同等数量的独立性能样本。功能验收、模型失败、性能、历史读数与未验证项分开记录，不跨阶段累加收益。
 
 [中文完整报告](docs/benchmarks/README.zh-CN.md) · [English results](docs/benchmarks/README.md) · [测试方法](docs/benchmarks/METHODOLOGY.md) · [验收矩阵](docs/benchmarks/data/validation.csv)
 
